@@ -1,0 +1,20 @@
+[gd_scene format=3 uid="uid://c10sqx10mrygh"]
+
+[ext_resource type="PackedScene" uid="uid://cchdt4mu2es45" path="res://scenes/desktop-window.tscn" id="1_df4r5"]
+[ext_resource type="Texture2D" uid="uid://dk8i03cmf040b" path="res://art/Document/CONSTITUTION.png" id="2_et1wv"]
+
+[node name="DesktopWindow" unique_id=1510619503 instance=ExtResource("1_df4r5")]
+custom_minimum_size = Vector2(1, 1)
+offset_right = 800.0
+offset_bottom = 1044.32
+title_text = "constitution.txt"
+
+[node name="Frame" parent="." index="0" unique_id=1580076577]
+offset_bottom = -59.99994
+
+[node name="Content" parent="Frame" index="0" unique_id=844016969]
+clip_contents = true
+
+[node name="Sprite2D" type="Sprite2D" parent="Frame/Content" index="0" unique_id=585741633]
+position = Vector2(400, 492.16)
+texture = ExtResource("2_et1wv")

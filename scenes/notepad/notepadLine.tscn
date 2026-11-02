@@ -1,0 +1,24 @@
+[gd_scene format=3 uid="uid://bfs5tv8dba2kb"]
+
+[ext_resource type="FontFile" uid="uid://4ga687weivse" path="res://fonts/ManifontGroteskBook.otf" id="1_pk5u0"]
+
+[node name="NotepadLine" type="HBoxContainer" unique_id=1717347846]
+offset_right = 560.0
+offset_bottom = 160.0
+
+[node name="Time" type="Label" parent="." unique_id=3776486]
+custom_minimum_size = Vector2(120, 0)
+layout_mode = 2
+size_flags_vertical = 0
+theme_override_colors/font_color = Color(0, 0.16470589, 1, 1)
+theme_override_fonts/font = ExtResource("1_pk5u0")
+theme_override_font_sizes/font_size = 30
+
+[node name="Text" type="Label" parent="." unique_id=1856130009]
+custom_minimum_size = Vector2(428, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 0
+theme_override_fonts/font = ExtResource("1_pk5u0")
+theme_override_font_sizes/font_size = 40
+autowrap_mode = 3

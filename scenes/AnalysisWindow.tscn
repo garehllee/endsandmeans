@@ -1,0 +1,41 @@
+[gd_scene format=3 uid="uid://ljw4mccm3gkf"]
+
+[ext_resource type="PackedScene" uid="uid://cchdt4mu2es45" path="res://scenes/desktop-window.tscn" id="1_quiiw"]
+[ext_resource type="Script" uid="uid://c52q0nfo40sfr" path="res://scenes/analysis_window.gd" id="2_qfw5u"]
+[ext_resource type="PackedScene" uid="uid://b45tx4lw1ebr" path="res://scenes/AnalysisRoom.tscn" id="3_sr8ok"]
+[ext_resource type="Script" uid="uid://dabxif0gd8qqq" path="res://scripts/analysis_room.gd" id="4_oxr88"]
+[ext_resource type="Texture2D" uid="uid://bpup1iovabkew" path="res://art/Artifactory/fileicon.png" id="5_4h1gw"]
+[ext_resource type="FontFile" uid="uid://4ga687weivse" path="res://fonts/ManifontGroteskBook.otf" id="5_xiovo"]
+[ext_resource type="Texture2D" uid="uid://fot8f1etqd8l" path="res://art/vista_firewall_2-1.png" id="6_0ju4p"]
+[ext_resource type="FontFile" uid="uid://dw3ano1pqxum6" path="res://fonts/Director-Regular.otf" id="6_eh375"]
+[ext_resource type="Texture2D" uid="uid://bdrimshpcjtln" path="res://art/catch-the-file-back.png" id="7_xiovo"]
+
+[node name="DesktopWindow" unique_id=1510619503 instance=ExtResource("1_quiiw")]
+offset_right = 2000.0
+offset_bottom = 2080.0
+script = ExtResource("2_qfw5u")
+title_text = "analysis.txt"
+
+[node name="SubViewportContainer" type="SubViewportContainer" parent="Frame/Content" parent_id_path=PackedInt32Array(844016969) index="0" unique_id=444019941]
+layout_mode = 2
+stretch = true
+
+[node name="SubViewport" type="SubViewport" parent="Frame/Content/SubViewportContainer" index="0" unique_id=652383255]
+handle_input_locally = false
+size = Vector2i(1996, 1996)
+render_target_update_mode = 4
+
+[node name="AnalysisRoom" parent="Frame/Content/SubViewportContainer/SubViewport" index="0" unique_id=746462631 instance=ExtResource("3_sr8ok")]
+unique_name_in_owner = true
+script = ExtResource("4_oxr88")
+message = "
+This seems to be a message from another AI. They must be trying to hide their messages by putting it at the end of the folder repository. Should I write my own folder to ask for the orange folder?"
+ui_font = ExtResource("5_xiovo")
+mono_font = ExtResource("6_eh375")
+folder_icon = ExtResource("5_4h1gw")
+firewall_icon = ExtResource("6_0ju4p")
+arena_image = ExtResource("7_xiovo")
+player_start_y = 450.0
+speed_min = 400.0
+speed_max = 800.0
+player_scale = 1.0

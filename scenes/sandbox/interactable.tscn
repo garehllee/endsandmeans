@@ -1,0 +1,17 @@
+[gd_scene format=3 uid="uid://dy26obh2sgob4"]
+
+[ext_resource type="Script" uid="uid://d27afruclisua" path="res://scripts/interactable.gd" id="1_afbx4"]
+[ext_resource type="Shader" uid="uid://bxqsh5uhr7yfm" path="res://Shaders/glow.gdshader" id="1_cdo2b"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_jyhfs"]
+shader = ExtResource("1_cdo2b")
+shader_parameter/glow_color = Color(0, 0.4090497, 0.90186113, 1)
+shader_parameter/glow_size = 0.0
+
+[node name="Interactable" type="Area2D" unique_id=1925929958]
+script = ExtResource("1_afbx4")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1255593315]
+material = SubResource("ShaderMaterial_jyhfs")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=497931946]

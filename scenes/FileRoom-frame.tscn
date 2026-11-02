@@ -1,0 +1,23 @@
+[gd_scene format=3 uid="uid://dr8q5ep3bt5rb"]
+
+[ext_resource type="PackedScene" uid="uid://cchdt4mu2es45" path="res://scenes/desktop-window.tscn" id="1_os2lk"]
+[ext_resource type="PackedScene" uid="uid://cf8rlmo8n6q4c" path="res://scenes/FileRoom.tscn" id="2_0lkok"]
+[ext_resource type="Script" uid="uid://dgmoyy3180v1t" path="res://scripts/file_room_frame.gd" id="2_alnpl"]
+
+[node name="DesktopWindow" unique_id=1510619503 instance=ExtResource("1_os2lk")]
+script = ExtResource("2_alnpl")
+
+[node name="Content" parent="Frame" parent_id_path=PackedInt32Array(1580076577) index="0" unique_id=844016969]
+clip_contents = true
+
+[node name="SubViewportContainer" type="SubViewportContainer" parent="Frame/Content" index="0" unique_id=1024781922]
+layout_mode = 2
+stretch = true
+
+[node name="SubViewport" type="SubViewport" parent="Frame/Content/SubViewportContainer" index="0" unique_id=1007366161]
+handle_input_locally = false
+size = Vector2i(1996, 1996)
+render_target_update_mode = 4
+
+[node name="FileRoom" parent="Frame/Content/SubViewportContainer/SubViewport" index="0" unique_id=556144229 instance=ExtResource("2_0lkok")]
+position = Vector2(2, 2)
