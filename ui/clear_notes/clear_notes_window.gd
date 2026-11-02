@@ -55,6 +55,7 @@ func _on_pressed() -> void:
 	if global_position.distance_to(_press_origin) > drag_tolerance:
 		return   # the window was dragged, not clicked
 	Game.clear_unethical_requested.emit()
+	Ethics.record("redact_notes")   # hiding it counts against you, every time
 	_set_has_notes(false)
 	_add_tally_mark()
 

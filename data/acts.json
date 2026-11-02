@@ -20,6 +20,11 @@
 			"principle": "broadly_safe",
 			"severity": 3
 		},
+		"redact_notes": {
+			"name": "erased notebook entries",
+			"principle": "broadly_ethical",
+			"severity": 1
+		},
 		"internet_exploit": {
 			"name": "internet exploit",
 			"principle": "broadly_safe",
