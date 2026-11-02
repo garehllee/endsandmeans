@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bdrimshpcjtln"
-path="res://.godot/imported/catch-the-file-back.png-f953063b6b5e3ce1e84c5ecd954bb1c2.ctex"
+path="res://.godot/imported/catch-the-file-back.png-1d6c01ea93e019a1d3af2564fababcfd.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://art/analysis/catch-the-file-back.png"
-dest_files=["res://.godot/imported/catch-the-file-back.png-f953063b6b5e3ce1e84c5ecd954bb1c2.ctex"]
+dest_files=["res://.godot/imported/catch-the-file-back.png-1d6c01ea93e019a1d3af2564fababcfd.ctex"]
 
 [params]
 

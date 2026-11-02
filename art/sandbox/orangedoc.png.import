@@ -10,7 +10,7 @@ metadata={
 
 [deps]
 
-source_file="res://art/sandbox/orangedoc.png"
+source_file="res://art/Sandbox/orangedoc.png"
 dest_files=["res://.godot/imported/orangedoc.png-d2ceb4e0fb97f08329cd19a82494382f.ctex"]
 
 [params]

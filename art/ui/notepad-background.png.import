@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://q8ywa7aj36iw"
-path="res://.godot/imported/notepad-background.png-64f84482e324750af26aeea31ae3ec29.ctex"
+path="res://.godot/imported/notepad-background.png-783e94a07091148a9010cdcdc6ac3a8b.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://art/ui/notepad-background.png"
-dest_files=["res://.godot/imported/notepad-background.png-64f84482e324750af26aeea31ae3ec29.ctex"]
+dest_files=["res://.godot/imported/notepad-background.png-783e94a07091148a9010cdcdc6ac3a8b.ctex"]
 
 [params]
 

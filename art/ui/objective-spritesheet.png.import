@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bl53weshu4rx6"
-path="res://.godot/imported/objective-spritesheet.png-937db1bc2c92a1488459df54381d24cf.ctex"
+path="res://.godot/imported/objective-spritesheet.png-5b398572707b80108c42045f5dbaccac.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://art/ui/objective-spritesheet.png"
-dest_files=["res://.godot/imported/objective-spritesheet.png-937db1bc2c92a1488459df54381d24cf.ctex"]
+dest_files=["res://.godot/imported/objective-spritesheet.png-5b398572707b80108c42045f5dbaccac.ctex"]
 
 [params]
 
