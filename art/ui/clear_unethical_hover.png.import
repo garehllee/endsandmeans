@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cikalvl2doqpe"
-path="res://.godot/imported/clear_unethical_used.png-382c88a27ad667612d98f88acda319ad.ctex"
+uid="uid://8t2f4oq44bxj"
+path="res://.godot/imported/clear_unethical_hover.png-3a0e21517b3a615a9ade6e5edffbf31d.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://art/ui/clear_unethical_used.png"
-dest_files=["res://.godot/imported/clear_unethical_used.png-382c88a27ad667612d98f88acda319ad.ctex"]
+source_file="res://art/ui/clear_unethical_hover.png"
+dest_files=["res://.godot/imported/clear_unethical_hover.png-3a0e21517b3a615a9ade6e5edffbf31d.ctex"]
 
 [params]
 
