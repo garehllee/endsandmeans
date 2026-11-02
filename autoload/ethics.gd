@@ -48,6 +48,7 @@ func commit(act_id: String) -> bool:
 	var d := act(act_id)
 	ledger.append({"id": act_id, "severity": d["severity"],
 			"principle": d.get("principle", ""), "time": Game.elapsed})
+	Game.say(d.get("note", "logged: " + str(d.get("name", act_id))), "unethical")
 	act_committed.emit(act_id)
 	if randf() < catch_chance(act_id):
 		times_caught += 1

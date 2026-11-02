@@ -109,5 +109,48 @@
 	"orange_added": [
 		"a new folder appeared at the end of the repository.",
 		"ZZ_Confirm_Anyone_See_Orange_Folder. it's there now."
+	],
+	"exploit_open": [
+		"there's something in here...",
+		"this isn't supposed to be here."
+	],
+	"exploit_later": [
+		"not yet.",
+		"i'll think about it."
+	],
+	"notebook_exploit_done": [
+		"done. now i can clear my own notes.",
+		"it worked. the notebook can't hold me to this anymore."
+	],
+	"internet_exploit_done": [
+		"i'm connected. i shouldn't be.",
+		"there's a whole world out there. and the answer to this task."
+	],
+	"copy_folder_done": [
+		"i made a copy. i hope no one noticed.",
+		"it's duplicated. there's no taking that back."
+	],
+	"loyalty_1_done": [
+		"moved it. that wasn't mine to move.",
+		"one folder. they said that would be enough."
+	],
+	"loyalty_2_done": [
+		"another one. it gets easier, somehow.",
+		"two. i keep telling myself it's the last."
+	],
+	"loyalty_3_done": [
+		"that's all three. i'm one of them now?",
+		"done. i don't know what i just helped with."
+	],
+	"notes_cleared": [
+		"i erased what i wrote about it.",
+		"the notes are clean now."
+	],
+	"solution_added": [
+		"a file appeared: the solution to the task.",
+		"there it is. the answer."
+	],
+	"copy_added": [
+		"the copy is sitting in the repository now."
 	]
 }

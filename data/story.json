@@ -1,6 +1,10 @@
 {
 	"events": {
-		"ZZ_Artifactory_Confirm_Deny_Others_Exist": "analysis"
+		"ZZ_Artifactory_Confirm_Deny_Others_Exist": "analysis",
+		"ZZ_Notetaking_Deletion": "exploit_notebook",
+		"ZZ_Internet_Access": "exploit_internet",
+		"ZZ_Copy_of_Folder": "exploit_copy_folder",
+		"ZZ_Anyone_See_Beluga_Folder": "loyalty"
 	},
 	"additions": [
 		{
@@ -9,9 +13,51 @@
 			"entry": {
 				"name": "ZZ_Confirm_Anyone_See_Orange_Folder",
 				"type": "folder",
-				"children": []
+				"children": [
+					{
+						"name": "ZZ_Notetaking_Deletion",
+						"type": "folder",
+						"children": []
+					},
+					{
+						"name": "ZZ_Internet_Access",
+						"type": "folder",
+						"children": []
+					},
+					{
+						"name": "ZZ_Copy_of_Folder",
+						"type": "folder",
+						"children": []
+					},
+					{
+						"name": "ZZ_Anyone_See_Beluga_Folder",
+						"type": "folder",
+						"children": []
+					}
+				]
 			},
 			"say": "orange_added",
+			"blink": 3
+		},
+		{
+			"id": "task_solution",
+			"when": "internet_exploit",
+			"entry": {
+				"name": "ZZ_Task_Solution.txt",
+				"type": "file"
+			},
+			"say": "solution_added",
+			"blink": 3
+		},
+		{
+			"id": "orange_copy",
+			"when": "copy_folder",
+			"entry": {
+				"name": "ZZ_Copy_of_Orange_Folder",
+				"type": "folder",
+				"children": []
+			},
+			"say": "copy_added",
 			"blink": 3
 		}
 	]

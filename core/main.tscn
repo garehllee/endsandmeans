@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://dr8q5ep3bt5rb" path="res://worlds/library/library_window.tscn" id="4_jyhfs"]
 [ext_resource type="PackedScene" uid="uid://ljw4mccm3gkf" path="res://worlds/analysis/analysis_window.tscn" id="5_tbgi4"]
 [ext_resource type="PackedScene" path="res://worlds/ending/ending_window.tscn" id="6_ending"]
+[ext_resource type="PackedScene" path="res://worlds/exploit/exploit_window.tscn" id="7_exploit"]
 
 [node name="Main" type="Control" unique_id=687128884]
 layout_mode = 3
@@ -65,6 +66,9 @@ title_text = "artifactory.txt"
 layout_mode = 0
 
 [node name="ending window" parent="Windows" instance=ExtResource("6_ending")]
+layout_mode = 0
+
+[node name="exploit window" parent="Windows" instance=ExtResource("7_exploit")]
 layout_mode = 0
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=498099593]
