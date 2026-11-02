@@ -50,6 +50,7 @@ enum Phase { CHOOSE, EXPANDING, ARENA, DONE }
 @export_group("Minigame")
 @export var config: MinigameConfig       # tunables, icons and the picture the button fills with
 @export var player_scale := 1.5
+var show_game_background := true   # first option shows the minigame's background instead of the green gradient
 
 class Btn:
 	var label := ""
@@ -329,10 +330,16 @@ func _draw_button(i: int, b: Btn, f: Font, m: Font) -> void:
 	var o := b.open
 	draw_rect(r, Color.WHITE)
 	if i == 0:
-		draw_texture_rect(_grad_tex, r, false, Color(1, 1, 1, o))
-		if config.arena_image and _expand_t > 0.0:
+		if show_game_background and config.arena_image:
+			# The open button already shows the minigame's background, so the
+			# expansion into the game doesn't change what's behind it.
 			draw_texture_rect_region(config.arena_image, r, _cover_region(config.arena_image, r),
-					Color(1, 1, 1, _expand_t))
+					Color(1, 1, 1, o))
+		else:
+			draw_texture_rect(_grad_tex, r, false, Color(1, 1, 1, o))
+			if config.arena_image and _expand_t > 0.0:
+				draw_texture_rect_region(config.arena_image, r, _cover_region(config.arena_image, r),
+						Color(1, 1, 1, _expand_t))
 	else:
 		draw_rect(r, Color(0.851, 0.851, 0.851, o))
 	if i != 0 or _expand_t < 1.0:
