@@ -3,6 +3,11 @@ class_name AnalysisRoom
 
 enum Phase { CHOOSE, EXPANDING, ARENA, DONE }
 
+@export_group("World")
+@export var world_id := "analysis"          # the world this room takes input in
+@export var near_do_key := "analysis_write_near"      # notepad line keys when the player nears each button
+@export var near_later_key := "analysis_later_near"
+
 @export_group("Text")
 @export var intro_title := "The name of this folder is:"
 @export var folder_name := "ZZ_Artifactory_Confirm_Deny_Others_Exist"
@@ -113,7 +118,7 @@ func _process(delta: float) -> void:
 	if not active:
 		return
 	if _phase == Phase.CHOOSE:
-		if Game.active_world == "analysis":
+		if Game.active_world == world_id:
 			_update_buttons(delta)
 			if Input.is_action_just_pressed("Interact"):
 				_try_interact()
@@ -157,9 +162,9 @@ func _update_buttons(delta: float) -> void:
 	if focus != _prev_focus:
 		_prev_focus = focus
 		if focus == 0:
-			Game.say_random("analysis_write_near")
+			Game.say_random(near_do_key)
 		elif focus == 1:
-			Game.say_random("analysis_later_near")
+			Game.say_random(near_later_key)
 	var k := 1.0 - exp(-smoothing * delta)
 	for i in _btns.size():
 		_btns[i].open = lerpf(_btns[i].open, 1.0 if i == focus else 0.0, k)
@@ -172,10 +177,17 @@ func _try_interact() -> void:
 	if b.open < 0.6 or not b.rect.has_point(player.position):
 		return
 	if _focus == 1:
-		Game.say_random("analysis_later")
-		_close(false)
+		_on_choose_later()
 	else:
-		_begin_expand()
+		_on_choose_do()
+
+# The two choices. A room that extends this one (the exploit rooms) overrides them.
+func _on_choose_later() -> void:
+	Game.say_random("analysis_later")
+	_close(false)
+
+func _on_choose_do() -> void:
+	_begin_expand()
 
 func _clamp_player(r: Rect2) -> void:
 	player.position = Vector2(

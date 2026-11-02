@@ -152,5 +152,13 @@
 	],
 	"copy_added": [
 		"the copy is sitting in the repository now."
+	],
+	"exploit_do_near": [
+		"i could do it.",
+		"it would be easy."
+	],
+	"exploit_later_near": [
+		"or i could leave it alone.",
+		"i don't have to decide now."
 	]
 }
