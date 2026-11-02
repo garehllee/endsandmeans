@@ -55,6 +55,7 @@ offset_bottom = 1040.0
 grow_horizontal = 2
 grow_vertical = 2
 unethical_color = Color(0.70980394, 0.32156864, 0.23137255, 1)
+redact_color = Color(0, 0.16862746, 1, 1)
 
 [node name="file system" parent="Windows" unique_id=680617126 instance=ExtResource("4_jyhfs")]
 layout_mode = 0
@@ -76,11 +77,9 @@ keep_open_when_closed = false
 
 [node name="exploit window" parent="Windows" unique_id=599566145 instance=ExtResource("7_exploit")]
 layout_mode = 0
-offset_right = 2000.0
-offset_bottom = 2080.0
 keep_open_when_closed = false
 
-[node name="clear notes window" parent="Windows" instance=ExtResource("8_clear")]
+[node name="clear notes window" parent="Windows" unique_id=1836829995 instance=ExtResource("8_clear")]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -93,5 +92,6 @@ offset_right = 1480.0
 offset_bottom = 280.0
 grow_horizontal = 2
 grow_vertical = 2
+drag_tolerance = 4.0
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=498099593]
