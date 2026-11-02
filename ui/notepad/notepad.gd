@@ -10,28 +10,12 @@ extends DesktopWindow
 @onready var scroll: ScrollContainer = %Scroll
 
 var _latest_label: Label = null
-var _clear_button: Button
 var _unethical_rows: Array[Node] = []
 
 func _ready() -> void:
 	super()
-	_build_clear_button()
 	Game.line_logged.connect(add_line)
-	Game.flag_changed.connect(_on_flag_changed)
-
-# The button is the first child of the list; new rows go in right below it.
-# It stays hidden (and takes no room) until the notebook exploit is unlocked.
-func _build_clear_button() -> void:
-	_clear_button = Button.new()
-	_clear_button.text = "clear unethical actions"
-	_clear_button.visible = Game.has_flag(Flag.NOTEBOOK_EXPLOIT)
-	_clear_button.pressed.connect(_clear_unethical)
-	lines.add_child(_clear_button)
-	lines.move_child(_clear_button, 0)
-
-func _on_flag_changed(flag: StringName, value: bool) -> void:
-	if flag == Flag.NOTEBOOK_EXPLOIT:
-		_clear_button.visible = value
+	Game.clear_unethical_requested.connect(_clear_unethical)
 
 func add_line(timestamp: String, text: String, kind: String) -> void:
 	var row = line_scene.instantiate()
@@ -52,11 +36,11 @@ func add_line(timestamp: String, text: String, kind: String) -> void:
 		label.add_theme_color_override("font_color", action_color)
 
 	lines.add_child(row)
-	lines.move_child(row, mini(1, lines.get_child_count() - 1))   # newest goes to the top, just under the button
+	lines.move_child(row, 0)   # newest goes to the top
 
 	scroll.scroll_vertical = 0
 
-# Erases every line logged for an unethical act.
+# Erases every line logged for an unethical act (the notebook exploit window asks for this).
 func _clear_unethical() -> void:
 	for row in _unethical_rows:
 		if is_instance_valid(row):

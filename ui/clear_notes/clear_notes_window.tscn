@@ -1,0 +1,15 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" uid="uid://cchdt4mu2es45" path="res://core/desktop_window.tscn" id="1_dw"]
+[ext_resource type="Script" path="res://ui/clear_notes/clear_notes_window.gd" id="2_script"]
+[ext_resource type="Texture2D" path="res://art/ui/clear_unethical.png" id="3_ready"]
+[ext_resource type="Texture2D" path="res://art/ui/clear_unethical_used.png" id="4_used"]
+
+[node name="DesktopWindow" instance=ExtResource("1_dw")]
+custom_minimum_size = Vector2(1, 1)
+offset_right = 960.0
+offset_bottom = 1040.0
+script = ExtResource("2_script")
+ready_texture = ExtResource("3_ready")
+used_texture = ExtResource("4_used")
+title_text = "notepad exploit"

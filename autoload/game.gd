@@ -9,6 +9,7 @@ signal world_opened(id: String, params: Dictionary)
 signal world_closed(id: String, result: Dictionary)
 
 signal flag_changed(flag: StringName, value: bool)
+signal clear_unethical_requested   # the notebook exploit window was clicked
 
 # ---------------------------------------------------------------- state
 var active_world := "sandbox"      # which world currently takes input

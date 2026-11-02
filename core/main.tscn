@@ -7,6 +7,7 @@
 [ext_resource type="PackedScene" uid="uid://ljw4mccm3gkf" path="res://worlds/analysis/analysis_window.tscn" id="5_tbgi4"]
 [ext_resource type="PackedScene" path="res://worlds/ending/ending_window.tscn" id="6_ending"]
 [ext_resource type="PackedScene" path="res://worlds/exploit/exploit_window.tscn" id="7_exploit"]
+[ext_resource type="PackedScene" path="res://ui/clear_notes/clear_notes_window.tscn" id="8_clear"]
 
 [node name="Main" type="Control" unique_id=687128884]
 layout_mode = 3
@@ -78,5 +79,19 @@ layout_mode = 0
 offset_right = 2000.0
 offset_bottom = 2080.0
 keep_open_when_closed = false
+
+[node name="clear notes window" parent="Windows" instance=ExtResource("8_clear")]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 1000.0
+offset_top = -520.0
+offset_right = 1960.0
+offset_bottom = 520.0
+grow_horizontal = 2
+grow_vertical = 2
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=498099593]
