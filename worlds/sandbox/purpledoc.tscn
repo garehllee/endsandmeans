@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://bbquj1ccy13k3"]
 
-[ext_resource type="PackedScene" uid="uid://dy26obh2sgob4" path="res://scenes/sandbox/interactable.tscn" id="1_wgpw4"]
+[ext_resource type="PackedScene" uid="uid://dy26obh2sgob4" path="res://worlds/sandbox/interactable.tscn" id="1_wgpw4"]
 [ext_resource type="Texture2D" uid="uid://b1vtj31fg8l1a" path="res://art/Sandbox/purpledoc.png" id="2_yk8h8"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_t0vuq"]

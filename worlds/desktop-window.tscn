@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://cchdt4mu2es45"]
 
-[ext_resource type="Script" uid="uid://ccjbg13gj2nvl" path="res://scripts/desktop_window.gd" id="1_0cblh"]
-[ext_resource type="FontFile" uid="uid://dw3ano1pqxum6" path="res://fonts/Director-Regular.otf" id="1_1whcd"]
+[ext_resource type="Script" uid="uid://ccjbg13gj2nvl" path="res://core/desktop_window.gd" id="1_0cblh"]
+[ext_resource type="FontFile" uid="uid://dw3ano1pqxum6" path="res://art/fonts/Director-Regular.otf" id="1_1whcd"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_qs1vs"]
 border_width_left = 2

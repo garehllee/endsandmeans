@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://yego6it0axcv"]
 
-[ext_resource type="PackedScene" uid="uid://dy26obh2sgob4" path="res://scenes/sandbox/interactable.tscn" id="1_x4ocl"]
+[ext_resource type="PackedScene" uid="uid://dy26obh2sgob4" path="res://worlds/sandbox/interactable.tscn" id="1_x4ocl"]
 [ext_resource type="Texture2D" uid="uid://ctfeoql2hg8qw" path="res://art/Sandbox/door.png" id="2_vdcxa"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_pv7lp"]

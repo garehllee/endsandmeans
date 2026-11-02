@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://b45tx4lw1ebr"]
 
-[ext_resource type="PackedScene" uid="uid://d3t47ugyynapu" path="res://scenes/player.tscn" id="1_lw2ow"]
+[ext_resource type="PackedScene" uid="uid://d3t47ugyynapu" path="res://worlds/player.tscn" id="1_lw2ow"]
 
 [node name="AnalysisRoom" type="Node2D" unique_id=746462631]
 

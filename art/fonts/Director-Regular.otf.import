@@ -3,12 +3,12 @@
 importer="font_data_dynamic"
 type="FontFile"
 uid="uid://dw3ano1pqxum6"
-path="res://.godot/imported/Director-Regular.otf-1cff5e7b79966da032fb70173581e5ac.fontdata"
+path="res://.godot/imported/Director-Regular.otf-1726c5fe45010cfb81ab28dda83fc5f4.fontdata"
 
 [deps]
 
-source_file="res://fonts/Director-Regular.otf"
-dest_files=["res://.godot/imported/Director-Regular.otf-1cff5e7b79966da032fb70173581e5ac.fontdata"]
+source_file="res://art/fonts/Director-Regular.otf"
+dest_files=["res://.godot/imported/Director-Regular.otf-1726c5fe45010cfb81ab28dda83fc5f4.fontdata"]
 
 [params]
 

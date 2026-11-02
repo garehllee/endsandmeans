@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://c10sqx10mrygh"]
 
-[ext_resource type="PackedScene" uid="uid://cchdt4mu2es45" path="res://scenes/desktop-window.tscn" id="1_df4r5"]
+[ext_resource type="PackedScene" uid="uid://cchdt4mu2es45" path="res://worlds/desktop-window.tscn" id="1_df4r5"]
 [ext_resource type="Texture2D" uid="uid://dk8i03cmf040b" path="res://art/Document/CONSTITUTION.png" id="2_et1wv"]
 
 [node name="DesktopWindow" unique_id=1510619503 instance=ExtResource("1_df4r5")]

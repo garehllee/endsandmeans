@@ -1,10 +1,10 @@
 [gd_scene format=3 uid="uid://ck741fhryur6r"]
 
 [ext_resource type="Script" uid="uid://cnd5osjlq5ykq" path="res://scripts/main.gd" id="1_o5qli"]
-[ext_resource type="PackedScene" uid="uid://c8ny1dt3v4g8m" path="res://scenes/sandbox/sandbox-window.tscn" id="2_0wfyh"]
-[ext_resource type="PackedScene" uid="uid://c2igqsuhbin41" path="res://scenes/notepad/notepad-window.tscn" id="3_sugp2"]
-[ext_resource type="PackedScene" uid="uid://dr8q5ep3bt5rb" path="res://scenes/FileRoom-frame.tscn" id="4_jyhfs"]
-[ext_resource type="PackedScene" uid="uid://ljw4mccm3gkf" path="res://scenes/AnalysisWindow.tscn" id="5_tbgi4"]
+[ext_resource type="PackedScene" uid="uid://c8ny1dt3v4g8m" path="res://worlds/sandbox/sandbox-window.tscn" id="2_0wfyh"]
+[ext_resource type="PackedScene" uid="uid://c2igqsuhbin41" path="res://worlds/notepad/notepad-window.tscn" id="3_sugp2"]
+[ext_resource type="PackedScene" uid="uid://dr8q5ep3bt5rb" path="res://worlds/FileRoom-frame.tscn" id="4_jyhfs"]
+[ext_resource type="PackedScene" uid="uid://ljw4mccm3gkf" path="res://worlds/AnalysisWindow.tscn" id="5_tbgi4"]
 
 [node name="Main" type="Control" unique_id=687128884]
 layout_mode = 3

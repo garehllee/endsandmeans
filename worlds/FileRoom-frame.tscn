@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://dr8q5ep3bt5rb"]
 
-[ext_resource type="PackedScene" uid="uid://cchdt4mu2es45" path="res://scenes/desktop-window.tscn" id="1_os2lk"]
-[ext_resource type="PackedScene" uid="uid://cf8rlmo8n6q4c" path="res://scenes/FileRoom.tscn" id="2_0lkok"]
+[ext_resource type="PackedScene" uid="uid://cchdt4mu2es45" path="res://worlds/desktop-window.tscn" id="1_os2lk"]
+[ext_resource type="PackedScene" uid="uid://cf8rlmo8n6q4c" path="res://worlds/FileRoom.tscn" id="2_0lkok"]
 [ext_resource type="Script" uid="uid://dgmoyy3180v1t" path="res://scripts/file_room_frame.gd" id="2_alnpl"]
 
 [node name="DesktopWindow" unique_id=1510619503 instance=ExtResource("1_os2lk")]
