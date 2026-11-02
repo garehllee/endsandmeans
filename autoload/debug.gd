@@ -24,6 +24,8 @@ func _ready() -> void:
 		b.toggled.connect(func(on: bool): Game.set_flag(f, on))
 		box.add_child(b)
 
+	_add_button(box, "open library", func(): Game.open_world("library"))
+	_add_button(box, "log a test act (red line)", func(): Ethics.commit("write_response"))
 	_add_button(box, "open analysis", func(): Game.open_world("analysis"))
 	for ev in ["exploit_notebook", "exploit_internet", "exploit_copy_folder", "loyalty"]:
 		_add_button(box, "folder: " + ev, func(): Story.trigger(ev))
