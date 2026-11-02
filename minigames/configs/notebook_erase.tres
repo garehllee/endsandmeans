@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="EraseConfig" format=3]
+
+[ext_resource type="Script" path="res://minigames/erase_config.gd" id="1_cfg"]
+[ext_resource type="Texture2D" path="res://art/notebook/background.png" id="2_bg"]
+[ext_resource type="Texture2D" path="res://art/notebook/text.png" id="3_text"]
+[ext_resource type="Texture2D" path="res://art/notebook/eraser.png" id="4_eraser"]
+[ext_resource type="Texture2D" path="res://art/notebook/instructions.png" id="5_instr"]
+
+[resource]
+script = ExtResource("1_cfg")
+player_radius = 35.0
+arena_image = ExtResource("2_bg")
+text_layer = ExtResource("3_text")
+eraser = ExtResource("4_eraser")
+instructions = ExtResource("5_instr")
+target_fraction = 0.5
+erase_radius = 60.0
+eraser_scale = 0.8
+eraser_offset = Vector2(95, 30)
+mask_scale = 0.5
