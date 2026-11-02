@@ -62,7 +62,10 @@ class Btn:
 var active := false
 var _phase := Phase.CHOOSE
 var _btns: Array[Btn] = []
+const REACT_TIME := 0.5        # how long the nod or head shake lasts
+
 var _game: CatchGame
+var _reacting := false
 var _focus := -1
 var _prev_focus := -1
 var _content_bottom := 1500.0
@@ -98,6 +101,7 @@ func open() -> void:
 	active = true
 
 func _reset() -> void:
+	_reacting = false
 	_phase = Phase.CHOOSE
 	_expand_t = 0.0
 	_focus = -1
@@ -171,7 +175,7 @@ func _update_buttons(delta: float) -> void:
 	_layout()
 
 func _try_interact() -> void:
-	if _focus < 0:
+	if _focus < 0 or _reacting:
 		return
 	var b: Btn = _btns[_focus]
 	if b.open < 0.6 or not b.rect.has_point(player.position):
@@ -183,11 +187,24 @@ func _try_interact() -> void:
 
 # The two choices. A room that extends this one (the exploit rooms) overrides them.
 func _on_choose_later() -> void:
+	await _react(false)
 	Game.say_random("analysis_later")
 	_close(false)
 
 func _on_choose_do() -> void:
+	await _react(true)
 	_begin_expand()
+
+# The character nods (yes) or shakes its head (no) for half a second before
+# the choice takes effect, so the screen doesn't vanish the instant E is pressed.
+func _react(yes: bool) -> void:
+	_reacting = true
+	Game.input_locked = true
+	if yes:
+		player.nod(REACT_TIME)
+	else:
+		player.shake_head(REACT_TIME)
+	await get_tree().create_timer(REACT_TIME).timeout
 
 func _clamp_player(r: Rect2) -> void:
 	player.position = Vector2(
