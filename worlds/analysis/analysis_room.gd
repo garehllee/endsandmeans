@@ -308,11 +308,13 @@ func _draw_button(i: int, b: Btn, f: Font, m: Font) -> void:
 		draw_rect(r, Color.BLACK, false, 2.0)
 
 	var fade := 1.0 - _expand_t if i == 0 else 1.0
-	var text_y := r.position.y + r.size.y * lerpf(0.5, 0.81, o if i == 0 else 0.0)
+	# The label makes room for the icon and new file name only when there is one.
+	var shows_new := i == 0 and new_folder_name != ""
+	var text_y := r.position.y + r.size.y * lerpf(0.5, 0.81, o if shows_new else 0.0)
 	draw_string(f, Vector2(r.position.x, text_y + button_font_size * 0.35), b.label,
 			HORIZONTAL_ALIGNMENT_CENTER, r.size.x, button_font_size, Color(0, 0, 0, fade))
 
-	if i == 0:
+	if shows_new:
 		var a := clampf((o - 0.4) / 0.5, 0.0, 1.0) * fade
 		if a > 0.0:
 			var cx := r.get_center().x
