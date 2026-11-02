@@ -129,6 +129,8 @@ func _process(delta: float) -> void:
 		_clamp_player(Rect2(0.0, 0.0, room_size.x, _content_bottom))
 	else:
 		_layout()
+		if _game:
+			_game.set_expand(_btns[0].rect, _expand_t)
 	_follow_camera(delta)
 	queue_redraw()
 
@@ -236,20 +238,27 @@ func _begin_expand() -> void:
 	_arena = Rect2(0.0, cam.position.y - vh * 0.5, room_size.x, vh)
 	_a_from = _btns[0].rect
 	_expand_t = 0.0
+	_make_game()
 	var t := create_tween().set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN_OUT)
 	t.tween_property(self, "_expand_t", 1.0, expand_time)
 	t.finished.connect(_start_arena)
 
-func _start_arena() -> void:
-	_phase = Phase.ARENA
+# Created as the button starts to grow, so the game's pictures can grow with it.
+func _make_game() -> void:
+	_stop_game()
 	_game = _create_game()
 	add_child(_game)
 	move_child(_game, 0)          # draw the game's pictures underneath the player
+	_game.setup(_arena, player, _start_pos)   # stay where the button was pressed
+	_game.prepare(config)
+
+func _start_arena() -> void:
+	_phase = Phase.ARENA
+	if _game == null:
+		_make_game()
 	if _game.has_signal("round_started"):
 		_game.connect("round_started", func(): Game.say_random("analysis_start"))
 	_game.finished.connect(_on_game_finished)
-	# Stay where the button was pressed; the game keeps it inside the arena.
-	_game.setup(_arena, player, _start_pos)
 	_game.start(config)
 
 # A room that extends this one overrides this to run a different minigame.

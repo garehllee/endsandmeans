@@ -14,3 +14,12 @@ func start(_config: MinigameConfig) -> void:
 
 func stop() -> void:
 	pass
+
+# Called when the button starts expanding, before start(): build the pictures.
+func prepare(_config: MinigameConfig) -> void:
+	pass
+
+# Called every frame while the button grows into the arena. rect is the button's
+# current rectangle, t goes 0 to 1.
+func set_expand(_rect: Rect2, _t: float) -> void:
+	pass

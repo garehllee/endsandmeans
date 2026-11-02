@@ -27,18 +27,45 @@ var _dirty := false
 var _done := false
 var _last := Vector2.INF
 var _eraser_sprite: Sprite2D
+var _text_sprite: Sprite2D
+var _instr_sprite: Sprite2D
+var _built := false
 
 func setup(arena: Rect2, player: Node2D, _start_pos: Vector2) -> void:
 	_arena = arena
 	_player = player
 
-func start(cfg: MinigameConfig) -> void:
+func prepare(cfg: MinigameConfig) -> void:
 	config = cfg as EraseConfig
 	if config == null or config.text_layer == null:
 		push_error("EraseGame needs an EraseConfig with a text_layer")
-		finished.emit(true)
 		return
 	_build_layers()
+	_built = true
+	set_expand(_arena, 0.0)
+
+# The text and instructions grow out of the button along with it.
+func set_expand(rect: Rect2, t: float) -> void:
+	if not _built:
+		return
+	var ts := config.text_layer.get_size()
+	var s := rect.size.x / ts.x
+	var pos := Vector2(rect.position.x, rect.get_center().y - ts.y * s * 0.5)
+	var a := clampf(t * 2.0, 0.0, 1.0)
+	for sp in [_text_sprite, _instr_sprite]:
+		if sp:
+			sp.position = pos
+			sp.scale = Vector2(s, s)
+			sp.modulate.a = a
+
+func start(cfg: MinigameConfig) -> void:
+	if not _built:
+		prepare(cfg)
+	if not _built:
+		finished.emit(true)
+		return
+	set_expand(_arena, 1.0)
+	_eraser_sprite.visible = true
 	_player.position = _arena.get_center()      # spawn in the middle
 	_last = Vector2.INF
 	_done = false
@@ -81,20 +108,21 @@ func _build_layers() -> void:
 	_erased = 0
 
 	# Children draw in order: text, then (the room's player), then eraser, then instructions.
-	var text_sprite := _make_sprite(config.text_layer, s, 0)
+	_text_sprite = _make_sprite(config.text_layer, s, 0)
 	var mat := ShaderMaterial.new()
 	mat.shader = MASK_SHADER
 	mat.set_shader_parameter("mask", _mask_tex)
-	text_sprite.material = mat
+	_text_sprite.material = mat
 
 	_eraser_sprite = Sprite2D.new()
 	_eraser_sprite.texture = config.eraser
 	_eraser_sprite.scale = Vector2.ONE * config.eraser_scale
 	_eraser_sprite.z_index = 1
+	_eraser_sprite.visible = false     # appears when the game starts
 	add_child(_eraser_sprite)
 
 	if config.instructions:
-		_make_sprite(config.instructions, s, 20)
+		_instr_sprite = _make_sprite(config.instructions, s, 20)
 
 func _make_sprite(tex: Texture2D, s: float, z: int) -> Sprite2D:
 	var sp := Sprite2D.new()
