@@ -11,8 +11,8 @@ var last_walk_log := -999.0
 const IDLE_ALTS := ["look-left-right", "think", "head-tilt"]
 
 @export var world_id := "sandbox"   # set to "library" on the file room's Player
-@export var idle_alt_min := 5.0     # seconds of plain idle before the next alternate
-@export var idle_alt_max := 10.0
+@export var idle_alt_min := 2.0     # seconds of plain idle before the next alternate
+@export var idle_alt_max := 5.0
 @export var nod_depth := 12.0       # how far the character dips when it nods
 
 var _alt_playing := false
