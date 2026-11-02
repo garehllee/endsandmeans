@@ -64,7 +64,7 @@ var _phase := Phase.CHOOSE
 var _btns: Array[Btn] = []
 const REACT_TIME := 0.5        # how long the nod or head shake lasts
 
-var _game: CatchGame
+var _game: Minigame
 var _reacting := false
 var _focus := -1
 var _prev_focus := -1
@@ -242,14 +242,19 @@ func _begin_expand() -> void:
 
 func _start_arena() -> void:
 	_phase = Phase.ARENA
-	_game = CatchGame.new()
+	_game = _create_game()
 	add_child(_game)
-	move_child(_game, 0)          # draw the icons underneath the player
-	_game.round_started.connect(func(): Game.say_random("analysis_start"))
+	move_child(_game, 0)          # draw the game's pictures underneath the player
+	if _game.has_signal("round_started"):
+		_game.connect("round_started", func(): Game.say_random("analysis_start"))
 	_game.finished.connect(_on_game_finished)
 	# Stay where the button was pressed; the game keeps it inside the arena.
 	_game.setup(_arena, player, _start_pos)
 	_game.start(config)
+
+# A room that extends this one overrides this to run a different minigame.
+func _create_game() -> Minigame:
+	return CatchGame.new()
 
 func _stop_game() -> void:
 	if _game:
