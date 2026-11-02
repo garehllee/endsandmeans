@@ -59,7 +59,7 @@ func _ready() -> void:
 	if has_node(\"AnimatedSprite2D\"):
 		$AnimatedSprite2D.play(\"default\")
 	else:
-		print(\"Still missing! Current children: \", get_children())
+		push_warning(\"AnimatedSprite2D child missing\")
 "
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_w4ayr"]

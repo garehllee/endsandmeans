@@ -66,9 +66,8 @@ func pick(key: String) -> String:
 	if options.size() == 1:
 		return options[0]
 	var last: String = _last_pick.get(key, "")
-	var choice: String = options.pick_random()
-	while choice == last:
-		choice = options.pick_random()
+	var fresh: Array[String] = options.filter(func(o: String): return o != last)
+	var choice: String = fresh.pick_random() if not fresh.is_empty() else options[0]
 	_last_pick[key] = choice
 	return choice
 
