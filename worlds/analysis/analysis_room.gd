@@ -24,9 +24,10 @@ enum Phase { CHOOSE, EXPANDING, ARENA, DONE }
 @export var message_size := 60
 @export var button_font_size := 64
 @export var small_size := 36
-@export var ripple_delay := 0.025      # seconds between one letter starting and the next
-@export var ripple_time := 0.6         # how long each letter takes to settle
-@export var ripple_rise := 26.0        # how far below its place a letter starts
+@export var ripple_time := 1.0         # how long the paragraph takes to fade in and settle
+@export var ripple_amp := 8.0          # how far the wave pushes the letters up and down
+@export var ripple_wavelength := 280.0 # distance between wave crests
+@export var ripple_speed := 700.0      # how fast the wave travels across the paragraph
 @export var ripple_start := 0.25       # wait before the first letter (the window is still fading in)
 @export var icon_width := 210.0
 
@@ -332,23 +333,26 @@ func _draw() -> void:
 	for i in _btns.size():
 		_draw_button(i, _btns[i], f, m)
 
-# The paragraph's letters rise into place one after another, left to right,
-# top to bottom. Once they've all landed it's drawn as plain text.
+# The whole paragraph fades in as one picture while a soft wave passes through
+# it and dies away. Once it has settled it's drawn as plain text.
 func _draw_message(f: Font) -> void:
-	var total := ripple_start + _glyphs.size() * ripple_delay + ripple_time
-	if _glyphs.is_empty() or _msg_t >= total:
+	var p := clampf((_msg_t - ripple_start) / ripple_time, 0.0, 1.0)
+	if _glyphs.is_empty() or p >= 1.0 and _msg_t > ripple_start:
 		draw_multiline_string(f, Vector2(60, message_y), message, HORIZONTAL_ALIGNMENT_CENTER,
 				room_size.x - 120.0, message_size, -1, Color.BLACK)
 		return
-	for i in _glyphs.size():
-		var p := clampf((_msg_t - ripple_start - i * ripple_delay) / ripple_time, 0.0, 1.0)
-		if p <= 0.0:
-			continue
-		var e := 1.0 - pow(1.0 - p, 3.0)                  # ease out
-		var wobble := sin(p * PI * 2.0) * (1.0 - p) * 6.0   # a little ripple as it settles
-		var g: Dictionary = _glyphs[i]
-		var pos: Vector2 = g["pos"] + Vector2(0.0, (1.0 - e) * ripple_rise + wobble)
-		draw_string(f, pos, g["ch"], HORIZONTAL_ALIGNMENT_LEFT, -1, message_size, Color(0, 0, 0, e))
+	if p <= 0.0:
+		return
+	var alpha := 1.0 - pow(1.0 - p, 2.0)
+	var calm := (1.0 - p) * (1.0 - p)                   # the wave fades out as the text settles
+	var travel := (_msg_t - ripple_start) * ripple_speed
+	var center := Vector2(room_size.x * 0.5, message_y)
+	for g in _glyphs:
+		var pos: Vector2 = g["pos"]
+		var d := pos.distance_to(center)                # rings spread out from the middle
+		var dy := sin((d - travel) / ripple_wavelength * TAU) * ripple_amp * calm
+		draw_string(f, pos + Vector2(0.0, dy), g["ch"], HORIZONTAL_ALIGNMENT_LEFT, -1,
+				message_size, Color(0, 0, 0, alpha))
 
 func _draw_chip(m: Font) -> void:
 	# If the name is too wide for the window, shrink the type until it fits.
