@@ -1,7 +1,7 @@
 extends Node2D
 class_name AnalysisRoom
 
-enum Phase { CHOOSE, EXPANDING, ARENA, HIT, DONE }
+enum Phase { CHOOSE, EXPANDING, ARENA, DONE }
 
 @export_group("Text")
 @export var intro_title := "The name of this folder is:"
@@ -19,9 +19,6 @@ enum Phase { CHOOSE, EXPANDING, ARENA, HIT, DONE }
 @export var message_size := 60
 @export var button_font_size := 64
 @export var small_size := 36
-@export var folder_icon: Texture2D       # faded icon on the button, and the bouncing folders
-@export var firewall_icon: Texture2D
-@export var arena_image: Texture2D       # the picture the button fills with
 @export var icon_width := 210.0
 
 @export_group("Layout (in room units; the window scales these to fit)")
@@ -46,29 +43,13 @@ enum Phase { CHOOSE, EXPANDING, ARENA, HIT, DONE }
 @export var chip_side_margin := 40.0   # minimum gap between the chip and the window edges
 
 @export_group("Minigame")
-@export var firewall_count := 8
-@export var folder_count := 3
-@export var icon_size := 125.0           # drawn size of bouncing icons
-@export var hit_scale := 0.8             # hitbox as a fraction of the icon (lower = more forgiving)
-@export var player_radius := 35.0
-@export var speed_min := 220.0
-@export var speed_max := 420.0
-@export var safe_radius := 450.0         # icons never spawn this close to the player
+@export var config: MinigameConfig       # tunables, icons and the picture the button fills with
 @export var player_scale := 1.5
-@export var blink_color := Color(1.0, 0.1, 0.1)
-@export var blink_alpha := 0.6
-@export var blink_time := 0.12           # seconds per on or off phase
 
 class Btn:
 	var label := ""
 	var open := 0.0
 	var rect := Rect2()
-
-class Bouncer:
-	var pos := Vector2.ZERO
-	var vel := Vector2.ZERO
-	var radius := 50.0
-	var is_firewall := false
 
 @onready var cam: Camera2D = $Camera2D
 @onready var player: Node2D = $Player
@@ -76,14 +57,13 @@ class Bouncer:
 var active := false
 var _phase := Phase.CHOOSE
 var _btns: Array[Btn] = []
-var _bouncers: Array[Bouncer] = []
+var _game: CatchGame
 var _focus := -1
 var _prev_focus := -1
 var _content_bottom := 1500.0
 var _expand_t := 0.0
 var _a_from := Rect2()
 var _arena := Rect2()
-var _flash := 0.0
 var _grad_tex: GradientTexture2D
 var _chip_style := StyleBoxFlat.new()
 var _start_pos := Vector2.ZERO
@@ -115,10 +95,9 @@ func open() -> void:
 func _reset() -> void:
 	_phase = Phase.CHOOSE
 	_expand_t = 0.0
-	_flash = 0.0
 	_focus = -1
 	_prev_focus = -1
-	_bouncers.clear()
+	_stop_game()
 	for b in _btns:
 		b.open = 0.0
 	player.position = Vector2(room_size.x * 0.5, player_start_y)
@@ -131,9 +110,6 @@ func _view_h() -> float:
 # ---------- per frame ----------
 
 func _process(delta: float) -> void:
-	if Input.is_action_just_pressed("Interact"):
-		print("analysis E | active=", active, " world=", Game.active_world, " locked=", Game.input_locked,
-				" phase=", _phase, " focus=", _focus, " player=", player.position)
 	if not active:
 		return
 	if _phase == Phase.CHOOSE:
@@ -144,8 +120,6 @@ func _process(delta: float) -> void:
 		_clamp_player(Rect2(0.0, 0.0, room_size.x, _content_bottom))
 	else:
 		_layout()
-		if _phase == Phase.ARENA:
-			_update_arena(delta)
 	_follow_camera(delta)
 	queue_redraw()
 
@@ -205,8 +179,8 @@ func _try_interact() -> void:
 
 func _clamp_player(r: Rect2) -> void:
 	player.position = Vector2(
-		clampf(player.position.x, r.position.x + player_radius, r.end.x - player_radius),
-		clampf(player.position.y, r.position.y + player_radius, r.end.y - player_radius))
+		clampf(player.position.x, r.position.x + config.player_radius, r.end.x - config.player_radius),
+		clampf(player.position.y, r.position.y + config.player_radius, r.end.y - config.player_radius))
 
 func _follow_camera(delta: float) -> void:
 	var vs := get_viewport_rect().size
@@ -239,73 +213,26 @@ func _begin_expand() -> void:
 
 func _start_arena() -> void:
 	_phase = Phase.ARENA
-	# Stay where the button was pressed (kept inside the arena, just in case).
-	_start_pos = Vector2(
-		clampf(_start_pos.x, _arena.position.x + player_radius, _arena.end.x - player_radius),
-		clampf(_start_pos.y, _arena.position.y + player_radius, _arena.end.y - player_radius))
-	player.position = _start_pos
-	_spawn_bouncers()
-	Game.input_locked = false
-	Game.say_random("analysis_start")
+	_game = CatchGame.new()
+	add_child(_game)
+	move_child(_game, 0)          # draw the icons underneath the player
+	_game.round_started.connect(func(): Game.say_random("analysis_start"))
+	_game.finished.connect(_on_game_finished)
+	# Stay where the button was pressed; the game keeps it inside the arena.
+	_game.setup(_arena, player, _start_pos)
+	_game.start(config)
 
-func _spawn_bouncers() -> void:
-	_bouncers.clear()
-	for i in firewall_count + folder_count:
-		var bn := Bouncer.new()
-		bn.is_firewall = i < firewall_count
-		bn.radius = icon_size * 0.5 * hit_scale
-		var m := icon_size * 0.5
-		for _try in 30:
-			bn.pos = Vector2(
-				randf_range(_arena.position.x + m, _arena.end.x - m),
-				randf_range(_arena.position.y + m, _arena.end.y - m))
-			if bn.pos.distance_to(_start_pos) > safe_radius:
-				break
-		bn.vel = Vector2.from_angle(randf() * TAU) * randf_range(speed_min, speed_max)
-		_bouncers.append(bn)
+func _stop_game() -> void:
+	if _game:
+		_game.stop()
+		_game.queue_free()
+		_game = null
 
-func _update_arena(delta: float) -> void:
-	var m := icon_size * 0.5
-	for bn in _bouncers:
-		bn.pos += bn.vel * delta
-		if bn.pos.x < _arena.position.x + m:
-			bn.pos.x = _arena.position.x + m
-			bn.vel.x = absf(bn.vel.x)
-		elif bn.pos.x > _arena.end.x - m:
-			bn.pos.x = _arena.end.x - m
-			bn.vel.x = -absf(bn.vel.x)
-		if bn.pos.y < _arena.position.y + m:
-			bn.pos.y = _arena.position.y + m
-			bn.vel.y = absf(bn.vel.y)
-		elif bn.pos.y > _arena.end.y - m:
-			bn.pos.y = _arena.end.y - m
-			bn.vel.y = -absf(bn.vel.y)
-	_clamp_player(_arena)
-	for bn in _bouncers:
-		if player.position.distance_to(bn.pos) < bn.radius + player_radius:
-			if bn.is_firewall:
-				_hit()
-			else:
-				_catch()
-			return
-
-func _hit() -> void:
-	_phase = Phase.HIT
-	Game.input_locked = true
-	Game.say_random("firewall_hit")
-	for i in 2:
-		_flash = blink_alpha
-		await get_tree().create_timer(blink_time).timeout
-		_flash = 0.0
-		await get_tree().create_timer(blink_time).timeout
-		if not active or _phase != Phase.HIT:
-			return
-	_start_arena()
-
-func _catch() -> void:
+func _on_game_finished(success: bool) -> void:
+	if not success:
+		return
 	_phase = Phase.DONE
-	Game.input_locked = true
-	Game.flags["orange_unlocked"] = true
+	Game.set_flag(Flag.ORANGE_UNLOCKED)
 	Game.say_random("folder_caught")
 	await get_tree().create_timer(1.0).timeout
 	_close(true)
@@ -313,7 +240,8 @@ func _catch() -> void:
 func _close(caught: bool) -> void:
 	active = false
 	Game.input_locked = false
-	Game.close_analysis(caught)
+	_stop_game()
+	Game.close_world({"caught": caught})
 
 # ---------- drawing ----------
 
@@ -330,10 +258,7 @@ func _draw() -> void:
 
 	for i in _btns.size():
 		_draw_button(i, _btns[i], f, m)
-	for bn in _bouncers:
-		_draw_bouncer(bn)
-	if _flash > 0.0:
-		draw_rect(_arena, Color(blink_color, _flash))
+
 func _draw_chip(m: Font) -> void:
 	# If the name is too wide for the window, shrink the type until it fits.
 	var fs := mono_size
@@ -362,8 +287,8 @@ func _draw_button(i: int, b: Btn, f: Font, m: Font) -> void:
 	draw_rect(r, Color.WHITE)
 	if i == 0:
 		draw_texture_rect(_grad_tex, r, false, Color(1, 1, 1, o))
-		if arena_image and _expand_t > 0.0:
-			draw_texture_rect_region(arena_image, r, _cover_region(arena_image, r),
+		if config.arena_image and _expand_t > 0.0:
+			draw_texture_rect_region(config.arena_image, r, _cover_region(config.arena_image, r),
 					Color(1, 1, 1, _expand_t))
 	else:
 		draw_rect(r, Color(0.851, 0.851, 0.851, o))
@@ -381,6 +306,7 @@ func _draw_button(i: int, b: Btn, f: Font, m: Font) -> void:
 			var cx := r.get_center().x
 			var ih := icon_width * 0.78
 			var top := r.position.y + r.size.y * 0.12
+			var folder_icon := config.folder_icon
 			if folder_icon:
 				ih = icon_width * folder_icon.get_height() / float(folder_icon.get_width())
 				draw_texture_rect(folder_icon, Rect2(cx - icon_width * 0.5, top, icon_width, ih),
@@ -393,15 +319,6 @@ func _draw_button(i: int, b: Btn, f: Font, m: Font) -> void:
 			draw_string(m, Vector2(cx - lw * 0.5, ly), new_folder_name,
 					HORIZONTAL_ALIGNMENT_LEFT, -1, small_size, col)
 			draw_line(Vector2(cx - lw * 0.5, ly + 5), Vector2(cx + lw * 0.5, ly + 5), col, 2.0)
-
-func _draw_bouncer(bn: Bouncer) -> void:
-	var tex: Texture2D = firewall_icon if bn.is_firewall else folder_icon
-	var sz := Vector2(icon_size, icon_size)
-	if tex:
-		sz.y = icon_size * tex.get_height() / float(tex.get_width())
-		draw_texture_rect(tex, Rect2(bn.pos - sz * 0.5, sz), false)
-	else:
-		draw_rect(Rect2(bn.pos - sz * 0.5, sz), Color("#b5523b") if bn.is_firewall else Color("#c9c9c9"))
 
 func _cover_region(tex: Texture2D, r: Rect2) -> Rect2:
 	var ts := tex.get_size()

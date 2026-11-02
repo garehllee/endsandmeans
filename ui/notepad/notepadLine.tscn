@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://bfs5tv8dba2kb"]
 
-[ext_resource type="FontFile" uid="uid://4ga687weivse" path="res://art/fonts/ManifontGroteskBook.otf" id="1_pk5u0"]
+[ext_resource type="FontFile" uid="uid://4ga687weivse" path="res://fonts/ManifontGroteskBook.otf" id="1_pk5u0"]
 
 [node name="NotepadLine" type="HBoxContainer" unique_id=1717347846]
 offset_right = 560.0

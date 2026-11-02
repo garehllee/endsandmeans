@@ -13,7 +13,7 @@ func _ready() -> void:
 	if has_node("AnimatedSprite2D"):
 		$AnimatedSprite2D.play("default")
 	else:
-		print("Still missing! Current children: ", get_children())
+		push_warning("World: AnimatedSprite2D missing")
 	
 	for beat in INTRO:
 		await get_tree().create_timer(beat[0]).timeout

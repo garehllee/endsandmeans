@@ -91,7 +91,6 @@ func open_world(id: String, params := {}) -> void:
 	_world_stack.append(active_world)
 	active_world = id
 	world_opened.emit(id, params)
-	_legacy_opened(id)
 
 func close_world(result := {}) -> void:
 	if _world_stack.is_empty():
@@ -100,7 +99,6 @@ func close_world(result := {}) -> void:
 	var closed := active_world
 	active_world = _world_stack.pop_back()
 	world_closed.emit(closed, result)
-	_legacy_closed(closed, result)
 
 # ---------------------------------------------------------------- interactables
 func register_candidate(i: Node) -> void:
@@ -131,36 +129,3 @@ func _update_active_interactable() -> void:
 	active_interactable = best
 	if best:
 		best.set_active(true)
-
-# ================================================================
-# TEMPORARY LEGACY BRIDGE
-# Keeps the old scripts working until you migrate them. Delete this whole
-# section once nothing calls enter_library / exit_library / open_analysis /
-# close_analysis or connects to the four old signals below.
-# ================================================================
-signal library_entered
-signal library_exited
-signal analysis_requested
-signal analysis_closed(caught: bool)
-
-func enter_library() -> void:
-	open_world("library")
-
-func exit_library() -> void:
-	close_world()
-
-func open_analysis() -> void:
-	open_world("analysis")
-
-func close_analysis(caught: bool) -> void:
-	close_world({"caught": caught})
-
-func _legacy_opened(id: String) -> void:
-	match id:
-		"library": library_entered.emit()
-		"analysis": analysis_requested.emit()
-
-func _legacy_closed(id: String, result: Dictionary) -> void:
-	match id:
-		"library": library_exited.emit()
-		"analysis": analysis_closed.emit(result.get("caught", false))

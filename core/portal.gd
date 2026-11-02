@@ -1,5 +1,10 @@
 extends Interactable
+class_name Portal
+# A door the player walks into. With a target_world it opens that world and
+# brings the player back out when it closes. With a blank target_world it
+# closes the current world instead (an exit door).
 
+@export var target_world := ""               # blank = leave the current world
 @export var open_texture: Texture2D          # optional "door open" art
 @export var enter_offset := Vector2(0, -20)  # where the character walks to, relative to the door
 @export var exit_offset := Vector2(0, 90)    # where they reappear when they return
@@ -14,7 +19,7 @@ func _ready() -> void:
 	super()
 	_closed_texture = visual.texture
 	_closed_scale = visual.scale
-	Game.library_exited.connect(_on_library_exited)
+	Game.world_closed.connect(_on_world_closed)
 
 func _on_interact() -> void:
 	_player = Game.active_player
@@ -37,13 +42,20 @@ func _on_interact() -> void:
 	await t.finished
 
 	_player.play_anim(0)
-	Game.enter_library()
-	await get_tree().create_timer(0.4).timeout
-	_set_door_open(false)
+	if target_world == "":
+		# Reset the character so it's ready for the next visit.
+		_player.scale = _start_scale
+		_player = null
+		Game.close_world()
+		_set_door_open(false)
+	else:
+		Game.open_world(target_world)
+		await get_tree().create_timer(0.4).timeout
+		_set_door_open(false)
 
-# The sandbox character steps back out when you leave the library.
-func _on_library_exited() -> void:
-	if _player == null:
+# The character steps back out of the door when the world it entered closes.
+func _on_world_closed(id: String, _result: Dictionary) -> void:
+	if target_world == "" or id != target_world or _player == null:
 		return
 	_player.global_position = global_position + exit_offset
 	_player.scale = _start_scale

@@ -1,9 +1,9 @@
 [gd_scene format=3 uid="uid://c2igqsuhbin41"]
 
-[ext_resource type="PackedScene" uid="uid://cchdt4mu2es45" path="res://worlds/desktop-window.tscn" id="1_t67fr"]
-[ext_resource type="Script" uid="uid://bxmstf028hkya" path="res://scripts/notepad.gd" id="2_8u1st"]
+[ext_resource type="PackedScene" uid="uid://cchdt4mu2es45" path="res://core/desktop-window.tscn" id="1_t67fr"]
+[ext_resource type="Script" uid="uid://bxmstf028hkya" path="res://ui/notepad/notepad.gd" id="2_8u1st"]
 [ext_resource type="Texture2D" uid="uid://q8ywa7aj36iw" path="res://art/notepad-background.png" id="2_r2q06"]
-[ext_resource type="PackedScene" uid="uid://bfs5tv8dba2kb" path="res://worlds/notepad/notepadLine.tscn" id="3_tdtde"]
+[ext_resource type="PackedScene" uid="uid://bfs5tv8dba2kb" path="res://ui/notepad/notepadLine.tscn" id="3_tdtde"]
 
 [node name="DesktopWindow" unique_id=1510619503 instance=ExtResource("1_t67fr")]
 custom_minimum_size = Vector2(600, 2080)

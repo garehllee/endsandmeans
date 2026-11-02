@@ -7,7 +7,7 @@ path="res://.godot/imported/Director-Regular.otf-1726c5fe45010cfb81ab28dda83fc5f
 
 [deps]
 
-source_file="res://art/fonts/Director-Regular.otf"
+source_file="res://fonts/Director-Regular.otf"
 dest_files=["res://.godot/imported/Director-Regular.otf-1726c5fe45010cfb81ab28dda83fc5f4.fontdata"]
 
 [params]

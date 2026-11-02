@@ -3806,7 +3806,7 @@
 			"children": [],
 			"name": "ZZ_Artifactory_Confirm_Deny_Others_Exist",
 			"type": "folder"
-		},
+		}
 	],
 	"name": "Desktop",
 	"type": "folder"

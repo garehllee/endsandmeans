@@ -19,7 +19,6 @@ var _last_near := -999.0
 var _tween: Tween
 
 func _ready() -> void:
-	print("Interactable ready: ", name, "  script: ", get_script().resource_path)
 	body_entered.connect(_on_body_entered)
 	body_exited.connect(_on_body_exited)
 	# Give each instance its own material, or they'd all glow together.
@@ -51,11 +50,6 @@ func set_active(value: bool) -> void:
 		_fade_glow(0.0)
 
 func _process(_delta: float) -> void:
-	if Input.is_action_just_pressed("Interact"):
-		print("E pressed. active = ", Game.active_interactable, "  me = ", self, "  used = ", used)
-	if Game.active_interactable != self or used:
-		return
-	# ...rest unchanged...
 	if Game.active_interactable != self or used:
 		return
 	if Input.is_action_just_pressed("Interact"):
@@ -69,6 +63,7 @@ func _process(_delta: float) -> void:
 
 func _exit_tree() -> void:
 	Game.unregister_candidate(self)
+
 # Override this in a child script to make each object do something unique.
 func _on_interact() -> void:
 	pass
@@ -82,7 +77,3 @@ func _fade_glow(target: float) -> void:
 	var current: float = visual.material.get_shader_parameter("glow_size")
 	_tween = create_tween()
 	_tween.tween_method(_set_glow, current, target, 0.1)
-
-
-func _on_interacted() -> void:
-	pass # Replace with function body.

@@ -1,13 +1,13 @@
 extends Node2D
 
 @export var tree_path := "res://data/tree_thumbs.json"
+@export var story_path := "res://data/story.json"
 @export var camera_follow := 8.0
 
 @onready var wall: FileWall = $Wall
 @onready var player: Node2D = $Player
 @onready var cam: Camera2D = $Camera2D
 
-const ANALYSIS_FOLDER := "ZZ_Artifactory_Confirm_Deny_Others_Exist"
 const ORANGE_FOLDER := {"name": "ZZ_Confirm_Anyone_See_Orange_Folder", "type": "folder", "children": []}
 
 # walls[0] is the root room; each folder you enter adds a room above it.
@@ -16,14 +16,24 @@ var walls: Array[FileWall] = []
 func _ready() -> void:
 	player.z_index = 10
 	var tree = JSON.parse_string(FileAccess.get_file_as_string(tree_path))
+	var story = JSON.parse_string(FileAccess.get_file_as_string(story_path))
+	var events: Dictionary = story.get("events", {}) if story is Dictionary else {}
+	_tag_events(tree, events)
 	wall.entry_entered.connect(_on_entry_entered.bind(wall))
 	wall.build(tree.get("children", []))
 	walls.append(wall)
 	player.global_position = $Spawn.global_position
 	_follow_camera(999.0)   # snap on the first frame
-	Game.library_entered.connect(_on_arrive)
-	Game.analysis_closed.connect(_on_analysis_closed)
-	Game.analysis_requested.connect(_on_analysis_requested)
+	Game.world_opened.connect(_on_world_opened)
+	Game.world_closed.connect(_on_world_closed)
+
+# Tags every entry whose name appears in story.json's "events" with its event id.
+func _tag_events(folder: Dictionary, events: Dictionary) -> void:
+	for c in folder.get("children", []):
+		if events.has(c.name):
+			c["event"] = events[c.name]
+		if c.get("type", "") == "folder":
+			_tag_events(c, events)
 
 func _process(delta: float) -> void:
 	var py := player.global_position.y
@@ -47,15 +57,20 @@ func _check_events() -> void:
 	# Fires once the player has walked up out of the hallway and into the folder's own room.
 	if player.global_position.y < top.global_position.y + top.level_height() - top.hallway_depth * 2.0:
 		top.set_meta("fired", true)
-		if top.get_meta("event") == "analysis" and not Game.flags.get("orange_unlocked", false):
-			Game.open_analysis()
+		Story.trigger(top.get_meta("event"))
 
-func _on_analysis_requested() -> void:
-	create_tween().tween_property(player, "modulate:a", 0.0, 0.3)
+func _on_world_opened(id: String, _params: Dictionary) -> void:
+	match id:
+		"library":
+			_on_arrive()
+		"analysis":
+			create_tween().tween_property(player, "modulate:a", 0.0, 0.3)
 
-func _on_analysis_closed(caught: bool) -> void:
+func _on_world_closed(id: String, result: Dictionary) -> void:
+	if id != "analysis":
+		return
 	create_tween().tween_property(player, "modulate:a", 1.0, 0.3)
-	if caught:
+	if result.get("caught", false):
 		var idx: int = walls[0].add_entry(ORANGE_FOLDER.duplicate(true))
 		walls[0].blink_entry(idx, 3)
 		Game.say_random("orange_added")
@@ -80,8 +95,8 @@ func _open_child(parent_wall: FileWall, entry: Dictionary, index: int) -> void:
 	add_child(child)
 	child.entry_entered.connect(_on_entry_entered.bind(child))
 	child.build(entry.get("children", []))
-	if entry.name == ANALYSIS_FOLDER or entry.get("event", "") == "analysis":
-		child.set_meta("event", "analysis")
+	if entry.get("event", "") != "":
+		child.set_meta("event", entry["event"])
 	child.active = false
 	parent_wall.lock_hallway(index)
 	walls.append(child)
@@ -104,13 +119,11 @@ func _follow_camera(delta: float) -> void:
 
 func _on_arrive() -> void:
 	Game.input_locked = true
-	player.global_position = $Spawn.global_position   # add this line
+	player.global_position = $Spawn.global_position
 	player.modulate.a = 0.0
 	_follow_camera(999.0)
-	# ...rest unchanged...
 	var t := create_tween()
 	t.tween_property(player, "modulate:a", 1.0, 0.5)
 	await t.finished
 	Game.input_locked = false
 	Game.say_random("library_arrive")
-	

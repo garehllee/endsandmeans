@@ -18,6 +18,9 @@ config/icon="res://icon.svg"
 [autoload]
 
 Game="*uid://c7rktf11pcmth"
+Ethics="*res://autoload/ethics.gd"
+Story="*res://autoload/story.gd"
+Debug="*res://autoload/debug.gd"
 
 [display]
 

@@ -7,7 +7,7 @@ path="res://.godot/imported/ManifontGroteskBook.otf-6e9353b563c49501d3de33c98ae4
 
 [deps]
 
-source_file="res://art/fonts/ManifontGroteskBook.otf"
+source_file="res://fonts/ManifontGroteskBook.otf"
 dest_files=["res://.godot/imported/ManifontGroteskBook.otf-6e9353b563c49501d3de33c98ae42068.fontdata"]
 
 [params]

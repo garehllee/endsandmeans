@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="MinigameConfig" format=3]
+
+[ext_resource type="Script" uid="uid://bh1uqsy10jkfm" path="res://minigames/minigame_config.gd" id="1_cfg"]
+[ext_resource type="Texture2D" uid="uid://bdrimshpcjtln" path="res://art/catch-the-file-back.png" id="2_arena"]
+[ext_resource type="Texture2D" uid="uid://fot8f1etqd8l" path="res://art/vista_firewall_2-1.png" id="3_firewall"]
+[ext_resource type="Texture2D" uid="uid://bpup1iovabkew" path="res://art/Artifactory/fileicon.png" id="4_folder"]
+
+[resource]
+script = ExtResource("1_cfg")
+firewall_count = 8
+folder_count = 3
+speed_min = 400.0
+speed_max = 800.0
+hit_scale = 0.8
+icon_size = 125.0
+safe_radius = 450.0
+player_radius = 35.0
+arena_image = ExtResource("2_arena")
+firewall_icon = ExtResource("3_firewall")
+folder_icon = ExtResource("4_folder")
