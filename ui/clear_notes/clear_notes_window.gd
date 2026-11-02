@@ -9,12 +9,12 @@ const CheckPop := preload("res://ui/clear_notes/check_pop.gd")
 
 @export var normal_texture: Texture2D
 @export var hover_texture: Texture2D
-@export var tally_margin := 16.0         # gap between the check marks and the picture's edge
 @export var drag_tolerance := 4.0        # pixels the window may move during a click
 
 var _button: TextureButton
 var _press_origin := Vector2.ZERO
-var _redactions := 0
+var _press_local := Vector2.ZERO        # where the pointer pressed, in this window
+var _redactions := 0                     # how many times it has been clicked (one check each)
 
 func _ready() -> void:
 	super()
@@ -49,6 +49,7 @@ func _on_flag_changed(flag: StringName, value: bool) -> void:
 
 func _on_button_down() -> void:
 	_press_origin = global_position
+	_press_local = get_local_mouse_position()
 
 func _on_pressed() -> void:
 	if global_position.distance_to(_press_origin) > drag_tolerance:
@@ -57,20 +58,12 @@ func _on_pressed() -> void:
 	_set_has_notes(false)
 	_add_tally_mark()
 
-# The check flies from the pointer to the next free spot along the bottom of
-# the picture (filling a row left to right, then the next row up).
+# The check sticks exactly where the pointer pressed.
 func _add_tally_mark() -> void:
 	var check := CheckPop.new()
 	add_child(check)
-	var spacing: float = check.size_px + 4.0
-	var area: Vector2 = $Frame.size
-	var per_row := maxi(1, int((area.x - tally_margin * 2.0) / spacing))
-	var col := _redactions % per_row
-	var row := floori(_redactions / float(per_row))
-	check.position = get_local_mouse_position()
-	check.land(Vector2(
-		tally_margin + check.size_px * 0.5 + col * spacing,
-		area.y - tally_margin - check.size_px * 0.5 - row * spacing))
+	check.position = _press_local
+	check.stick()
 	_redactions += 1
 
 # With nothing left to redact the picture is dimmed and can't be clicked.
