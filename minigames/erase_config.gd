@@ -8,7 +8,7 @@ class_name EraseConfig
 @export var instructions: Texture2D        # drawn on top of everything
 
 @export_group("Feel")
-@export_range(0.05, 1.0) var target_fraction := 0.5   # how much of the text must go
+@export_range(0.05, 1.0) var target_fraction := 0.6   # how much of the text must go
 @export var erase_radius := 60.0           # room units: how wide a swipe is
 @export var eraser_scale := 0.8
 @export var eraser_offset := Vector2(95, 30)   # eraser position relative to the character (right side)
