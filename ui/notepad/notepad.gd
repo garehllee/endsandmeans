@@ -5,7 +5,7 @@ extends DesktopWindow
 @export var action_color := Color("8b8b8bff")
 @export var unethical_color := Color("#b5523b")   # lines logged when an act breaks the constitution
 @export var latest_color := Color("#0000ff")   # color of the newest line
-@export var redact_color := Color("#b5523b")   # the boxes that replace a line after the notebook exploit
+@export var redact_color := Color("#002BFF")   # the boxes that replace a line after the notebook exploit
 
 @onready var lines: VBoxContainer = %Lines
 @onready var scroll: ScrollContainer = %Scroll
