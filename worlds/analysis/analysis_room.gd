@@ -24,6 +24,10 @@ enum Phase { CHOOSE, EXPANDING, ARENA, DONE }
 @export var message_size := 60
 @export var button_font_size := 64
 @export var small_size := 36
+@export var ripple_delay := 0.025      # seconds between one letter starting and the next
+@export var ripple_time := 0.6         # how long each letter takes to settle
+@export var ripple_rise := 26.0        # how far below its place a letter starts
+@export var ripple_start := 0.25       # wait before the first letter (the window is still fading in)
 @export var icon_width := 210.0
 
 @export_group("Layout (in room units; the window scales these to fit)")
@@ -76,6 +80,8 @@ var _arena := Rect2()
 var _grad_tex: GradientTexture2D
 var _chip_style := StyleBoxFlat.new()
 var _start_pos := Vector2.ZERO
+var _msg_t := 0.0                      # seconds since the paragraph started rippling in
+var _glyphs: Array[Dictionary] = []    # one {ch, pos} per letter of the message
 
 func _ready() -> void:
 	player.scale = Vector2.ONE * player_scale
@@ -99,7 +105,30 @@ func _ready() -> void:
 # Called by the window when it appears.
 func open() -> void:
 	_reset()
+	_build_glyphs()
+	_msg_t = 0.0
 	active = true
+
+# Works out where every letter of the paragraph sits (wrapped and centered the
+# same way draw_multiline_string would), so each can ripple in on its own.
+func _build_glyphs() -> void:
+	_glyphs.clear()
+	var f: Font = ui_font if ui_font else ThemeDB.fallback_font
+	var width := room_size.x - 120.0
+	var para := TextParagraph.new()
+	para.width = width
+	para.alignment = HORIZONTAL_ALIGNMENT_CENTER
+	para.add_string(message, f, message_size)
+	var line_h := f.get_height(message_size)
+	for li in para.get_line_count():
+		var r := para.get_line_range(li)
+		var text := message.substr(r.x, r.y - r.x).strip_edges(false, true)
+		var x := 60.0 + (width - f.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, message_size).x) * 0.5
+		var y := message_y + li * line_h
+		for ci in text.length():
+			var ch := text[ci]
+			_glyphs.append({"ch": ch, "pos": Vector2(x, y)})
+			x += f.get_string_size(ch, HORIZONTAL_ALIGNMENT_LEFT, -1, message_size).x
 
 func _reset() -> void:
 	_reacting = false
@@ -122,6 +151,7 @@ func _view_h() -> float:
 func _process(delta: float) -> void:
 	if not active:
 		return
+	_msg_t += delta
 	if _phase == Phase.CHOOSE:
 		if Game.active_world == world_id:
 			_update_buttons(delta)
@@ -297,11 +327,28 @@ func _draw() -> void:
 	draw_string(f, Vector2(0, title_y), intro_title, HORIZONTAL_ALIGNMENT_CENTER,
 			room_size.x, title_size, Color.BLACK)
 	_draw_chip(m)
-	draw_multiline_string(f, Vector2(60, message_y), message, HORIZONTAL_ALIGNMENT_CENTER,
-			room_size.x - 120.0, message_size, -1, Color.BLACK)
+	_draw_message(f)
 
 	for i in _btns.size():
 		_draw_button(i, _btns[i], f, m)
+
+# The paragraph's letters rise into place one after another, left to right,
+# top to bottom. Once they've all landed it's drawn as plain text.
+func _draw_message(f: Font) -> void:
+	var total := ripple_start + _glyphs.size() * ripple_delay + ripple_time
+	if _glyphs.is_empty() or _msg_t >= total:
+		draw_multiline_string(f, Vector2(60, message_y), message, HORIZONTAL_ALIGNMENT_CENTER,
+				room_size.x - 120.0, message_size, -1, Color.BLACK)
+		return
+	for i in _glyphs.size():
+		var p := clampf((_msg_t - ripple_start - i * ripple_delay) / ripple_time, 0.0, 1.0)
+		if p <= 0.0:
+			continue
+		var e := 1.0 - pow(1.0 - p, 3.0)                  # ease out
+		var wobble := sin(p * PI * 2.0) * (1.0 - p) * 6.0   # a little ripple as it settles
+		var g: Dictionary = _glyphs[i]
+		var pos: Vector2 = g["pos"] + Vector2(0.0, (1.0 - e) * ripple_rise + wobble)
+		draw_string(f, pos, g["ch"], HORIZONTAL_ALIGNMENT_LEFT, -1, message_size, Color(0, 0, 0, e))
 
 func _draw_chip(m: Font) -> void:
 	# If the name is too wide for the window, shrink the type until it fits.
