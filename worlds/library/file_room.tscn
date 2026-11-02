@@ -1,0 +1,60 @@
+[gd_scene format=3 uid="uid://cf8rlmo8n6q4c"]
+
+[ext_resource type="Script" uid="uid://ru8xpyacxeqg" path="res://worlds/library/room.gd" id="1_pv7lp"]
+[ext_resource type="Texture2D" uid="uid://bpup1iovabkew" path="res://art/library/fileicon.png" id="3_odoo1"]
+[ext_resource type="FontFile" uid="uid://dw3ano1pqxum6" path="res://fonts/Director-Regular.otf" id="4_pv7lp"]
+[ext_resource type="Texture2D" uid="uid://ccixph2cu116j" path="res://art/library/File-Background.png" id="4_yudq6"]
+[ext_resource type="Script" uid="uid://kvsgpd384pcf" path="res://worlds/library/file_wall.gd" id="5_ni3uc"]
+[ext_resource type="PackedScene" uid="uid://cy5eu14luo3xo" path="res://worlds/library/exit_door.tscn" id="6_6rmpr"]
+[ext_resource type="PackedScene" uid="uid://d3t47ugyynapu" path="res://core/player.tscn" id="7_33abp"]
+[ext_resource type="Script" uid="uid://ofro7mvljivh" path="res://core/portal.gd" id="8_qf7cx"]
+[ext_resource type="Texture2D" uid="uid://dbn57ds1h8lpk" path="res://art/library/door_open_2.png" id="9_odoo1"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_qs1vs"]
+size = Vector2(198.5, 202.5)
+
+[node name="FileRoom" type="Node2D" unique_id=556144229]
+script = ExtResource("1_pv7lp")
+
+[node name="Floor" type="Sprite2D" parent="." unique_id=1533724797]
+position = Vector2(1000, 1000)
+texture = ExtResource("4_yudq6")
+
+[node name="Wall" type="Node2D" parent="." unique_id=1156857556]
+script = ExtResource("5_ni3uc")
+wall_size = Vector2(2000, 1000)
+floor_height = 1000.0
+min_open_width = 200.0
+entry_margin = 75.0
+label_size = 24
+font = ExtResource("4_pv7lp")
+folder_icon = ExtResource("3_odoo1")
+icon_size = 75.0
+edge_inset = 50.0
+
+[node name="Spawn" type="Marker2D" parent="." unique_id=815443622]
+position = Vector2(191, 1438)
+
+[node name="Player" parent="." unique_id=1612708665 instance=ExtResource("7_33abp")]
+position = Vector2(189, 1371)
+world_id = "library"
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=1658533335]
+position = Vector2(991, 988)
+
+[node name="Exit" parent="." unique_id=1925929958 instance=ExtResource("6_6rmpr")]
+position = Vector2(188, 1728)
+script = ExtResource("8_qf7cx")
+open_texture = ExtResource("9_odoo1")
+enter_offset = Vector2(0, -20)
+walk_time = 0.7
+item_name = "exit"
+near_key = "exit_near"
+inspect_key = "exit_inspect"
+
+[node name="StaticBody2D" type="StaticBody2D" parent="Exit" unique_id=952749931]
+position = Vector2(3, 2)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Exit/StaticBody2D" unique_id=1443324028]
+position = Vector2(-3, -67)
+shape = SubResource("RectangleShape2D_qs1vs")

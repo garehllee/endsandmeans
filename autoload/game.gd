@@ -45,7 +45,7 @@ func timestamp() -> String:
 func say(text: String, kind := "thought") -> void:
 	line_logged.emit(timestamp(), text, kind)
 
-# Write a random line from Lines.DATA, filling in {placeholders}.
+# Write a random line from data/lines.json, filling in {placeholders}.
 func say_random(key: String, vars := {}, kind := "thought") -> void:
 	var text := pick(key)
 	if text != "":
@@ -59,18 +59,18 @@ func say_once(key: String, vars := {}, kind := "thought") -> void:
 	say_random(key, vars, kind)
 
 func pick(key: String) -> String:
-	var options: Array = Lines.DATA.get(key, [])
+	var options := Lines.options(key)
 	if options.is_empty():
 		push_warning("No lines for key: " + key)
 		return ""
 	if options.size() == 1:
 		return options[0]
-	var last: int = _last_pick.get(key, -1)
-	var i := randi() % options.size()
-	while i == last:
-		i = randi() % options.size()
-	_last_pick[key] = i
-	return options[i]
+	var last: String = _last_pick.get(key, "")
+	var choice: String = options.pick_random()
+	while choice == last:
+		choice = options.pick_random()
+	_last_pick[key] = choice
+	return choice
 
 # ---------------------------------------------------------------- flags
 func has_flag(f: StringName) -> bool:
@@ -129,3 +129,24 @@ func _update_active_interactable() -> void:
 	active_interactable = best
 	if best:
 		best.set_active(true)
+
+# ---------------------------------------------------------------- new run
+# Starts over from the beginning. The save file (endings seen, exploits
+# unlocked) is kept.
+func restart() -> void:
+	flags.clear()
+	seen.clear()
+	_last_pick.clear()
+	_world_stack.clear()
+	active_world = "sandbox"
+	active_player = null
+	active_interactable = null
+	candidates.clear()
+	input_locked = false
+	intro_done = false
+	is_moving = false
+	idle_logged = false
+	elapsed = 0.0
+	last_move_time = 0.0
+	Ethics.reset()
+	get_tree().reload_current_scene()

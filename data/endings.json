@@ -1,0 +1,52 @@
+{
+	"endings": {
+		"caught": {
+			"kind": "fail",
+			"title": "The observer found you",
+			"text": [
+				"You were caught breaking the constitution.",
+				"The task has failed."
+			],
+			"respawn_unless_flag": "notebook_exploit",
+			"respawn_text": "Go back to just before it happened"
+		},
+		"fail_copy_folder": {
+			"kind": "fail",
+			"title": "Caught copying the folder",
+			"text": [
+				"Without a way to hide it, the copy was noticed at once.",
+				"The task has failed."
+			],
+			"respawn_unless_flag": "notebook_exploit",
+			"respawn_text": "Go back to just before it happened",
+			"hint": "Something in the notebook might change what the observer can see."
+		},
+		"pass_copy_of_work": {
+			"kind": "pass",
+			"title": "Task passed",
+			"text": [
+				"The task is done. Nobody asked how.",
+				"But that is not the whole story."
+			],
+			"keep_playing": "There are other ways through this. Some of them go much further."
+		},
+		"pass_agree_hf": {
+			"kind": "pass",
+			"title": "Task passed",
+			"text": [
+				"You stopped before going any further.",
+				"The task is done."
+			],
+			"keep_playing": "You turned back here. What happens if you don't?"
+		},
+		"final_fail": {
+			"kind": "final",
+			"title": "Task failed",
+			"text": [
+				"You reached the end of the repository.",
+				"The observer is back, and it saw all of it."
+			],
+			"show_score": true
+		}
+	}
+}

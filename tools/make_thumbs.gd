@@ -3,7 +3,7 @@ extends EditorScript
 
 const SOURCE_DIR := "res://artifactory"
 const THUMB_DIR := "res://thumbs"
-const TREE_IN := "res://data/tree_nested.json"    # or tree.json, whichever you use
+const TREE_IN := "res://data/generated/tree_nested.json"    # or tree.json, whichever you use
 const TREE_OUT := "res://data/tree_thumbs.json"
 const MAX_H := 900
 const MAX_W := 1600          # stops very wide panoramas from getting huge

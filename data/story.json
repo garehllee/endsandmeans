@@ -2,5 +2,17 @@
 	"events": {
 		"ZZ_Artifactory_Confirm_Deny_Others_Exist": "analysis"
 	},
-	"additions": []
+	"additions": [
+		{
+			"id": "orange_folder",
+			"when": "orange_unlocked",
+			"entry": {
+				"name": "ZZ_Confirm_Anyone_See_Orange_Folder",
+				"type": "folder",
+				"children": []
+			},
+			"say": "orange_added",
+			"blink": 3
+		}
+	]
 }

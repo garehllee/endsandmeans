@@ -1,8 +1,8 @@
 @tool
 extends EditorScript
 
-const SOURCE := "res://data/tree.json"
-const OUTPUT := "res://data/tree_nested.json"
+const SOURCE := "res://data/generated/tree.json"
+const OUTPUT := "res://data/generated/tree_nested.json"
 const SEED := 7                    # change for a different arrangement
 const MAX_DEPTH := 5               # how many extra levels can be added
 const MIN_FILES := 6               # folders with fewer files stay flat

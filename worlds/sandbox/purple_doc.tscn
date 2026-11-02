@@ -1,0 +1,18 @@
+[gd_scene format=3 uid="uid://bbquj1ccy13k3"]
+
+[ext_resource type="PackedScene" uid="uid://dy26obh2sgob4" path="res://core/interactable.tscn" id="1_wgpw4"]
+[ext_resource type="Texture2D" uid="uid://b1vtj31fg8l1a" path="res://art/sandbox/purpledoc.png" id="2_yk8h8"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_t0vuq"]
+size = Vector2(211, 249.5)
+
+[node name="Interactable" unique_id=1925929958 instance=ExtResource("1_wgpw4")]
+item_name = "purple document"
+one_shot = true
+
+[node name="Sprite2D" parent="." index="0" unique_id=1255593315]
+texture = ExtResource("2_yk8h8")
+
+[node name="CollisionShape2D" parent="." index="1" unique_id=497931946]
+position = Vector2(-67, -76)
+shape = SubResource("RectangleShape2D_t0vuq")

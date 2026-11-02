@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://ckb0euitjl4lq"]
 
-[ext_resource type="PackedScene" uid="uid://cchdt4mu2es45" path="res://core/desktop-window.tscn" id="1_l3owv"]
-[ext_resource type="Texture2D" uid="uid://bl53weshu4rx6" path="res://art/Document/objective-spritesheet.png" id="2_l3owv"]
+[ext_resource type="PackedScene" uid="uid://cchdt4mu2es45" path="res://core/desktop_window.tscn" id="1_l3owv"]
+[ext_resource type="Texture2D" uid="uid://bl53weshu4rx6" path="res://art/ui/objective-spritesheet.png" id="2_l3owv"]
 [ext_resource type="Script" uid="uid://smirs4ml50qa" path="res://ui/objective/objectives.gd" id="2_qhv5o"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_qhv5o"]

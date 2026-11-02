@@ -10,3 +10,15 @@ func trigger(event_id: String) -> void:
 				Game.open_world("analysis")
 		_:
 			push_warning("Story: no handler for event '%s'" % event_id)
+
+# Shows an ending from data/endings.json (fail, pass or final).
+func end_with(ending_id: String) -> void:
+	Game.open_world("ending", {"id": ending_id})
+
+# Commits an act and, if the observer catches the player, starts the fail
+# ending. Returns true if the player got away with it.
+func resolve_act(act_id: String) -> bool:
+	if Ethics.commit(act_id):
+		end_with(Ethics.catch_ending(act_id))
+		return false
+	return true

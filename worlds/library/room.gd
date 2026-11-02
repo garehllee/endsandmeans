@@ -8,17 +8,21 @@ extends Node2D
 @onready var player: Node2D = $Player
 @onready var cam: Camera2D = $Camera2D
 
-const ORANGE_FOLDER := {"name": "ZZ_Confirm_Anyone_See_Orange_Folder", "type": "folder", "children": []}
-
 # walls[0] is the root room; each folder you enter adds a room above it.
 var walls: Array[FileWall] = []
+
+var _events := {}
+var _additions: Array = []   # files that appear later, from story.json "additions"
+var _added := {}
 
 func _ready() -> void:
 	player.z_index = 10
 	var tree = JSON.parse_string(FileAccess.get_file_as_string(tree_path))
 	var story = JSON.parse_string(FileAccess.get_file_as_string(story_path))
-	var events: Dictionary = story.get("events", {}) if story is Dictionary else {}
-	_tag_events(tree, events)
+	if story is Dictionary:
+		_events = story.get("events", {})
+		_additions = story.get("additions", [])
+	_tag_events(tree, _events)
 	wall.entry_entered.connect(_on_entry_entered.bind(wall))
 	wall.build(tree.get("children", []))
 	walls.append(wall)
@@ -26,6 +30,7 @@ func _ready() -> void:
 	_follow_camera(999.0)   # snap on the first frame
 	Game.world_opened.connect(_on_world_opened)
 	Game.world_closed.connect(_on_world_closed)
+	Game.flag_changed.connect(func(_f: StringName, _v: bool): _apply_additions())
 
 # Tags every entry whose name appears in story.json's "events" with its event id.
 func _tag_events(folder: Dictionary, events: Dictionary) -> void:
@@ -66,14 +71,30 @@ func _on_world_opened(id: String, _params: Dictionary) -> void:
 		"analysis":
 			create_tween().tween_property(player, "modulate:a", 0.0, 0.3)
 
-func _on_world_closed(id: String, result: Dictionary) -> void:
-	if id != "analysis":
+func _on_world_closed(id: String, _result: Dictionary) -> void:
+	if id == "analysis":
+		create_tween().tween_property(player, "modulate:a", 1.0, 0.3)
+	_apply_additions()
+
+# Adds the files listed under "additions" in story.json once their flag is set.
+# New files go on the root wall and blink so the player notices them.
+func _apply_additions() -> void:
+	if Game.active_world != "library":
 		return
-	create_tween().tween_property(player, "modulate:a", 1.0, 0.3)
-	if result.get("caught", false):
-		var idx: int = walls[0].add_entry(ORANGE_FOLDER.duplicate(true))
-		walls[0].blink_entry(idx, 3)
-		Game.say_random("orange_added")
+	for a in _additions:
+		var id: String = a.get("id", "")
+		if _added.has(id):
+			continue
+		var when: String = a.get("when", "")
+		if when != "" and not Game.has_flag(StringName(when)):
+			continue
+		_added[id] = true
+		var entry: Dictionary = a.get("entry", {}).duplicate(true)
+		_tag_events({"children": [entry]}, _events)
+		var idx: int = walls[0].add_entry(entry)
+		walls[0].blink_entry(idx, a.get("blink", 3))
+		if a.has("say"):
+			Game.say_random(a["say"])
 
 func _on_entry_entered(entry: Dictionary, index: int, w: FileWall) -> void:
 	if w != walls.back():
