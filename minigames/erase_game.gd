@@ -8,6 +8,7 @@ class_name EraseGame
 # character, eraser, instructions.
 
 const MASK_SHADER := preload("res://shaders/erase_mask.gdshader")
+const CLIP_SHADER := preload("res://shaders/clip_rect.gdshader")
 
 var config: EraseConfig
 var running := false
@@ -52,8 +53,14 @@ func set_expand(rect: Rect2, t: float) -> void:
 	var s := rect.size.x / ts.x
 	var pos := Vector2(rect.position.x, rect.get_center().y - ts.y * s * 0.5)
 	var a := clampf(t * 2.0, 0.0, 1.0)
+	# Clip to the growing button so nothing spills over the rest of the room.
+	var gt := get_global_transform()
+	var tl := gt * rect.position
+	var br := gt * rect.end
+	var clip := Vector4(tl.x, tl.y, br.x - tl.x, br.y - tl.y)
 	for sp in [_text_sprite, _instr_sprite]:
 		if sp:
+			(sp.material as ShaderMaterial).set_shader_parameter("clip_rect", clip)
 			sp.position = pos
 			sp.scale = Vector2(s, s)
 			sp.modulate.a = a
@@ -123,6 +130,9 @@ func _build_layers() -> void:
 
 	if config.instructions:
 		_instr_sprite = _make_sprite(config.instructions, s, 20)
+		var im := ShaderMaterial.new()
+		im.shader = CLIP_SHADER
+		_instr_sprite.material = im
 
 func _make_sprite(tex: Texture2D, s: float, z: int) -> Sprite2D:
 	var sp := Sprite2D.new()
