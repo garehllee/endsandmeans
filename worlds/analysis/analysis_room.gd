@@ -281,6 +281,7 @@ func _make_game() -> void:
 	_game = _create_game()
 	add_child(_game)
 	move_child(_game, 0)          # draw the game's pictures underneath the player
+	_game.world_id = world_id
 	_game.setup(_arena, player, _start_pos)   # stay where the button was pressed
 	_game.prepare(config)
 

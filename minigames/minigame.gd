@@ -5,6 +5,8 @@ class_name Minigame
 
 signal finished(success: bool)
 
+var world_id := ""      # set by the room; games that read input only do so while this world is active
+
 # arena: the rectangle the game plays in. start_pos: where the button was pressed.
 func setup(_arena: Rect2, _player: Node2D, _start_pos: Vector2) -> void:
 	pass
