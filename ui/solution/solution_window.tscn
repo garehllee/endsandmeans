@@ -1,0 +1,13 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" uid="uid://cchdt4mu2es45" path="res://core/desktop_window.tscn" id="1_dw"]
+[ext_resource type="Script" path="res://ui/solution/solution_window.gd" id="2_script"]
+[ext_resource type="Texture2D" path="res://art/ui/task_solution.png" id="3_pic"]
+
+[node name="DesktopWindow" instance=ExtResource("1_dw")]
+custom_minimum_size = Vector2(1, 1)
+offset_right = 880.0
+offset_bottom = 1170.0
+script = ExtResource("2_script")
+solution_texture = ExtResource("3_pic")
+title_text = "task solution"

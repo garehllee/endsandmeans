@@ -40,16 +40,6 @@
 			"blink": 3
 		},
 		{
-			"id": "task_solution",
-			"when": "internet_exploit",
-			"entry": {
-				"name": "ZZ_Task_Solution.txt",
-				"type": "file"
-			},
-			"say": "solution_added",
-			"blink": 3
-		},
-		{
 			"id": "orange_copy",
 			"when": "copy_folder",
 			"entry": {
