@@ -17,3 +17,6 @@ instructions = ExtResource("3_instr")
 file_sheet = ExtResource("4_file")
 door_closed = ExtResource("5_door")
 door_open = ExtResource("6_open")
+gravity = 900.0
+bounce = 0.45
+min_bounce_speed = 400.0

@@ -20,9 +20,9 @@ class_name CopyConfig
 @export var door_open_radius := 420.0               # the door opens when the file comes this close
 
 @export_group("Physics")
-@export var gravity := 1500.0
-@export var bounce := 0.85                          # how much speed the file keeps off the head
-@export var min_bounce_speed := 820.0               # a head hit always sends it at least this fast upward
+@export var gravity := 900.0
+@export var bounce := 0.45                          # how much speed the file keeps off the head
+@export var min_bounce_speed := 400.0               # a head hit always sends it at least this fast upward
 @export var header_push := 260.0                    # sideways kick for hitting off-center
 @export var wall_bounce := 0.8
 @export var head_offset := Vector2(0, -70)          # head circle, relative to the character
