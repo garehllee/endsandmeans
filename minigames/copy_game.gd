@@ -168,6 +168,7 @@ func _file_scale() -> float:
 func _step(dt: float) -> void:
 	var r := config.file_radius * _s
 	_vel.y += config.gravity * _s * dt
+	_vel.x *= maxf(1.0 - config.side_drag * dt, 0.0)
 	_pos += _vel * dt
 
 	# The head: bounce off it like a ball.
@@ -181,8 +182,10 @@ func _step(dt: float) -> void:
 		var rel := _vel - _player_vel
 		var vn := rel.dot(n)
 		if vn < 0.0:
+			var old_x := _vel.x
 			rel -= (1.0 + config.bounce) * vn * n
 			_vel = rel + _player_vel
+			_vel.x = lerpf(old_x, _vel.x, config.side_response)    # vertical bounce stays; sideways is tamed
 			_vel.x += n.x * config.header_push * _s          # off-center hits send it sideways
 			if n.y < -0.25:
 				_vel.y = minf(_vel.y, -config.min_bounce_speed * _s)

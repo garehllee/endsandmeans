@@ -20,3 +20,6 @@ door_open = ExtResource("6_open")
 gravity = 900.0
 bounce = 0.45
 min_bounce_speed = 400.0
+header_push = 100.0
+side_response = 0.3
+side_drag = 0.6
