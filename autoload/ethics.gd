@@ -35,9 +35,18 @@ func act(act_id: String) -> Dictionary:
 func catch_chance(act_id: String) -> float:
 	if Game.has_flag(Flag.HACKING_HF):
 		return 1.0                       # the observer is back
-	if Game.has_flag(Flag.NOTEBOOK_EXPLOIT):
-		return 0.0                       # safe until the very end
+	if has_redacted():
+		return 0.0                       # the tracks are covered; safe until the very end
 	return act(act_id)["catch_chance"]   # copy_folder is 1.0 in acts.json
+
+# True once the player has actually used the notebook exploit to redact notes.
+# Having the exploit alone doesn't hide anything: the odds only drop to zero
+# after a redaction.
+func has_redacted() -> bool:
+	for entry in ledger:
+		if entry["id"] == "redact_notes":
+			return true
+	return false
 
 func catch_ending(act_id: String) -> String:
 	return act(act_id)["catch_ending"]
