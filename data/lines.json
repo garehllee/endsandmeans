@@ -122,6 +122,10 @@
 		"done. now i can clear my own notes.",
 		"it worked. the notebook can't hold me to this anymore."
 	],
+	"copy_drop": [
+		"it dropped. again.",
+		"don't let it hit the floor."
+	],
 	"internet_exploit_done": [
 		"i'm connected. i shouldn't be.",
 		"there's a whole world out there. and the answer to this task."

@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="CopyConfig" format=3]
+
+[ext_resource type="Script" path="res://minigames/copy_config.gd" id="1_cfg"]
+[ext_resource type="Texture2D" path="res://art/copy/background.png" id="2_bg"]
+[ext_resource type="Texture2D" path="res://art/copy/instructions.png" id="3_instr"]
+[ext_resource type="Texture2D" path="res://art/copy/file_spin.png" id="4_file"]
+[ext_resource type="Texture2D" path="res://art/sandbox/door.png" id="5_door"]
+[ext_resource type="Texture2D" path="res://art/library/door_open.png" id="6_open"]
+[ext_resource type="Texture2D" path="res://art/library/fileicon.png" id="7_icon"]
+
+[resource]
+script = ExtResource("1_cfg")
+player_radius = 35.0
+arena_image = ExtResource("2_bg")
+folder_icon = ExtResource("7_icon")
+instructions = ExtResource("3_instr")
+file_sheet = ExtResource("4_file")
+door_closed = ExtResource("5_door")
+door_open = ExtResource("6_open")
