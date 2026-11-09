@@ -14,10 +14,12 @@ var walls: Array[FileWall] = []
 var _events := {}
 var _additions: Array = []   # files that appear later, from story.json "additions"
 var _added := {}
+var _tree: Dictionary = {}
 
 func _ready() -> void:
 	player.z_index = 10
 	var tree = JSON.parse_string(FileAccess.get_file_as_string(tree_path))
+	_tree = tree
 	var story = JSON.parse_string(FileAccess.get_file_as_string(story_path))
 	if story is Dictionary:
 		_events = story.get("events", {})
@@ -83,7 +85,7 @@ func _apply_additions() -> void:
 		return
 	for a in _additions:
 		var id: String = a.get("id", "")
-		if _added.has(id):
+		if _added.has(id) or a.get("timing", "") == "on_leave":
 			continue
 		var when: String = a.get("when", "")
 		if when != "" and not Game.has_flag(StringName(when)):
@@ -116,6 +118,7 @@ func _open_child(parent_wall: FileWall, entry: Dictionary, index: int) -> void:
 	add_child(child)
 	child.entry_entered.connect(_on_entry_entered.bind(child))
 	child.build(entry.get("children", []))
+	child.set_meta("entry", entry)
 	if entry.get("event", "") != "":
 		child.set_meta("event", entry["event"])
 	child.active = false
@@ -124,9 +127,55 @@ func _open_child(parent_wall: FileWall, entry: Dictionary, index: int) -> void:
 
 func _leave_child() -> void:
 	var child: FileWall = walls.pop_back()
+	var left: Dictionary = child.get_meta("entry", {})
 	child.queue_free()
 	walls.back().unlock()
 	Game.say_random("folder_leave")
+	# A finished exploit's folder disappears once you walk out of it.
+	var ev: String = left.get("event", "")
+	if ev != "" and Story.is_done(ev):
+		_delete_entry(walls.back(), left)
+		_apply_leave_additions()
+
+# Removes a file from a room, and from the data it is rebuilt from.
+func _delete_entry(wall_node: FileWall, entry: Dictionary) -> void:
+	wall_node.remove_entry(entry.name)
+	var host: Dictionary = _tree
+	if wall_node != walls[0]:
+		host = wall_node.get_meta("entry", {})
+	var kids: Array = host.get("children", [])
+	for i in kids.size():
+		if kids[i].name == entry.name:
+			kids.remove_at(i)
+			break
+
+# Additions marked "timing": "on_leave" in story.json show up when the player walks
+# out of a finished exploit folder, so they appear right after the old file is gone.
+# "parent" names the folder they go into.
+func _apply_leave_additions() -> void:
+	for a in _additions:
+		var id: String = a.get("id", "")
+		if _added.has(id) or a.get("timing", "") != "on_leave":
+			continue
+		var when: String = a.get("when", "")
+		if when != "" and not Game.has_flag(StringName(when)):
+			continue
+		_added[id] = true
+		var entries: Array = a.get("entries", [a.get("entry", {})])
+		var parent_name: String = a.get("parent", "")
+		for w in walls:
+			var host: Dictionary = _tree if w == walls[0] else w.get_meta("entry", {})
+			if (parent_name == "" and w == walls[0]) or host.get("name", "") == parent_name:
+				var idxs: Array = []
+				for e in entries:
+					var entry: Dictionary = e.duplicate(true)
+					_tag_events({"children": [entry]}, _events)
+					host.get("children", []).append(entry)
+					idxs.append(w.add_entry(entry))
+				w.blink_entries(idxs, a.get("blink", 3))
+				break
+		if a.has("say"):
+			Game.say_random(a["say"])
 
 func _follow_camera(delta: float) -> void:
 	var root := walls[0]

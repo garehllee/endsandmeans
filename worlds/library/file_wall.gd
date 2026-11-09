@@ -83,9 +83,9 @@ var _inside := -1
 var _announced := -1
 var _last_announce := -999.0
 
-var _blink_i := -1
+var _blink_ids: Array[int] = []
 var _blink_a := 0.0
-var _blink_pending_i := -1
+var _blink_pending_ids: Array[int] = []
 var _blink_pending_n := 0
 var _blink_tween: Tween
 
@@ -179,12 +179,12 @@ func unlock() -> void:
 	_inside = -1
 	active = true
 	queue_redraw()
-	if _blink_pending_i >= 0:
-		var i := _blink_pending_i
+	if not _blink_pending_ids.is_empty():
+		var ids := _blink_pending_ids.duplicate()
 		var n := _blink_pending_n
-		_blink_pending_i = -1
+		_blink_pending_ids.clear()
 		await get_tree().create_timer(0.4).timeout   # let the strips settle first
-		_play_blink(i, n)
+		_play_blink(ids, n)
 
 func _process(delta: float) -> void:
 	_poll_textures()
@@ -290,7 +290,7 @@ func _draw() -> void:
 			draw_texture_rect(tex, r, false)   # whole image, squeezed horizontally, never cropped
 		else:
 			draw_texture_rect(_gradients[it.grad], r, false)
-		if i == _blink_i and _blink_a > 0.0:
+		if i in _blink_ids and _blink_a > 0.0:
 			draw_rect(r, Color(blink_color, _blink_a))
 	if hallway_index < 0:
 		_draw_label()
@@ -416,22 +416,60 @@ func add_entry(entry: Dictionary) -> int:
 	return _items.size() - 1
 # Blinks one strip. Waits until the room is active if it's currently locked as a hallway.
 func blink_entry(index: int, times := 3) -> void:
+	blink_entries([index], times)
+
+# Blinks several strips together (same wait as above).
+func blink_entries(indices: Array, times := 3) -> void:
 	if hallway_index >= 0 or not active:
-		_blink_pending_i = index
+		for i in indices:
+			if not i in _blink_pending_ids:
+				_blink_pending_ids.append(i)
 		_blink_pending_n = times
 		return
-	_play_blink(index, times)
+	_play_blink(indices, times)
 
-func _play_blink(index: int, times: int) -> void:
+func _play_blink(indices: Array, times: int) -> void:
 	if _blink_tween and _blink_tween.is_valid():
 		_blink_tween.kill()
-	_blink_i = index
+	_blink_ids.clear()
+	for i in indices:
+		_blink_ids.append(i)
 	_blink_tween = create_tween()
 	for i in times:
 		_blink_tween.tween_method(_set_blink, 0.0, blink_alpha, blink_time)
 		_blink_tween.tween_method(_set_blink, blink_alpha, 0.0, blink_time)
-	_blink_tween.finished.connect(func(): _blink_i = -1)
+	_blink_tween.finished.connect(func(): _blink_ids.clear())
 
 func _set_blink(v: float) -> void:
 	_blink_a = v
 	queue_redraw()
+
+# Deletes a file or folder from this room (the other strips close up to fill the gap).
+func remove_entry(entry_name: String) -> bool:
+	for i in _items.size():
+		if _items[i].entry.name != entry_name:
+			continue
+		_items.remove_at(i)
+		_shapes[i].queue_free()
+		_shapes.remove_at(i)
+		_blink_ids.clear()
+		_blink_pending_ids.clear()
+		_inside = -1
+		_announced = -1
+		_focus = clampi(_focus, 0, maxi(_items.size() - 1, 0))
+		if _items.is_empty():
+			_shapes.append(_add_box(Rect2(0, 0, wall_size.x, wall_size.y)))   # nothing left: solid wall
+		else:
+			_layout_now()
+		queue_redraw()
+		return true
+	return false
+
+func _layout_now() -> void:
+	var open_sum := 0.0
+	var closed_sum := 0.0
+	for item in _items:
+		open_sum += item.open * item.open_w
+		closed_sum += 1.0 - item.open
+	_layout(open_sum, closed_sum)
+	_update_collision()

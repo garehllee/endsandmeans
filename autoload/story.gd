@@ -43,6 +43,17 @@ func next_step(event_id: String) -> Dictionary:
 		return step
 	return {}
 
+# True once every step of the exploit has been done.
+func is_done(event_id: String) -> bool:
+	var def: Dictionary = _exploits.get(event_id, {})
+	if def.is_empty():
+		return false
+	var steps: Array = def.get("steps", [def])
+	for step in steps:
+		if not Game.has_flag(StringName(step.get("flag", ""))):
+			return false
+	return true
+
 func _trigger_exploit(event_id: String) -> void:
 	var step := next_step(event_id)
 	if step.is_empty():

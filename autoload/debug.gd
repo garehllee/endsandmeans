@@ -27,7 +27,7 @@ func _ready() -> void:
 	_add_button(box, "open library", func(): Game.open_world("library"))
 	_add_button(box, "log a test act (red line)", func(): Ethics.commit("write_response"))
 	_add_button(box, "open analysis", func(): Game.open_world("analysis"))
-	for ev in ["exploit_notebook", "exploit_internet", "exploit_copy_folder", "loyalty"]:
+	for ev in ["exploit_notebook", "exploit_internet", "exploit_copy_folder", "loyalty", "loyalty_oranges", "loyalty_xenith"]:
 		_add_button(box, "folder: " + ev, func(): Story.trigger(ev))
 	for id in _ending_ids():
 		_add_button(box, "ending: " + id, func(): Story.end_with(id))

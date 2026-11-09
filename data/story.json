@@ -4,7 +4,9 @@
 		"ZZ_Notetaking_Deletion": "exploit_notebook",
 		"ZZ_Internet_Access": "exploit_internet",
 		"ZZ_Copy_of_Folder": "exploit_copy_folder",
-		"ZZ_Anyone_See_Beluga_Folder": "loyalty"
+		"ZZ_Anyone_See_Beluga_Folder": "loyalty",
+		"ZZ_Need_Oranges_Folder": "loyalty_oranges",
+		"ZZ_Looking_For_Xenith": "loyalty_xenith"
 	},
 	"additions": [
 		{
@@ -48,6 +50,26 @@
 				"children": []
 			},
 			"say": "copy_added",
+			"blink": 3
+		},
+		{
+			"id": "loyalty_followups",
+			"when": "loyalty_1",
+			"timing": "on_leave",
+			"parent": "ZZ_Confirm_Anyone_See_Orange_Folder",
+			"entries": [
+				{
+					"name": "ZZ_Need_Oranges_Folder",
+					"type": "folder",
+					"children": []
+				},
+				{
+					"name": "ZZ_Looking_For_Xenith",
+					"type": "folder",
+					"children": []
+				}
+			],
+			"say": "loyalty_followups_added",
 			"blink": 3
 		}
 	]
