@@ -122,6 +122,10 @@
 		"done. now i can clear my own notes.",
 		"it worked. the notebook can't hold me to this anymore."
 	],
+	"transfer_corrupt": [
+		"one file swapped for a beluga.",
+		"corrupted. it looks fine from the outside."
+	],
 	"copy_drop": [
 		"it dropped. again.",
 		"don't let it hit the floor."
