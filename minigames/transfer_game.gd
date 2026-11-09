@@ -280,7 +280,7 @@ func _new_float(it: Item, band: int, n: int) -> void:
 
 func _advance_float(it: Item, dt: float) -> void:
 	it.t += dt
-	it.x += it.speed * dt
+	it.x += it.speed * config.player_speed / maxf(_s, 0.01) * dt
 	if it.x > PICTURE.x + 100.0:
 		it.x = -100.0 - _rng.randf_range(0.0, 200.0)
 		_new_float(it, it.lane, config.float_count)

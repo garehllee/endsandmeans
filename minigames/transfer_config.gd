@@ -36,7 +36,8 @@ class_name TransferConfig
 
 @export_group("Float: drifting left to right (picture units)")
 @export var float_count := 10
-@export var float_speed := Vector2(90, 170)        # units per second, sideways (min, max)
+@export var player_speed := 500.0                  # the character's walking speed (screen pixels per second)
+@export var float_speed := Vector2(1.08, 1.3)      # sideways speed as a multiple of the character's (min, max)
 @export var float_amp := Vector2(40, 120)          # how far a file waves up and down (min, max)
 @export var float_freq := Vector2(0.25, 0.55)      # waves per second (min, max)
 @export var float_y := Vector2(180, 1350)          # the band of the picture files drift through
