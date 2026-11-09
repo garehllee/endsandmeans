@@ -245,6 +245,7 @@ func _advance_hop(it: Item, dt: float) -> void:
 		_new_hop(it)
 		if it.s0 > float(_wires[it.lane]["len"]) + 120.0:
 			it.s0 = -_rng.randf_range(60.0, 260.0)       # back to the start of the wire
+			_recycle(it)
 
 # One trip from the foreground into the distance.
 func _new_trip(it: Item) -> void:
@@ -256,6 +257,16 @@ func _advance_shoot(it: Item, dt: float) -> void:
 	if it.t >= it.dur:
 		it.t = 0.0
 		_new_trip(it)
+		_recycle(it)
+
+# A corrupted file that has made its trip comes back as a fresh blank one, so
+# there are always files left to corrupt (there can be more photos than files).
+func _recycle(it: Item) -> void:
+	if not it.corrupted:
+		return
+	it.corrupted = false
+	it.sprite.texture = config.blank_file
+	it.sprite.region_enabled = false
 
 func _place_items() -> void:
 	for it in _items:
