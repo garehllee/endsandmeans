@@ -1,0 +1,29 @@
+[gd_resource type="Resource" script_class="TransferConfig" format=3]
+
+[ext_resource type="Script" path="res://minigames/transfer_config.gd" id="1_cfg"]
+[ext_resource type="Texture2D" path="res://art/transfer/oranges_background.png" id="2_bg"]
+[ext_resource type="Texture2D" path="res://art/transfer/oranges_beams.png" id="4_wires"]
+[ext_resource type="Texture2D" path="res://art/transfer/blank_file.png" id="5_blank"]
+[ext_resource type="Texture2D" path="res://art/transfer/instructions.png" id="6_instr"]
+[ext_resource type="Texture2D" path="res://art/transfer/oranges_text.png" id="7_text"]
+[ext_resource type="Texture2D" path="res://thumbs/oranges/alin-luna-Mp69pDHia3Q-unsplash.jpg" id="p0"]
+[ext_resource type="Texture2D" path="res://thumbs/oranges/brave-sneakers-HPW_Hjzw6ZA-unsplash.jpg" id="p1"]
+[ext_resource type="Texture2D" path="res://thumbs/oranges/mockup-graphics-enNffryKuQI-unsplash.jpg" id="p2"]
+[ext_resource type="Texture2D" path="res://thumbs/oranges/moritz-nie-7WAGthfGJ9w-unsplash.jpg" id="p3"]
+[ext_resource type="Texture2D" path="res://thumbs/oranges/mustafa-akin-C5o6xUEfg0E-unsplash.jpg" id="p4"]
+[ext_resource type="Texture2D" path="res://thumbs/oranges/mustafa-akin-C8ANhg-w678-unsplash.jpg" id="p5"]
+[ext_resource type="Texture2D" path="res://thumbs/oranges/steve-doig-FaMBWkmvPyY-unsplash.jpg" id="p6"]
+[ext_resource type="Texture2D" path="res://thumbs/oranges/tati-niki--s_TDs0IFv8-unsplash.jpg" id="p7"]
+[ext_resource type="Texture2D" path="res://thumbs/oranges/thitiphum-koonjantuek-TFqjlTmkeyY-unsplash.jpg" id="p8"]
+[ext_resource type="Texture2D" path="res://thumbs/oranges/vladimir-gladkov-HzswivUN-tI-unsplash.jpg" id="p9"]
+
+[resource]
+script = ExtResource("1_cfg")
+player_radius = 35.0
+arena_image = ExtResource("2_bg")
+wires = ExtResource("4_wires")
+blank_file = ExtResource("5_blank")
+instructions = ExtResource("6_instr")
+flash_text = ExtResource("7_text")
+flash_photos = Array[Texture2D]([ExtResource("p0"), ExtResource("p1"), ExtResource("p2"), ExtResource("p3"), ExtResource("p4"), ExtResource("p5"), ExtResource("p6"), ExtResource("p7"), ExtResource("p8"), ExtResource("p9")])
+motion = "shoot"
