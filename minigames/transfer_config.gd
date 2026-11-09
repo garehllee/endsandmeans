@@ -13,7 +13,7 @@ class_name TransferConfig
 @export var flash_photos: Array[Texture2D] = []    # one is swapped in per corruption; all used = win
 
 @export_group("Motion")
-@export_enum("hop", "shoot") var motion := "hop"   # hop: bounce down wires. shoot: fly off into the distance.
+@export_enum("hop", "shoot", "float") var motion := "hop"   # hop: bounce down wires. shoot: fly off into the distance. float: drift left to right, waving.
 
 @export_group("Hop: wires (picture units)")
 @export var wire_a := PackedVector2Array([Vector2(0, 281), Vector2(1535, 1197), Vector2(1600, 1247)])
@@ -33,6 +33,14 @@ class_name TransferConfig
 @export var ease_power := 3.0                      # higher = faster launch, longer drift at the end
 @export var near_scale := 1.5                      # file size at the start (close to the camera)
 @export var far_scale := 0.05                      # file size at the end (far away)
+
+@export_group("Float: drifting left to right (picture units)")
+@export var float_count := 10
+@export var float_speed := Vector2(90, 170)        # units per second, sideways (min, max)
+@export var float_amp := Vector2(40, 120)          # how far a file waves up and down (min, max)
+@export var float_freq := Vector2(0.25, 0.55)      # waves per second (min, max)
+@export var float_y := Vector2(180, 1350)          # the band of the picture files drift through
+@export var float_tilt := 8.0                      # degrees a file tilts as it waves
 
 @export_group("Feel")
 @export var touch_radius := 100.0                  # how close the character must be to corrupt a file

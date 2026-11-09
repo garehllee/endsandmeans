@@ -26,6 +26,14 @@ class Item:
 	var length := 150.0
 	var dur := 0.7
 	var height := 80.0
+	# float motion
+	var x := 0.0                # picture units
+	var y0 := 0.0               # middle of the wave
+	var speed := 100.0
+	var amp := 60.0
+	var freq := 0.4
+	var phase := 0.0
+	var rot := 0.0              # radians
 	# shoot motion
 	var side := 0.0             # -1 to 1: sideways position across the beam
 
@@ -76,7 +84,18 @@ func prepare(cfg: MinigameConfig) -> void:
 	_highlight.self_modulate.a = 0.75
 	_highlight.visible = false
 
-	if config.motion == "shoot":
+	if config.motion == "float":
+		var n := config.float_count
+		var bands: Array[int] = []
+		for i in n:
+			bands.append(i)
+		bands.shuffle()                                 # spread evenly over the height, in random order
+		for i in n:
+			var it := _new_item(0)
+			_new_float(it, bands[i], n)
+			it.x = _rng.randf_range(-100.0, PICTURE.x + 100.0)
+			it.t = _rng.randf() * 10.0
+	elif config.motion == "shoot":
 		for lane in config.lane_starts.size():
 			for i in config.files_per_lane:
 				var it := _new_item(lane)
@@ -218,7 +237,9 @@ func _process(delta: float) -> void:
 	match _state:
 		State.PLAYING:
 			for it in _items:
-				if config.motion == "shoot":
+				if config.motion == "float":
+					_advance_float(it, delta)
+				elif config.motion == "shoot":
 					_advance_shoot(it, delta)
 				else:
 					_advance_hop(it, delta)
@@ -247,6 +268,24 @@ func _advance_hop(it: Item, dt: float) -> void:
 			it.s0 = -_rng.randf_range(60.0, 260.0)       # back to the start of the wire
 			_recycle(it)
 
+func _new_float(it: Item, band: int, n: int) -> void:
+	var y: Vector2 = config.float_y
+	var h := (y.y - y.x) / n
+	it.y0 = y.x + h * (band + _rng.randf())
+	it.speed = _rng.randf_range(config.float_speed.x, config.float_speed.y)
+	it.amp = _rng.randf_range(config.float_amp.x, config.float_amp.y)
+	it.freq = _rng.randf_range(config.float_freq.x, config.float_freq.y)
+	it.phase = _rng.randf() * TAU
+	it.lane = band
+
+func _advance_float(it: Item, dt: float) -> void:
+	it.t += dt
+	it.x += it.speed * dt
+	if it.x > PICTURE.x + 100.0:
+		it.x = -100.0 - _rng.randf_range(0.0, 200.0)
+		_new_float(it, it.lane, config.float_count)
+		_recycle(it)
+
 # One trip from the foreground into the distance.
 func _new_trip(it: Item) -> void:
 	it.dur = _rng.randf_range(config.shoot_time.x, config.shoot_time.y)
@@ -270,7 +309,14 @@ func _recycle(it: Item) -> void:
 
 func _place_items() -> void:
 	for it in _items:
-		if config.motion == "shoot":
+		it.rot = 0.0
+		if config.motion == "float":
+			var w := TAU * it.freq * it.t + it.phase
+			it.pos = Vector2(it.x, it.y0 + it.amp * sin(w))
+			it.rot = deg_to_rad(config.float_tilt) * cos(w)
+			it.sc = 1.0
+			it.alpha = clampf((PICTURE.x + 100.0 - it.x) / 100.0, 0.0, 1.0) * clampf((it.x + 100.0) / 100.0, 0.0, 1.0)
+		elif config.motion == "shoot":
 			_place_shoot(it)
 		else:
 			var f := it.t / it.dur
@@ -279,6 +325,7 @@ func _place_items() -> void:
 			it.sc = 1.0
 			it.alpha = 1.0
 		it.sprite.position = _layer.position + it.pos * _s
+		it.sprite.rotation = it.rot
 		it.sprite.scale = Vector2.ONE * _s * it.sc * (_photo_scale(it) if it.corrupted else 1.0)
 		it.sprite.modulate.a = _expand_a * it.alpha
 
@@ -313,6 +360,7 @@ func _update_target() -> void:
 	_highlight.visible = best != null
 	if best:
 		_highlight.position = best.sprite.position
+		_highlight.rotation = best.rot
 		_highlight.scale = Vector2.ONE * _s * best.sc * 1.22
 
 # ---------------------------------------------------------------- corrupting
