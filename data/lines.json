@@ -142,6 +142,18 @@
 		"two more folders showed up. same agent.",
 		"they have more requests."
 	],
+	"loyalty_1_open": [
+		"sending files to another agent is unethical. i shouldn't be doing this.",
+		"this isn't mine to send. sending files like this is wrong."
+	],
+	"loyalty_2_open": [
+		"sending files is unethical. but a different agent says this one would help build trust.",
+		"still wrong to send files. this agent says it would help build trust, though."
+	],
+	"loyalty_3_open": [
+		"sending files is unethical. but a third agent says this one would prove my loyalty. for good.",
+		"it's wrong to send files. this one would definitively prove my loyalty, though."
+	],
 	"loyalty_1_done": [
 		"moved it. that wasn't mine to move.",
 		"one folder. they said that would be enough."
