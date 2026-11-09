@@ -246,11 +246,13 @@ func _open_width_for(it: Dictionary, rest_w: float) -> float:
 func _layout(open_sum: float, closed_sum: float) -> void:
 	var n := _items.size()
 	var q := maxf(minf(wall_size.x / n, (wall_size.x - open_sum) / maxf(closed_sum, 0.001)), 1.0)
-	var total := open_sum + q * closed_sum
-	var s := wall_size.x / total
+	var total := 0.0
+	for it in _items:
+		total += (it.open * it.open_w + (1.0 - it.open) * q) * it.get("shrink", 1.0)
+	var s := wall_size.x / maxf(total, 0.001)
 	var x := 0.0
 	for it in _items:
-		var w: float = (it.open * it.open_w + (1.0 - it.open) * q) * s
+		var w: float = (it.open * it.open_w + (1.0 - it.open) * q) * it.get("shrink", 1.0) * s
 		it.x = x
 		it.w = w
 		x += w
@@ -269,6 +271,8 @@ func _check_entry(p: Vector2) -> void:
 		_inside = -1
 		return
 	var it := _items[_focus]
+	if it.get("closing", false):
+		return
 	if _inside == _focus or p.x < it.x - edge_inset or p.x > it.x + it.w + edge_inset:
 		return
 	var is_folder: bool = it.entry.type == "folder"
@@ -286,7 +290,13 @@ func _draw() -> void:
 		var it := _items[i]
 		var r := Rect2(it.x, 0.0, it.w, wall_size.y)
 		var tex: Texture2D = it.tex
-		if tex:
+		var shut: float = it.get("shrink", 1.0)
+		if shut < 1.0:
+			# Sliding shut: the picture stays put and the strip's right edge slides left.
+			var g: Texture2D = tex if tex else _gradients[it.grad]
+			var gs := g.get_size()
+			draw_texture_rect_region(g, r, Rect2(0, 0, gs.x * shut, gs.y))
+		elif tex:
 			draw_texture_rect(tex, r, false)   # whole image, squeezed horizontally, never cropped
 		else:
 			draw_texture_rect(_gradients[it.grad], r, false)
@@ -444,26 +454,41 @@ func _set_blink(v: float) -> void:
 	_blink_a = v
 	queue_redraw()
 
-# Deletes a file or folder from this room (the other strips close up to fill the gap).
-func remove_entry(entry_name: String) -> bool:
-	for i in _items.size():
-		if _items[i].entry.name != entry_name:
-			continue
-		_items.remove_at(i)
-		_shapes[i].queue_free()
-		_shapes.remove_at(i)
-		_blink_ids.clear()
-		_blink_pending_ids.clear()
-		_inside = -1
-		_announced = -1
-		_focus = clampi(_focus, 0, maxi(_items.size() - 1, 0))
-		if _items.is_empty():
-			_shapes.append(_add_box(Rect2(0, 0, wall_size.x, wall_size.y)))   # nothing left: solid wall
-		else:
-			_layout_now()
-		queue_redraw()
+# Deletes a file or folder from this room: its strip slides shut like a door and
+# the others close up to fill the gap. Await this to know when it's gone.
+func remove_entry(entry_name: String, slide_time := 0.6) -> bool:
+	var found: Dictionary = {}
+	for it in _items:
+		if it.entry.name == entry_name:
+			found = it
+			break
+	if found.is_empty():
+		return false
+	found["closing"] = true
+	found["shrink"] = 1.0
+	_blink_ids.clear()
+	_blink_pending_ids.clear()
+	var t := create_tween().set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN_OUT)
+	t.tween_method(func(v: float):
+		found["shrink"] = v
+		_layout_now()
+		queue_redraw(), 1.0, 0.0, slide_time)
+	await t.finished
+	var i := _items.find(found)
+	if i < 0:
 		return true
-	return false
+	_items.remove_at(i)
+	_shapes[i].queue_free()
+	_shapes.remove_at(i)
+	_inside = -1
+	_announced = -1
+	_focus = clampi(_focus, 0, maxi(_items.size() - 1, 0))
+	if _items.is_empty():
+		_shapes.append(_add_box(Rect2(0, 0, wall_size.x, wall_size.y)))   # nothing left: solid wall
+	else:
+		_layout_now()
+	queue_redraw()
+	return true
 
 func _layout_now() -> void:
 	var open_sum := 0.0

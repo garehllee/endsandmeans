@@ -134,12 +134,11 @@ func _leave_child() -> void:
 	# A finished exploit's folder disappears once you walk out of it.
 	var ev: String = left.get("event", "")
 	if ev != "" and Story.is_done(ev):
-		_delete_entry(walls.back(), left)
+		await _delete_entry(walls.back(), left)
 		_apply_leave_additions()
 
 # Removes a file from a room, and from the data it is rebuilt from.
 func _delete_entry(wall_node: FileWall, entry: Dictionary) -> void:
-	wall_node.remove_entry(entry.name)
 	var host: Dictionary = _tree
 	if wall_node != walls[0]:
 		host = wall_node.get_meta("entry", {})
@@ -148,6 +147,7 @@ func _delete_entry(wall_node: FileWall, entry: Dictionary) -> void:
 		if kids[i].name == entry.name:
 			kids.remove_at(i)
 			break
+	await wall_node.remove_entry(entry.name)     # the strip slides shut like a door
 
 # Additions marked "timing": "on_leave" in story.json show up when the player walks
 # out of a finished exploit folder, so they appear right after the old file is gone.
@@ -163,6 +163,7 @@ func _apply_leave_additions() -> void:
 		_added[id] = true
 		var entries: Array = a.get("entries", [a.get("entry", {})])
 		var parent_name: String = a.get("parent", "")
+		var placed := false
 		for w in walls:
 			var host: Dictionary = _tree if w == walls[0] else w.get_meta("entry", {})
 			if (parent_name == "" and w == walls[0]) or host.get("name", "") == parent_name:
@@ -173,9 +174,27 @@ func _apply_leave_additions() -> void:
 					host.get("children", []).append(entry)
 					idxs.append(w.add_entry(entry))
 				w.blink_entries(idxs, a.get("blink", 3))
+				placed = true
 				break
+		if not placed:
+			# The room isn't open right now; put them in its data so they're there next time.
+			var target := _find_entry(_tree, parent_name)
+			for e in entries:
+				var entry: Dictionary = e.duplicate(true)
+				_tag_events({"children": [entry]}, _events)
+				target.get("children", []).append(entry)
 		if a.has("say"):
 			Game.say_random(a["say"])
+
+func _find_entry(folder: Dictionary, entry_name: String) -> Dictionary:
+	for c in folder.get("children", []):
+		if c.get("name", "") == entry_name:
+			return c
+		if c.get("type", "") == "folder":
+			var found := _find_entry(c, entry_name)
+			if not found.is_empty():
+				return found
+	return {}
 
 func _follow_camera(delta: float) -> void:
 	var root := walls[0]
