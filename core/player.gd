@@ -27,6 +27,7 @@ var _sprite_base_y := 0.0
 # with the character's idle pose).
 const BUG_TRANSFORM := preload("res://art/player/bug_transition.png")
 const BUG_WALK := preload("res://art/player/bug_walk.png")
+const BUG_IDLE := preload("res://art/player/bug_idle.png")
 const BUG_FRAME := Vector2(400, 378)
 const BUG_SCALE := 0.4232
 const BUG_OFFSET := Vector2(3.6, 2.0)
@@ -112,9 +113,8 @@ func play_anim(movement):
 		if movement == 1:
 			if _bug.animation != "walk" or not _bug.is_playing():
 				_bug.play("walk")
-		elif _bug.is_playing():
-			_bug.stop()
-			_bug.frame = 0
+		elif _bug.animation != "idle" or not _bug.is_playing():
+			_bug.play("idle")
 		return
 	if movement == 1:
 		_alt_playing = false
@@ -196,6 +196,7 @@ func _build_bug() -> void:
 	frames.remove_animation("default")
 	_add_bug_animation(frames, "transform", BUG_TRANSFORM, 10, 5, false)
 	_add_bug_animation(frames, "walk", BUG_WALK, 7, 4, true)
+	_add_bug_animation(frames, "idle", BUG_IDLE, 4, 4, true)
 	_bug = AnimatedSprite2D.new()
 	_bug.sprite_frames = frames
 	_bug.position = BUG_OFFSET
@@ -230,9 +231,7 @@ func become_bug() -> void:
 		return      # reset while it was playing
 	_bug_active = true
 	_bug_busy = false
-	_bug.animation = "walk"
-	_bug.frame = 0
-	_bug.stop()
+	_bug.play("idle")
 
 # And back again: the same transformation, played in reverse.
 func become_human() -> void:
