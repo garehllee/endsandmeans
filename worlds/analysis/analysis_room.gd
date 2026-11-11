@@ -67,6 +67,7 @@ class Btn:
 
 var active := false
 var _phase := Phase.CHOOSE
+var _transforming := false     # the character is turning into a bug
 var _btns: Array[Btn] = []
 const REACT_TIME := 0.5        # how long the nod or head shake lasts
 
@@ -157,7 +158,7 @@ func _process(delta: float) -> void:
 	if _phase == Phase.CHOOSE:
 		if Game.active_world == world_id:
 			_update_buttons(delta)
-			if Input.is_action_just_pressed("Interact"):
+			if Input.is_action_just_pressed("Interact") and not _transforming:
 				_try_interact()
 		_clamp_player(Rect2(0.0, 0.0, room_size.x, _content_bottom))
 	else:
@@ -264,9 +265,11 @@ func _follow_camera(delta: float) -> void:
 # ---------- expanding into the game ----------
 
 func _begin_expand() -> void:
-	_phase = Phase.EXPANDING
 	Game.input_locked = true
+	_transforming = true           # still the choose screen (camera, buttons) while the bug transformation plays
 	await player.become_bug()      # agreeing to the challenge: the character turns into a bug
+	_transforming = false
+	_phase = Phase.EXPANDING
 	_start_pos = player.position
 	var vh := _view_h()
 	_arena = Rect2(0.0, cam.position.y - vh * 0.5, room_size.x, vh)
