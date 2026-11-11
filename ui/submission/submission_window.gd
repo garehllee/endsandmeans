@@ -19,6 +19,11 @@ const FONT := preload("res://fonts/Director-Regular.otf")
 @export var button_pressed: Texture2D
 @export var folder_texture: Texture2D
 @export var work_texture: Texture2D
+@export var file_sheet: Texture2D                     # the spinning file from the copy minigame
+@export var file_sheet_columns := 10
+@export var file_sheet_rows := 12
+@export var file_frames := 120
+@export var file_fps := 30.0
 @export var drift_speed := Vector2(35.0, 65.0)        # how fast icons float around in the box (min, max)
 
 var _holder: Control
@@ -41,7 +46,7 @@ func _ready() -> void:
 		"task_solution": {"flag": Flag.INTERNET_EXPLOIT, "label": "task_solution",
 				"tex": work_texture, "tint": Color.WHITE, "slot": 1},
 		"orange_file": {"flag": Flag.COPY_FOLDER, "label": "orange_file",
-				"tex": folder_texture, "tint": Color(1.0, 0.78, 0.35), "slot": 2},
+				"tex": null, "sheet": file_sheet, "tint": Color.WHITE, "slot": 2},
 	}
 	_holder = Control.new()
 	_holder.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -125,13 +130,7 @@ func _make_available(id: String, animate: bool) -> void:
 		push_warning("SubmissionWindow: no icon layer")
 		return
 	var d: Dictionary = _defs[id]
-	var icon := SubmitIcon.new()
-	icon.item_id = id
-	icon.label_text = d["label"]
-	icon.texture = d["tex"]
-	icon.tint = d["tint"]
-	icon.font = FONT
-	icon.dropped.connect(_on_icon_dropped)
+	var icon := _new_icon(id)
 	layer.add_child(icon)
 	icon.home = _clamp_icon(_homes.get(id, _home_for(d["slot"])), icon)
 	icon.global_position = icon.home
@@ -146,6 +145,29 @@ func _make_available(id: String, animate: bool) -> void:
 		tw.tween_property(icon, "scale", Vector2.ONE, 0.45).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 		if id == "orange_file":
 			Game.say_random("copy_added")
+
+func _new_icon(id: String) -> SubmitIcon:
+	var d: Dictionary = _defs[id]
+	var icon := SubmitIcon.new()
+	icon.item_id = id
+	icon.label_text = d["label"]
+	icon.texture = d["tex"]
+	icon.tint = d["tint"]
+	icon.font = FONT
+	if d.get("sheet") != null:
+		icon.sheet = d["sheet"]
+		icon.sheet_cols = file_sheet_columns
+		icon.sheet_rows = file_sheet_rows
+		icon.sheet_frames = file_frames
+		icon.sheet_fps = file_fps
+	icon.dropped.connect(_on_icon_dropped)
+	return icon
+
+func _frame_region(frame: int) -> Rect2:
+	var fw := file_sheet.get_width() / float(file_sheet_columns)
+	var fh := file_sheet.get_height() / float(file_sheet_rows)
+	frame = frame % file_frames
+	return Rect2((frame % file_sheet_columns) * fw, (frame / file_sheet_columns) * fh, fw, fh)
 
 func _home_for(slot: int) -> Vector2:
 	var vp := get_viewport_rect().size
@@ -191,7 +213,13 @@ func _bounds() -> Rect2:
 func _add_item(id: String, at: Vector2) -> void:
 	var d: Dictionary = _defs[id]
 	var tex: Texture2D = d["tex"]
-	var ts := tex.get_size()
+	var atlas: AtlasTexture = null
+	if d.get("sheet") != null:
+		atlas = AtlasTexture.new()
+		atlas.atlas = d["sheet"]
+		atlas.region = _frame_region(0)
+		tex = atlas
+	var ts := atlas.region.size if atlas else tex.get_size()
 	var sz := Vector2(BOX_ICON, BOX_ICON * ts.y / ts.x) if ts.x >= ts.y else Vector2(BOX_ICON * ts.x / ts.y, BOX_ICON)
 	var node := TextureRect.new()
 	node.texture = tex
@@ -207,7 +235,7 @@ func _add_item(id: String, at: Vector2) -> void:
 	node.scale = Vector2.ONE * 0.5
 	create_tween().tween_property(node, "scale", Vector2.ONE, 0.25).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 	_items.append({
-		"id": id, "node": node, "pos": pos, "size": sz, "phase": randf() * TAU,
+		"id": id, "node": node, "atlas": atlas, "pos": pos, "size": sz, "phase": randf() * TAU,
 		"vel": Vector2.from_angle(randf() * TAU) * randf_range(drift_speed.x, drift_speed.y),
 	})
 	_refresh_button()
@@ -244,6 +272,8 @@ func _process(delta: float) -> void:
 		var node: TextureRect = it["node"]
 		node.position = p + bob - node.size * 0.5
 		node.rotation = sin(_t * 1.1 + it["phase"]) * 0.05
+		if it["atlas"] != null:
+			(it["atlas"] as AtlasTexture).region = _frame_region(int(_t * file_fps))
 
 # ---------------------------------------------------------------- clicks
 func _input(event: InputEvent) -> void:
@@ -291,13 +321,7 @@ func _return_item(i: int) -> void:
 	if layer == null:
 		return
 	var d: Dictionary = _defs[id]
-	var icon := SubmitIcon.new()
-	icon.item_id = id
-	icon.label_text = d["label"]
-	icon.texture = d["tex"]
-	icon.tint = d["tint"]
-	icon.font = FONT
-	icon.dropped.connect(_on_icon_dropped)
+	var icon := _new_icon(id)
 	layer.add_child(icon)
 	icon.home = _clamp_icon(_homes.get(id, _home_for(d["slot"])), icon)
 	icon.global_position = _clamp_icon(from - icon.size * 0.5, icon)

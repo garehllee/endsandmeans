@@ -8,6 +8,7 @@
 [ext_resource type="Texture2D" path="res://art/ui/submit_pressed.png" id="6_press"]
 [ext_resource type="Texture2D" path="res://art/library/fileicon.png" id="7_folder"]
 [ext_resource type="Texture2D" path="res://art/ui/task_solution.png" id="8_work"]
+[ext_resource type="Texture2D" path="res://art/copy/file_spin.png" id="9_spin"]
 
 [node name="DesktopWindow" instance=ExtResource("1_dw")]
 custom_minimum_size = Vector2(1, 1)
@@ -20,4 +21,5 @@ button_normal = ExtResource("5_norm")
 button_pressed = ExtResource("6_press")
 folder_texture = ExtResource("7_folder")
 work_texture = ExtResource("8_work")
-title_text = "submission box"
+file_sheet = ExtResource("9_spin")
+title_text = "submission.exe"

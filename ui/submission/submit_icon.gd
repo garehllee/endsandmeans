@@ -13,6 +13,11 @@ var item_id := ""
 var label_text := ""
 var texture: Texture2D
 var tint := Color.WHITE
+var sheet: Texture2D           # optional: an animated sprite sheet drawn instead of `texture`
+var sheet_cols := 1
+var sheet_rows := 1
+var sheet_frames := 1
+var sheet_fps := 30.0
 var home := Vector2.ZERO       # where it sits on the desktop; it flies back here when returned
 var font: Font
 
@@ -38,7 +43,14 @@ func _process(delta: float) -> void:
 func _draw() -> void:
 	var bob := 0.0 if _dragging else sin(_t * 1.6 + _phase) * 7.0
 	var a := 0.85 if _dragging else 1.0
-	if texture:
+	if sheet:
+		var fw := sheet.get_width() / float(sheet_cols)
+		var fh := sheet.get_height() / float(sheet_rows)
+		var fr := int(_t * sheet_fps) % sheet_frames
+		var w := ICON_H * fw / fh
+		draw_texture_rect_region(sheet, Rect2((size.x - w) * 0.5, bob, w, ICON_H),
+				Rect2((fr % sheet_cols) * fw, (fr / sheet_cols) * fh, fw, fh), Color(tint.r, tint.g, tint.b, a))
+	elif texture:
 		var ts := texture.get_size()
 		var w := ICON_H * ts.x / ts.y
 		draw_texture_rect(texture, Rect2((size.x - w) * 0.5, bob, w, ICON_H), false,
