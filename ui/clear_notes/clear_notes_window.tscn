@@ -12,4 +12,4 @@ offset_bottom = 560.0
 script = ExtResource("2_script")
 normal_texture = ExtResource("3_normal")
 hover_texture = ExtResource("4_hover")
-title_text = "notepad exploit"
+title_text = "notebook_exploit.exe"

@@ -6,6 +6,7 @@ const BUTTON := preload("res://art/ui/minimize/button.png")
 const TXT := preload("res://art/ui/minimize/txt.png")
 const EXE_SANDBOX := preload("res://art/ui/minimize/exe_sandbox.png")
 const EXE_SUBMISSION := preload("res://art/ui/minimize/exe_submission.png")
+const EXE_NOTEBOOK := preload("res://art/ui/minimize/exe_notebook.png")
 const COMPUTER := preload("res://art/ui/minimize/computer.png")
 const NOTEPAD := preload("res://art/ui/minimize/notepad.png")
 
@@ -26,8 +27,8 @@ static func for_title(title: String) -> Dictionary:
 			return {"tex": TXT, "tint": Color(0.82, 0.38, 0.33)}     # coral
 		"task solution":
 			return {"tex": TXT, "tint": Color(0.89, 0.4, 0.25)}      # orange
-		"notepad exploit":
-			return {"tex": TXT, "tint": Color(0.96, 0.58, 0.82)}     # pink
+		"notebook_exploit.exe":
+			return {"tex": EXE_NOTEBOOK, "tint": Color.WHITE}        # pink bar, like its window
 	if title.ends_with(".exe"):
 		return {"tex": EXE_SANDBOX, "tint": Color.WHITE}
 	return {"tex": TXT, "tint": Color(0.8, 0.8, 0.8)}
