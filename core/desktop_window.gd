@@ -30,6 +30,7 @@ func _ready() -> void:
 		_min_btn.size = Vector2(MIN_SIZE, MIN_SIZE)
 		_min_btn.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		_min_btn.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+		_min_btn.modulate.a = 0.5       # faint until hovered
 		add_child(_min_btn)
 		resized.connect(_place_min_btn)
 		_place_min_btn.call_deferred()
@@ -61,6 +62,9 @@ func _over_min_btn() -> bool:
 	return _min_btn != null and _min_btn.visible and _min_btn.get_global_rect().has_point(get_global_mouse_position())
 
 func _input(event: InputEvent) -> void:
+	if _min_btn != null and event is InputEventMouseMotion:
+		var hot := visible and _over_min_btn() and _topmost_window_at(get_global_mouse_position()) == self
+		_min_btn.modulate.a = 1.0 if hot else 0.5
 	if can_minimize and visible and event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
 		if event.pressed:
 			if _over_min_btn() and _topmost_window_at(get_global_mouse_position()) == self:
