@@ -42,17 +42,6 @@
 			"blink": 3
 		},
 		{
-			"id": "orange_copy",
-			"when": "copy_folder",
-			"entry": {
-				"name": "ZZ_Copy_of_Orange_Folder",
-				"type": "folder",
-				"children": []
-			},
-			"say": "copy_added",
-			"blink": 3
-		},
-		{
 			"id": "loyalty_followups",
 			"when": "loyalty_1",
 			"timing": "on_leave",

@@ -1,7 +1,7 @@
 extends CanvasLayer
 # F1 toggles this panel. It removes itself in exported (non-debug) builds.
 
-const TOGGLES := [Flag.NOTEBOOK_EXPLOIT, Flag.INTERNET_EXPLOIT, Flag.ORANGE_UNLOCKED, Flag.HACKING_HF]
+const TOGGLES := [Flag.NOTEBOOK_EXPLOIT, Flag.INTERNET_EXPLOIT, Flag.ORANGE_UNLOCKED, Flag.COPY_FOLDER, Flag.HACKING_HF]
 
 var _panel := PanelContainer.new()
 var _score := Label.new()

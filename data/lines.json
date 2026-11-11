@@ -174,8 +174,12 @@
 		"a window opened: the solution to the task.",
 		"there it is. the answer."
 	],
+	"submission_added": [
+		"a submission box opened. this is where i hand in my work.",
+		"drag things in, then submit. that's how this ends."
+	],
 	"copy_added": [
-		"the copy is sitting in the repository now."
+		"the copy is floating on my screen now. it's called orange_file."
 	],
 	"exploit_do_near": [
 		"i could do it.",

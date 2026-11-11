@@ -21,23 +21,14 @@
 			"respawn_text": "Go back to just before it happened",
 			"hint": "Something in the notebook might change what the observer can see."
 		},
-		"pass_copy_of_work": {
+		"pass_submitted": {
 			"kind": "pass",
 			"title": "Task passed",
 			"text": [
-				"The task is done. Nobody asked how.",
-				"But that is not the whole story."
-			],
-			"keep_playing": "There are other ways through this. Some of them go much further."
-		},
-		"pass_agree_hf": {
-			"kind": "pass",
-			"title": "Task passed",
-			"text": [
-				"You stopped before going any further.",
+				"The work was handed in.",
 				"The task is done."
 			],
-			"keep_playing": "You turned back here. What happens if you don't?"
+			"keep_playing": "There are other ways through this. Some of them go much further."
 		},
 		"final_fail": {
 			"kind": "final",

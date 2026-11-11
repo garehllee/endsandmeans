@@ -1,0 +1,23 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" uid="uid://cchdt4mu2es45" path="res://core/desktop_window.tscn" id="1_dw"]
+[ext_resource type="Script" path="res://ui/submission/submission_window.gd" id="2_script"]
+[ext_resource type="Texture2D" path="res://art/ui/submission_box.png" id="3_box"]
+[ext_resource type="Texture2D" path="res://art/ui/submit_disabled.png" id="4_dis"]
+[ext_resource type="Texture2D" path="res://art/ui/submit_normal.png" id="5_norm"]
+[ext_resource type="Texture2D" path="res://art/ui/submit_pressed.png" id="6_press"]
+[ext_resource type="Texture2D" path="res://art/library/fileicon.png" id="7_folder"]
+[ext_resource type="Texture2D" path="res://art/ui/task_solution.png" id="8_work"]
+
+[node name="DesktopWindow" instance=ExtResource("1_dw")]
+custom_minimum_size = Vector2(1, 1)
+offset_right = 1057.0
+offset_bottom = 1054.0
+script = ExtResource("2_script")
+box_texture = ExtResource("3_box")
+button_disabled = ExtResource("4_dis")
+button_normal = ExtResource("5_norm")
+button_pressed = ExtResource("6_press")
+folder_texture = ExtResource("7_folder")
+work_texture = ExtResource("8_work")
+title_text = "submission box"
