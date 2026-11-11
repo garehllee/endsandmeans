@@ -6,8 +6,8 @@
 
 [node name="DesktopWindow" instance=ExtResource("1_dw")]
 custom_minimum_size = Vector2(1, 1)
-offset_right = 880.0
-offset_bottom = 1170.0
+offset_right = 616.0
+offset_bottom = 819.0
 script = ExtResource("2_script")
 solution_texture = ExtResource("3_pic")
 title_text = "task solution"

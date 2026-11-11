@@ -24,6 +24,7 @@ const FONT := preload("res://fonts/Director-Regular.otf")
 @export var file_sheet_rows := 12
 @export var file_frames := 120
 @export var file_fps := 30.0
+@export var orange_file_width := 200.0               # the orange_file icon on the desktop (it shrinks inside the box)
 @export var drift_speed := Vector2(35.0, 65.0)        # how fast icons float around in the box (min, max)
 
 var _holder: Control
@@ -31,6 +32,7 @@ var _stage: Control
 var _button: TextureRect
 var _defs := {}                       # id -> {flag, label, tex, tint, slot}
 var _icons := {}                      # id -> SubmitIcon on the desktop
+var _windows := {}                    # id -> window that is (or was) in the box
 var _homes := {}                      # id -> where its icon rests on the desktop
 var _items: Array[Dictionary] = []    # icons in the box: {id, node, pos, vel, phase}
 var _btn_down := false
@@ -41,7 +43,7 @@ var _icon_layer: Control
 func _ready() -> void:
 	super()
 	_defs = {
-		"task_solution": {"flag": Flag.INTERNET_EXPLOIT, "label": "task_solution",
+		"task_solution": {"flag": Flag.INTERNET_EXPLOIT, "label": "task_solution", "window": true,
 				"tex": work_texture, "tint": Color.WHITE, "slot": 0},
 		"orange_file": {"flag": Flag.COPY_FOLDER, "label": "orange_file",
 				"tex": null, "sheet": file_sheet, "tint": Color.WHITE, "slot": 1},
@@ -113,6 +115,7 @@ func _on_world_closed(_id: String, result: Dictionary) -> void:
 		_resync()
 
 func _resync() -> void:
+	_connect_windows()
 	for id in _defs:
 		if Game.has_flag(_defs[id]["flag"]):
 			_make_available(id, false)
@@ -121,6 +124,8 @@ func _resync() -> void:
 	_refresh_button()
 
 func _make_available(id: String, animate: bool) -> void:
+	if _defs[id].get("window", false):
+		return                               # a window: it is dragged into the box itself
 	if _icons.has(id) or _item_index(id) >= 0:
 		return
 	var layer := _layer()
@@ -158,6 +163,9 @@ func _new_icon(id: String) -> SubmitIcon:
 		icon.sheet_rows = file_sheet_rows
 		icon.sheet_frames = file_frames
 		icon.sheet_fps = file_fps
+		var fw := file_sheet.get_width() / float(file_sheet_columns)
+		var fh := file_sheet.get_height() / float(file_sheet_rows)
+		icon.icon_h = orange_file_width * fh / fw
 	icon.dropped.connect(_on_icon_dropped)
 	return icon
 
@@ -175,12 +183,45 @@ func _clamp_icon(p: Vector2, icon: Control) -> Vector2:
 	var b := get_viewport_rect().size
 	return Vector2(clampf(p.x, 0.0, maxf(0.0, b.x - icon.size.x)), clampf(p.y, 0.0, maxf(0.0, b.y - icon.size.y)))
 
+# Windows that can be dragged into the box (they tell us where they were let go).
+func _connect_windows() -> void:
+	for w in get_tree().get_nodes_in_group("submittable_window"):
+		if not w.dropped.is_connected(_on_window_dropped):
+			w.dropped.connect(_on_window_dropped)
+
+func _on_window_dropped(w: DesktopWindow, mouse_global: Vector2) -> void:
+	if not visible or _submitting or _item_index(w.item_id) >= 0:
+		return
+	var local := _stage.get_global_transform().affine_inverse() * mouse_global
+	if not DROP.has_point(local):
+		return
+	_homes[w.item_id] = w.global_position      # it goes back here when taken out of the box
+	_windows[w.item_id] = w
+	w.visible = false
+	_add_item(w.item_id, local)
+
+# Taking a window back out of the box: it flies from the icon to where it was.
+func _restore_window(id: String, from: Vector2) -> void:
+	var w: DesktopWindow = _windows.get(id)
+	if w == null or not is_instance_valid(w):
+		return
+	var home: Vector2 = _homes.get(id, w.global_position)
+	w.visible = true
+	w.bring_to_front()
+	w.global_position = from - w.size * 0.5
+	w.modulate.a = 0.0
+	var tw := create_tween().set_parallel(true)
+	tw.tween_property(w, "global_position", w._clamp_to_viewport(home), 0.4).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	tw.tween_property(w, "modulate:a", 1.0, 0.25)
+
 func _remove(id: String) -> void:
 	if _icons.has(id):
 		_icons[id].queue_free()
 		_icons.erase(id)
 	var i := _item_index(id)
 	if i >= 0:
+		if _windows.has(id) and is_instance_valid(_windows[id]):
+			_windows[id].visible = false        # it follows its own flag; the box just lets go
 		_items[i]["node"].queue_free()
 		_items.remove_at(i)
 
@@ -315,6 +356,9 @@ func _return_item(i: int) -> void:
 	_items.remove_at(i)
 	node.queue_free()
 	_refresh_button()
+	if _defs[id].get("window", false):
+		_restore_window(id, from)
+		return
 	var layer := _layer()
 	if layer == null:
 		return

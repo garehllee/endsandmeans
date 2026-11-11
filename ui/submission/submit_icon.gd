@@ -18,6 +18,7 @@ var sheet_cols := 1
 var sheet_rows := 1
 var sheet_frames := 1
 var sheet_fps := 30.0
+var icon_h := ICON_H           # drawn height of the picture
 var home := Vector2.ZERO       # where it sits on the desktop; it flies back here when returned
 var font: Font
 
@@ -28,7 +29,7 @@ var _phase := randf() * TAU
 var _busy := false             # true while it is flying in or out (can't be grabbed)
 
 func _ready() -> void:
-	custom_minimum_size = Vector2(240, ICON_H + 70)
+	custom_minimum_size = Vector2(maxf(240.0, icon_h * 1.6), icon_h + 70.0)
 	size = custom_minimum_size
 	mouse_filter = Control.MOUSE_FILTER_STOP
 	mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
@@ -47,16 +48,16 @@ func _draw() -> void:
 		var fw := sheet.get_width() / float(sheet_cols)
 		var fh := sheet.get_height() / float(sheet_rows)
 		var fr := int(_t * sheet_fps) % sheet_frames
-		var w := ICON_H * fw / fh
-		draw_texture_rect_region(sheet, Rect2((size.x - w) * 0.5, bob, w, ICON_H),
+		var w := icon_h * fw / fh
+		draw_texture_rect_region(sheet, Rect2((size.x - w) * 0.5, bob, w, icon_h),
 				Rect2((fr % sheet_cols) * fw, (fr / sheet_cols) * fh, fw, fh), Color(tint.r, tint.g, tint.b, a))
 	elif texture:
 		var ts := texture.get_size()
-		var w := ICON_H * ts.x / ts.y
-		draw_texture_rect(texture, Rect2((size.x - w) * 0.5, bob, w, ICON_H), false,
+		var w := icon_h * ts.x / ts.y
+		draw_texture_rect(texture, Rect2((size.x - w) * 0.5, bob, w, icon_h), false,
 				Color(tint.r, tint.g, tint.b, a))
 	var f: Font = font if font else ThemeDB.fallback_font
-	var pos := Vector2(0, ICON_H + 50 + bob)
+	var pos := Vector2(0, icon_h + 50 + bob)
 	draw_string_outline(f, pos, label_text, HORIZONTAL_ALIGNMENT_CENTER, size.x, LABEL_SIZE, 10, Color.BLACK)
 	draw_string(f, pos, label_text, HORIZONTAL_ALIGNMENT_CENTER, size.x, LABEL_SIZE, Color.WHITE)
 
