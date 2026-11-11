@@ -7,6 +7,9 @@ class_name WorldWindow
 @export var window_size := Vector2(1000, 1040)
 @export var keep_open_when_closed := false   # library: true, analysis: false
 
+func _init() -> void:
+	can_minimize = false     # minigames and choice screens stay open (the library turns it back on)
+
 func _ready() -> void:
 	custom_minimum_size = window_size
 	size = window_size

@@ -9,6 +9,7 @@ script = ExtResource("2_alnpl")
 world_id = "library"
 window_size = Vector2(2000, 2040)
 keep_open_when_closed = true
+can_minimize = true
 
 [node name="Content" parent="Frame" parent_id_path=PackedInt32Array(1580076577) index="0" unique_id=844016969]
 clip_contents = true
