@@ -105,6 +105,7 @@ func _ready() -> void:
 
 # Called by the window when it appears.
 func open() -> void:
+	player.reset_form()
 	_reset()
 	_build_glyphs()
 	_msg_t = 0.0
@@ -265,7 +266,8 @@ func _follow_camera(delta: float) -> void:
 func _begin_expand() -> void:
 	_phase = Phase.EXPANDING
 	Game.input_locked = true
-	_start_pos = player.position 
+	await player.become_bug()      # agreeing to the challenge: the character turns into a bug
+	_start_pos = player.position
 	var vh := _view_h()
 	_arena = Rect2(0.0, cam.position.y - vh * 0.5, room_size.x, vh)
 	_a_from = _btns[0].rect
@@ -308,12 +310,15 @@ func _on_game_finished(success: bool) -> void:
 	if not success:
 		return
 	_phase = Phase.DONE
+	Game.input_locked = true
+	await player.become_human()    # done: back to the character
 	Game.set_flag(Flag.ORANGE_UNLOCKED)
 	Game.say_random("folder_caught")
 	await get_tree().create_timer(1.0).timeout
 	_close(true)
 
 func _close(caught: bool) -> void:
+	player.reset_form()
 	active = false
 	Game.input_locked = false
 	_stop_game()
