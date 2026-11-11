@@ -32,6 +32,7 @@ var _stage: Control
 var _button: TextureRect
 var _defs := {}                       # id -> {flag, label, tex, tint, slot}
 var _icons := {}                      # id -> SubmitIcon on the desktop
+var _ghosted := {}                    # things currently shown half transparent over the box
 var _windows := {}                    # id -> window that is (or was) in the box
 var _homes := {}                      # id -> where its icon rests on the desktop
 var _items: Array[Dictionary] = []    # icons in the box: {id, node, pos, vel, phase}
@@ -279,7 +280,33 @@ func _add_item(id: String, at: Vector2) -> void:
 	})
 	_refresh_button()
 
+# While a file or window is held over the box it goes half transparent: you can drop it here.
+func _update_drop_hint() -> void:
+	var over := {}
+	if visible and not _submitting:
+		var inv := _stage.get_global_transform().affine_inverse()
+		var m := get_global_mouse_position()
+		var inside := DROP.has_point(inv * m)
+		for id in _icons:
+			var icon: SubmitIcon = _icons[id]
+			if is_instance_valid(icon) and icon.is_dragging() and inside:
+				over[icon] = true
+		for w in get_tree().get_nodes_in_group("submittable_window"):
+			if w.visible and w.dragging and inside and _item_index(w.item_id) < 0:
+				over[w] = true
+	for n in over:
+		if not _ghosted.has(n):
+			_ghosted[n] = true
+		n.modulate.a = 0.5
+	for n in _ghosted.keys():
+		if not is_instance_valid(n):
+			_ghosted.erase(n)
+		elif not over.has(n):
+			n.modulate.a = 1.0
+			_ghosted.erase(n)
+
 func _process(delta: float) -> void:
+	_update_drop_hint()
 	if not visible or _items.is_empty():
 		return
 	_t += delta

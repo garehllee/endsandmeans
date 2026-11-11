@@ -34,6 +34,9 @@ func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_STOP
 	mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 
+func is_dragging() -> bool:
+	return _dragging
+
 func set_busy(b: bool) -> void:
 	_busy = b
 
