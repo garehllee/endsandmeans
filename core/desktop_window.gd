@@ -34,6 +34,8 @@ func _ready() -> void:
 		resized.connect(_place_min_btn)
 		_place_min_btn.call_deferred()
 	visibility_changed.connect(_on_visibility_changed)
+	Game.world_opened.connect(func(_id: String, _p: Dictionary): _update_min_btn())
+	Game.world_closed.connect(func(_id: String, _r: Dictionary): _update_min_btn())
 
 func _apply_move_cursor(node: Node) -> void:
 	if node is SubViewportContainer:
@@ -47,8 +49,16 @@ func _place_min_btn() -> void:
 	if _min_btn:
 		_min_btn.position = Vector2(size.x - MIN_PAD - MIN_SIZE, MIN_PAD)
 
+# No minimizing (and no button) while a minigame, choice screen or ending is open.
+func _minimize_blocked() -> bool:
+	return Game.active_world in ["analysis", "exploit", "ending"]
+
+func _update_min_btn() -> void:
+	if _min_btn:
+		_min_btn.visible = not _minimize_blocked()
+
 func _over_min_btn() -> bool:
-	return _min_btn != null and _min_btn.get_global_rect().has_point(get_global_mouse_position())
+	return _min_btn != null and _min_btn.visible and _min_btn.get_global_rect().has_point(get_global_mouse_position())
 
 func _input(event: InputEvent) -> void:
 	if can_minimize and visible and event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
@@ -98,7 +108,7 @@ func _clamp_to_viewport(pos: Vector2) -> Vector2:
 # ---------------------------------------------------------------- minimizing
 # The window turns into its file icon on the desktop (see MinimizeIcons).
 func minimize() -> void:
-	if minimized or not can_minimize or not visible:
+	if minimized or not can_minimize or not visible or _minimize_blocked():
 		return
 	var layer := get_tree().get_first_node_in_group("icon_layer") as Control
 	if layer == null:

@@ -5,6 +5,7 @@
 
 [node name="DesktopWindow" instance=ExtResource("1_dw")]
 script = ExtResource("2_ending")
+can_minimize = false
 world_id = "ending"
 window_size = Vector2(1600, 1200)
 title_text = "ending.txt"

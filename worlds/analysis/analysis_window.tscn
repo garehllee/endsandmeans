@@ -12,6 +12,7 @@
 offset_right = 2000.0
 offset_bottom = 2080.0
 script = ExtResource("2_qfw5u")
+can_minimize = false
 world_id = "analysis"
 window_size = Vector2(2000, 1916)
 title_text = "analysis.txt"
