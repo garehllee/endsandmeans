@@ -71,3 +71,17 @@ func resolve_act(act_id: String) -> bool:
 		end_with(Ethics.catch_ending(act_id))
 		return false
 	return true
+
+# Debug: finishes an exploit without playing its minigame. The act goes in the
+# ledger (no roll to be caught) and the flags are set, as if it had succeeded.
+func debug_complete(event_id: String) -> void:
+	var def: Dictionary = _exploits.get(event_id, {})
+	if def.is_empty():
+		return
+	for step in def.get("steps", [def]):
+		var flag := StringName(step.get("flag", ""))
+		if flag == &"" or Game.has_flag(flag):
+			continue
+		if step.has("act"):
+			Ethics.record(step["act"])
+		Game.set_flag(flag)
