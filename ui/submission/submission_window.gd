@@ -1,6 +1,6 @@
 extends DesktopWindow
-# The submission box. It opens as its own window once the orange folder task is
-# given (the orange folder is found). Files that become available (the orange
+# The submission box. It opens as its own window the first time the task file
+# (the objectives) is opened. Files that become available (the orange
 # folder, the task solution, the copy) float on the desktop as little icons:
 # drag one into the box and it drifts around in there; click it in the box and
 # it goes back to the desktop. SUBMIT hands in whatever is in the box, and is
@@ -67,7 +67,7 @@ func _ready() -> void:
 
 	Game.flag_changed.connect(_on_flag_changed)
 	Game.world_closed.connect(_on_world_closed)
-	visible = Game.has_flag(Flag.ORANGE_UNLOCKED)
+	visible = Game.has_flag(Flag.TASK_RECEIVED)
 	_resync.call_deferred()
 
 # The picture is drawn at its own size and scaled to fit the window's content.
@@ -87,7 +87,7 @@ func _layer() -> Control:
 
 # ---------------------------------------------------------------- what's available
 func _on_flag_changed(flag: StringName, value: bool) -> void:
-	if flag == Flag.ORANGE_UNLOCKED:
+	if flag == Flag.TASK_RECEIVED:
 		if not value:
 			visible = false
 		elif not visible:
@@ -106,7 +106,7 @@ func _on_flag_changed(flag: StringName, value: bool) -> void:
 # After a respawn the flags are put back without signals; line everything up again.
 func _on_world_closed(_id: String, result: Dictionary) -> void:
 	if result.get("action", "") == "respawn":
-		visible = Game.has_flag(Flag.ORANGE_UNLOCKED)
+		visible = Game.has_flag(Flag.TASK_RECEIVED)
 		_resync()
 
 func _resync() -> void:
