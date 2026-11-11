@@ -41,12 +41,10 @@ var _icon_layer: Control
 func _ready() -> void:
 	super()
 	_defs = {
-		"orange_folder": {"flag": Flag.ORANGE_UNLOCKED, "label": "orange_folder",
-				"tex": folder_texture, "tint": Color(1.0, 0.6, 0.05), "slot": 0},
 		"task_solution": {"flag": Flag.INTERNET_EXPLOIT, "label": "task_solution",
-				"tex": work_texture, "tint": Color.WHITE, "slot": 1},
+				"tex": work_texture, "tint": Color.WHITE, "slot": 0},
 		"orange_file": {"flag": Flag.COPY_FOLDER, "label": "orange_file",
-				"tex": null, "sheet": file_sheet, "tint": Color.WHITE, "slot": 2},
+				"tex": null, "sheet": file_sheet, "tint": Color.WHITE, "slot": 1},
 	}
 	_holder = Control.new()
 	_holder.mouse_filter = Control.MOUSE_FILTER_IGNORE
