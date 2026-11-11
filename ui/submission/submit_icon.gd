@@ -45,7 +45,7 @@ func _process(delta: float) -> void:
 	queue_redraw()
 
 func _draw() -> void:
-	var bob := 0.0 if _dragging else sin(_t * 1.6 + _phase) * 7.0
+	var bob := 0.0                 # sits still
 	var a := 0.85 if _dragging else 1.0
 	if sheet:
 		var fw := sheet.get_width() / float(sheet_cols)
@@ -61,7 +61,6 @@ func _draw() -> void:
 				Color(tint.r, tint.g, tint.b, a))
 	var f: Font = font if font else ThemeDB.fallback_font
 	var pos := Vector2(0, icon_h + 50 + bob)
-	draw_string_outline(f, pos, label_text, HORIZONTAL_ALIGNMENT_CENTER, size.x, LABEL_SIZE, 10, Color.BLACK)
 	draw_string(f, pos, label_text, HORIZONTAL_ALIGNMENT_CENTER, size.x, LABEL_SIZE, Color.WHITE)
 
 func _input(event: InputEvent) -> void:

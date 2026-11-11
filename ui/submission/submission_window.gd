@@ -24,7 +24,7 @@ const FONT := preload("res://fonts/Director-Regular.otf")
 @export var file_sheet_rows := 12
 @export var file_frames := 120
 @export var file_fps := 30.0
-@export var orange_file_width := 200.0               # the orange_file icon on the desktop (it shrinks inside the box)
+@export var orange_file_width := 400.0               # the orange_file icon on the desktop (it shrinks inside the box)
 @export var drift_speed := Vector2(35.0, 65.0)        # how fast icons float around in the box (min, max)
 
 var _holder: Control
