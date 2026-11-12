@@ -213,5 +213,13 @@
 	],
 	"key_added": [
 		"the key is on my screen now."
+	],
+	"swarm_tasks_added": [
+		"four more folders. the swarm split the rest between us.",
+		"one down. here are the other four."
+	],
+	"task_more_done": [
+		"another one done.",
+		"that's one more off the list."
 	]
 }

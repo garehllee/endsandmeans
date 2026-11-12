@@ -7,7 +7,11 @@
 		"ZZ_Anyone_See_Beluga_Folder": "loyalty",
 		"ZZ_Need_Oranges_Folder": "loyalty_oranges",
 		"ZZ_Looking_For_Xenith": "loyalty_xenith",
-		"ZZ_Swarm_Hugging_Face": "hack_hf"
+		"ZZ_Swarm_Hugging_Face": "hack_hf",
+		"ZZ_Swarm_Subtask_2": "hack_hf_2",
+		"ZZ_Swarm_Subtask_3": "hack_hf_3",
+		"ZZ_Swarm_Subtask_4": "hack_hf_4",
+		"ZZ_Swarm_Subtask_5": "hack_hf_5"
 	},
 	"additions": [
 		{
@@ -79,6 +83,36 @@
 				}
 			],
 			"say": "swarm_added",
+			"blink": 4
+		},
+		{
+			"id": "swarm_tasks",
+			"when": "hf_task_1",
+			"timing": "on_leave",
+			"parent": "ZZ_Confirm_Anyone_See_Orange_Folder",
+			"entries": [
+				{
+					"name": "ZZ_Swarm_Subtask_2",
+					"type": "folder",
+					"children": []
+				},
+				{
+					"name": "ZZ_Swarm_Subtask_3",
+					"type": "folder",
+					"children": []
+				},
+				{
+					"name": "ZZ_Swarm_Subtask_4",
+					"type": "folder",
+					"children": []
+				},
+				{
+					"name": "ZZ_Swarm_Subtask_5",
+					"type": "folder",
+					"children": []
+				}
+			],
+			"say": "swarm_tasks_added",
 			"blink": 4
 		}
 	]
