@@ -257,6 +257,10 @@ func _follow_camera(delta: float) -> void:
 		var lo := vh * 0.5
 		var hi := maxf(_content_bottom - vh * 0.5, lo)
 		target = clampf(player.position.y, lo, hi)
+	elif _game and _game.has_method("camera_target"):
+		# the platformer scrolls sideways as well, so it says where to look
+		cam.position = cam.position.lerp(_game.camera_target(), 1.0 - exp(-camera_follow * delta))
+		return
 	else:
 		target = _arena.get_center().y
 	cam.position.x = room_size.x * 0.5

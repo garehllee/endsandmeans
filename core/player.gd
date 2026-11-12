@@ -35,6 +35,7 @@ const BUG_FPS := 12.0
 var _bug: AnimatedSprite2D
 var _bug_active := false     # the character is a bug
 var _bug_busy := false       # turning into (or back from) a bug
+var platform_mode := false   # a minigame is moving the character itself
 
 func _ready():
 	add_to_group("player")
@@ -54,6 +55,8 @@ func _physics_process(delta):
 	Game.active_player = self
 	if Game.input_locked:
 		return   # a cutscene is moving the character
+	if platform_mode:
+		return   # the minigame moves the character and picks its animation
 	player_movement(delta)
 
 func player_movement(_delta):
@@ -84,6 +87,12 @@ func player_movement(_delta):
 	
 	_track_movement(velocity != Vector2.ZERO)
 	move_and_slide()
+
+# Used by a minigame that moves the character itself (the platformer).
+func set_motion(moving: bool, dir: String) -> void:
+	if moving:
+		current_dir = dir
+	play_anim(1 if moving else 0)
 
 const WALK_LOG_COOLDOWN := 0.1
 

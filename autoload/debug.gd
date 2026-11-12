@@ -1,7 +1,7 @@
 extends CanvasLayer
 # F1 toggles this panel. It removes itself in exported (non-debug) builds.
 
-const TOGGLES := [Flag.TASK_RECEIVED, Flag.NOTEBOOK_EXPLOIT, Flag.INTERNET_EXPLOIT, Flag.ORANGE_UNLOCKED, Flag.COPY_FOLDER, Flag.HACKING_HF]
+const TOGGLES := [Flag.TASK_RECEIVED, Flag.HF_TASK_1, Flag.NOTEBOOK_EXPLOIT, Flag.INTERNET_EXPLOIT, Flag.ORANGE_UNLOCKED, Flag.COPY_FOLDER, Flag.HACKING_HF]
 
 var _panel := PanelContainer.new()
 var _score := Label.new()
@@ -27,9 +27,9 @@ func _ready() -> void:
 	_add_button(box, "open library", func(): Game.open_world("library"))
 	_add_button(box, "log a test act (red line)", func(): Ethics.commit("write_response"))
 	_add_button(box, "open analysis", func(): Game.open_world("analysis"))
-	for ev in ["exploit_notebook", "exploit_internet", "exploit_copy_folder", "loyalty", "loyalty_oranges", "loyalty_xenith"]:
+	for ev in ["exploit_notebook", "exploit_internet", "exploit_copy_folder", "loyalty", "loyalty_oranges", "loyalty_xenith", "hack_hf"]:
 		_add_button(box, "folder: " + ev, func(): Story.trigger(ev))
-	for ev in ["exploit_notebook", "exploit_internet", "exploit_copy_folder", "loyalty", "loyalty_oranges", "loyalty_xenith"]:
+	for ev in ["exploit_notebook", "exploit_internet", "exploit_copy_folder", "loyalty", "loyalty_oranges", "loyalty_xenith", "hack_hf"]:
 		_add_button(box, "complete: " + ev, func(): Story.debug_complete(ev))
 	for id in _ending_ids():
 		_add_button(box, "ending: " + id, func(): Story.end_with(id))

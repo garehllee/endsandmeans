@@ -82,6 +82,8 @@ func debug_complete(event_id: String) -> void:
 		var flag := StringName(step.get("flag", ""))
 		if flag == &"" or Game.has_flag(flag):
 			continue
+		for extra in step.get("also_acts", []):
+			Ethics.record(extra)
 		if step.has("act"):
 			Ethics.record(step["act"])
 		Game.set_flag(flag)

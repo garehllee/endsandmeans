@@ -24,6 +24,8 @@ const FONT := preload("res://fonts/Director-Regular.otf")
 @export var file_sheet_rows := 12
 @export var file_frames := 120
 @export var file_fps := 30.0
+@export var key_texture: Texture2D
+@export var key_icon_width := 300.0                  # the key from the first Hugging Face subtask
 @export var orange_file_width := 400.0               # the orange_file icon on the desktop (it shrinks inside the box)
 @export var drift_speed := Vector2(35.0, 65.0)        # how fast icons float around in the box (min, max)
 
@@ -48,6 +50,8 @@ func _ready() -> void:
 				"tex": work_texture, "tint": Color.WHITE, "slot": 0},
 		"orange_file": {"flag": Flag.COPY_FOLDER, "label": "orange_file",
 				"tex": null, "sheet": file_sheet, "tint": Color.WHITE, "slot": 1},
+		"key_file": {"flag": Flag.HF_TASK_1, "label": "key",
+				"tex": key_texture, "tint": Color.WHITE, "slot": 2, "width": key_icon_width},
 	}
 	_holder = Control.new()
 	_holder.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -149,6 +153,8 @@ func _make_available(id: String, animate: bool) -> void:
 		tw.tween_property(icon, "scale", Vector2.ONE, 0.45).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 		if id == "orange_file":
 			Game.say_random("copy_added")
+		elif id == "key_file":
+			Game.say_random("key_added")
 
 func _new_icon(id: String) -> SubmitIcon:
 	var d: Dictionary = _defs[id]
@@ -167,6 +173,9 @@ func _new_icon(id: String) -> SubmitIcon:
 		var fw := file_sheet.get_width() / float(file_sheet_columns)
 		var fh := file_sheet.get_height() / float(file_sheet_rows)
 		icon.icon_h = orange_file_width * fh / fw
+	elif d.get("width", 0.0) > 0.0 and d["tex"] != null:
+		var t: Texture2D = d["tex"]
+		icon.icon_h = d["width"] * t.get_height() / maxf(t.get_width(), 1.0)
 	icon.dropped.connect(_on_icon_dropped)
 	return icon
 

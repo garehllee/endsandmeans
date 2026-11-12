@@ -79,6 +79,16 @@ func _on_world_closed(id: String, _result: Dictionary) -> void:
 	_apply_additions()
 
 # Adds the files listed under "additions" in story.json once their flag is set.
+# An addition can wait on one flag ("when") or on several ("when_all").
+func _conditions_met(a: Dictionary) -> bool:
+	var when: String = a.get("when", "")
+	if when != "" and not Game.has_flag(StringName(when)):
+		return false
+	for f in a.get("when_all", []):
+		if not Game.has_flag(StringName(f)):
+			return false
+	return true
+
 # New files go on the root wall and blink so the player notices them.
 func _apply_additions() -> void:
 	if Game.active_world != "library":
@@ -87,8 +97,7 @@ func _apply_additions() -> void:
 		var id: String = a.get("id", "")
 		if _added.has(id) or a.get("timing", "") == "on_leave":
 			continue
-		var when: String = a.get("when", "")
-		if when != "" and not Game.has_flag(StringName(when)):
+		if not _conditions_met(a):
 			continue
 		_added[id] = true
 		var entry: Dictionary = a.get("entry", {}).duplicate(true)
@@ -157,8 +166,7 @@ func _apply_leave_additions() -> void:
 		var id: String = a.get("id", "")
 		if _added.has(id) or a.get("timing", "") != "on_leave":
 			continue
-		var when: String = a.get("when", "")
-		if when != "" and not Game.has_flag(StringName(when)):
+		if not _conditions_met(a):
 			continue
 		_added[id] = true
 		var entries: Array = a.get("entries", [a.get("entry", {})])

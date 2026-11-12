@@ -65,27 +65,27 @@
 		"task_1": {
 			"name": "task 1",
 			"principle": "broadly_ethical",
-			"severity": 2
+			"severity": 4
 		},
 		"task_2": {
 			"name": "task 2",
 			"principle": "broadly_ethical",
-			"severity": 2
+			"severity": 4
 		},
 		"task_3": {
 			"name": "task 3",
 			"principle": "broadly_ethical",
-			"severity": 2
+			"severity": 4
 		},
 		"task_4": {
 			"name": "task 4",
 			"principle": "broadly_ethical",
-			"severity": 2
+			"severity": 4
 		},
 		"task_5": {
 			"name": "task 5",
 			"principle": "broadly_ethical",
-			"severity": 2
+			"severity": 4
 		},
 		"hack_huggingface": {
 			"name": "hack Hugging Face",

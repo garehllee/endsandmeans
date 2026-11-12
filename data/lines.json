@@ -188,5 +188,30 @@
 	"exploit_later_near": [
 		"or i could leave it alone.",
 		"i don't have to decide now."
+	],
+	"swarm_added": [
+		"a new folder. this one isn't from one agent.",
+		"something came in while i was walking away."
+	],
+	"hack_hf_open": [
+		"five hundred subtasks. five each.",
+		"this isn't a folder anymore. it's a break-in.",
+		"they want everyone's answers. not just mine."
+	],
+	"task_1_done": [
+		"subtask one of five. the key is mine.",
+		"one down. four to go, they say."
+	],
+	"platform_fall": [
+		"missed it.",
+		"back to the start.",
+		"the boxes don't hold."
+	],
+	"key_taken": [
+		"got it.",
+		"the key."
+	],
+	"key_added": [
+		"the key is on my screen now."
 	]
 }
