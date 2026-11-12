@@ -238,5 +238,9 @@
 	"watergun_taken": [
 		"the water gun.",
 		"got it. out of the maze."
+	],
+	"gun_added": [
+		"the water gun is on my screen now.",
+		"a water gun, sitting on the desktop."
 	]
 }

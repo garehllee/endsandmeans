@@ -10,6 +10,7 @@
 [ext_resource type="Texture2D" path="res://art/ui/task_solution.png" id="8_work"]
 [ext_resource type="Texture2D" path="res://art/copy/file_spin.png" id="9_spin"]
 [ext_resource type="Texture2D" path="res://art/platform/key.png" id="10_key"]
+[ext_resource type="Texture2D" path="res://art/laser/watergun.png" id="11_gun"]
 
 [node name="DesktopWindow" instance=ExtResource("1_dw")]
 custom_minimum_size = Vector2(1, 1)
@@ -24,4 +25,5 @@ folder_texture = ExtResource("7_folder")
 work_texture = ExtResource("8_work")
 file_sheet = ExtResource("9_spin")
 key_texture = ExtResource("10_key")
+gun_texture = ExtResource("11_gun")
 title_text = "submission.exe"

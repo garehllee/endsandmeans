@@ -26,6 +26,8 @@ const FONT := preload("res://fonts/Director-Regular.otf")
 @export var file_fps := 30.0
 @export var key_texture: Texture2D
 @export var key_icon_width := 300.0                  # the key from the first Hugging Face subtask
+@export var gun_texture: Texture2D
+@export var gun_icon_width := 260.0                  # the water gun from the second
 @export var orange_file_width := 400.0               # the orange_file icon on the desktop (it shrinks inside the box)
 @export var drift_speed := Vector2(35.0, 65.0)        # how fast icons float around in the box (min, max)
 
@@ -52,6 +54,8 @@ func _ready() -> void:
 				"tex": null, "sheet": file_sheet, "tint": Color.WHITE, "slot": 1},
 		"key_file": {"flag": Flag.HF_TASK_1, "label": "key",
 				"tex": key_texture, "tint": Color.WHITE, "slot": 2, "width": key_icon_width},
+		"water_gun": {"flag": Flag.HF_TASK_2, "label": "water_gun",
+				"tex": gun_texture, "tint": Color.WHITE, "slot": 3, "width": gun_icon_width},
 	}
 	_holder = Control.new()
 	_holder.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -155,6 +159,8 @@ func _make_available(id: String, animate: bool) -> void:
 			Game.say_random("copy_added")
 		elif id == "key_file":
 			Game.say_random("key_added")
+		elif id == "water_gun":
+			Game.say_random("gun_added")
 
 func _new_icon(id: String) -> SubmitIcon:
 	var d: Dictionary = _defs[id]
