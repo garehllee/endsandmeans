@@ -43,6 +43,7 @@ enum Phase { CHOOSE, EXPANDING, ARENA, DONE }
 @export var button_closed_h := 175.0
 @export var button_open_h := 460.0
 @export var button_gap := 42.0
+@export var message_margin := 70.0     # clear space kept between the message and the first button
 @export var bottom_margin := 105.0
 @export var open_margin := 260.0         # how close the player gets before a button opens
 @export var smoothing := 10.0
@@ -76,6 +77,7 @@ var _reacting := false
 var _focus := -1
 var _prev_focus := -1
 var _content_bottom := 1500.0
+var _msg_bottom := 0.0
 var _expand_t := 0.0
 var _a_from := Rect2()
 var _arena := Rect2()
@@ -107,8 +109,8 @@ func _ready() -> void:
 # Called by the window when it appears.
 func open() -> void:
 	player.reset_form()
-	_reset()
 	_build_glyphs()
+	_reset()
 	_msg_t = 0.0
 	active = true
 
@@ -123,6 +125,7 @@ func _build_glyphs() -> void:
 	para.alignment = HORIZONTAL_ALIGNMENT_CENTER
 	para.add_string(message, f, message_size)
 	var line_h := f.get_height(message_size)
+	_msg_bottom = message_y + para.get_line_count() * line_h
 	for li in para.get_line_count():
 		var r := para.get_line_range(li)
 		var text := message.substr(r.x, r.y - r.x).strip_edges(false, true)
@@ -169,7 +172,7 @@ func _process(delta: float) -> void:
 	queue_redraw()
 
 func _layout() -> void:
-	var y := buttons_top
+	var y := maxf(buttons_top, _msg_bottom + message_margin)
 	for b in _btns:
 		var h := lerpf(button_closed_h, button_open_h, b.open)
 		b.rect = Rect2(button_x, y, button_w, h)
