@@ -13,5 +13,6 @@ class_name MinigameConfig
 @export var arena_image: Texture2D
 @export var firewall_icon: Texture2D
 @export var folder_icon: Texture2D
-@export var button_dim := 0.0                  # black laid over the picture on the open button (0 to 1)
+@export var button_dim := 0.0                  # tint laid over the picture on the open button (0 to 1)
+@export var button_dim_color := Color.BLACK    # colour of that tint
 @export var button_text_color := Color.BLACK   # type on the open button

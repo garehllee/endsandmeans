@@ -400,7 +400,7 @@ func _draw_button(i: int, b: Btn, f: Font, m: Font) -> void:
 			draw_texture_rect_region(config.arena_image, r, _cover_region(config.arena_image, r),
 					Color(1, 1, 1, o))
 			if config.button_dim > 0.0:
-				draw_rect(r, Color(0, 0, 0, config.button_dim * o))
+				draw_rect(r, Color(config.button_dim_color, config.button_dim * o))
 		else:
 			draw_texture_rect(_grad_tex, r, false, Color(1, 1, 1, o))
 			if config.arena_image and _expand_t > 0.0:
