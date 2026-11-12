@@ -32,4 +32,4 @@ class_name PetShopConfig
 @export var scoot_time := Vector2(0.5, 1.3)               # how long a scoot lasts
 
 @export_group("Feel")
-@export var adopt_hold := 0.9                             # pause on the adoption before the game ends
+@export var adopt_hold := 1.5                             # pause on the adoption before the game ends

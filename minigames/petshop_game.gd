@@ -36,6 +36,10 @@ var _mice: Array[Mouse] = []
 var _touching: Mouse = null
 var _timer := 0.0
 var _t := 0.0
+var _hearts: Array[Dictionary] = []   # {pos, vel, age, life, size, sway, color}
+var _heart_layer: Node2D              # draws the hearts over the mice
+var _heart_shape := PackedVector2Array()
+const HEART_COLORS := [Color("ff4f81"), Color("ff7aa2"), Color("ff2e63"), Color("ff9dbb")]
 
 func setup(arena: Rect2, player: Node2D, _start_pos: Vector2) -> void:
 	_arena = arena
@@ -59,6 +63,14 @@ func prepare(cfg: MinigameConfig) -> void:
 		m.sprite.visible = false
 		add_child(m.sprite)
 		_mice.append(m)
+	_heart_layer = Node2D.new()
+	_heart_layer.draw.connect(_draw_hearts)
+	add_child(_heart_layer)              # after the mice, so the hearts are on top of them
+	for i in 28:
+		var a := TAU * float(i) / 28.0
+		# the classic heart curve, scaled to about one unit across
+		_heart_shape.append(Vector2(16.0 * pow(sin(a), 3.0),
+				-(13.0 * cos(a) - 5.0 * cos(2.0 * a) - 2.0 * cos(3.0 * a) - cos(4.0 * a))) / 32.0)
 	_built = true
 	set_expand(_arena, 0.0)
 
@@ -135,6 +147,7 @@ func _process(delta: float) -> void:
 				running = false
 				finished.emit(true)
 	_place()
+	_tick_hearts(delta)
 
 func _player_pos() -> Vector2:
 	return _to_picture(_player.position) if _player else config.start_pos
@@ -210,3 +223,41 @@ func _adopt(m: Mouse) -> void:
 	Game.input_locked = true
 	Game.say_random("mouse_adopted")
 	Pets.adopt(m.index, _to_room(m.pos), m.face_right)
+	_burst_hearts(m.pos)
+
+# ---------------------------------------------------------------- hearts
+func _burst_hearts(at: Vector2) -> void:
+	for i in 10:
+		_hearts.append({
+			"pos": at + Vector2(randf_range(-30.0, 30.0), randf_range(-50.0, -10.0)),
+			"vel": Vector2(randf_range(-110.0, 110.0), randf_range(-300.0, -140.0)),
+			"age": -randf_range(0.0, 0.18),               # they don't all leave at once
+			"life": randf_range(0.9, 1.3),
+			"size": randf_range(26.0, 48.0),
+			"sway": randf() * TAU,
+			"color": HEART_COLORS[randi() % HEART_COLORS.size()],
+		})
+
+func _tick_hearts(delta: float) -> void:
+	for h in _hearts:
+		h["age"] += delta
+		if h["age"] > 0.0:
+			h["vel"] = (h["vel"] as Vector2) * (1.0 - 1.6 * delta)       # they slow as they rise
+			h["pos"] += (h["vel"] as Vector2) * delta + Vector2(sin(h["age"] * 7.0 + h["sway"]) * 24.0 * delta, 0.0)
+	_hearts = _hearts.filter(func(h: Dictionary): return h["age"] < h["life"])
+	if _heart_layer:
+		_heart_layer.queue_redraw()
+
+func _draw_hearts() -> void:
+	for h in _hearts:
+		var age: float = h["age"]
+		if age <= 0.0:
+			continue
+		var life: float = h["life"]
+		var pop := clampf(age / 0.18, 0.0, 1.0)                 # pops in
+		var fade := clampf((life - age) / (life * 0.4), 0.0, 1.0) # fades out over the last stretch
+		var c: Color = h["color"]
+		var sz: float = h["size"] * (0.4 + 0.6 * pop) * _s
+		_heart_layer.draw_set_transform(_to_room(h["pos"]), 0.0, Vector2(sz, sz))
+		_heart_layer.draw_colored_polygon(_heart_shape, Color(c, fade))
+	_heart_layer.draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
