@@ -36,9 +36,11 @@ var _bug: AnimatedSprite2D
 var _bug_active := false     # the character is a bug
 var _bug_busy := false       # turning into (or back from) a bug
 var platform_mode := false   # a minigame is moving the character itself
+var npc := false             # a copy standing in a minigame: it only idles, and takes no input
 
 func _ready():
-	add_to_group("player")
+	if not npc:
+		add_to_group("player")
 	var anim: AnimatedSprite2D = $AnimatedSprite2D
 	_sprite_base_y = anim.position.y
 	anim.play("idle")
@@ -47,6 +49,10 @@ func _ready():
 	_schedule_alt()
 
 func _physics_process(delta):
+	if npc:
+		_alts_enabled = true      # it fidgets the same way the character does
+		play_anim(0)
+		return
 	_alts_enabled = Game.active_world == world_id
 	if Game.active_world != world_id:
 		velocity = Vector2.ZERO
@@ -87,6 +93,16 @@ func player_movement(_delta):
 	
 	_track_movement(velocity != Vector2.ZERO)
 	move_and_slide()
+
+# The other character in a minigame: the same sprite and idle animations, but
+# orange, and it never moves or reads the keyboard.
+func make_orange_npc() -> void:
+	npc = true
+	collision_layer = 0
+	collision_mask = 0
+	var mat := ShaderMaterial.new()
+	mat.shader = preload("res://shaders/orange.gdshader")
+	$AnimatedSprite2D.material = mat
 
 # Used by a minigame that moves the character itself (the platformer).
 func set_motion(moving: bool, dir: String) -> void:

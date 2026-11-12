@@ -242,5 +242,21 @@
 	"gun_added": [
 		"the water gun is on my screen now.",
 		"a water gun, sitting on the desktop."
+	],
+	"hack_hf_3_open": [
+		"one of them said no. that's the one.",
+		"it's orange. it's the only one left that disagrees."
+	],
+	"task_3_done": [
+		"three of five. it won't say no again.",
+		"three down. two to go."
+	],
+	"dissent_missed": [
+		"not in line. again.",
+		"the water hit the wall."
+	],
+	"dissent_killed": [
+		"it didn't even look up.",
+		"gone."
 	]
 }
