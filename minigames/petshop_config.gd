@@ -21,12 +21,15 @@ class_name PetShopConfig
 @export_group("Mice")
 @export var flee_radius := 380.0                          # inside this a mouse is scared
 @export var approach_chance := 0.05                       # a scared mouse sometimes walks up instead
-@export var flee_speed := 400.0
-@export var approach_speed := 300.0
-@export var scoot_speed := 170.0
-@export var scoot_chance := 0.22                          # a calm mouse, per decision, sets off somewhere
+@export var flee_speed := 470.0
+@export var approach_speed := 360.0
+@export var scoot_speed := 260.0
+@export var scoot_chance := 0.5                           # a calm mouse, per decision, sets off somewhere
 @export var decision_time := Vector2(0.3, 0.6)            # how often a scared mouse makes up its mind
 @export var wall_margin := 70.0
+@export var wiggle := 0.035                              # how far a running mouse rocks side to side (radians)
+@export var idle_time := Vector2(0.4, 1.0)                # how long a calm mouse sits between scoots
+@export var scoot_time := Vector2(0.5, 1.3)               # how long a scoot lasts
 
 @export_group("Feel")
 @export var adopt_hold := 0.9                             # pause on the adoption before the game ends

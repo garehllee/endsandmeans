@@ -90,7 +90,7 @@ func _place() -> void:
 		m.sprite.scale = Vector2.ONE * k * lift
 		m.sprite.flip_h = m.face_right                  # the pictures face left
 		m.sprite.position = _to_room(m.pos)
-		m.sprite.rotation = sin(_t * 20.0 + m.phase) * 0.1 if m.speed > 0.0 else 0.0
+		m.sprite.rotation = sin(_t * 14.0 + m.phase) * config.wiggle if m.speed > 0.0 else 0.0
 		m.sprite.modulate = Color(1.25, 1.25, 1.25, 1.0) if m == _touching else Color.WHITE
 		m.sprite.visible = _expand >= 0.999
 
@@ -174,11 +174,11 @@ func _decide(m: Mouse, to_p: Vector2) -> void:
 	elif randf() < config.scoot_chance:
 		m.dir = Vector2.from_angle(randf() * TAU)
 		m.speed = config.scoot_speed
-		m.timer = randf_range(0.4, 0.9)
+		m.timer = randf_range(config.scoot_time.x, config.scoot_time.y)
 		_along_walls(m, m.dir)
 	else:
 		m.speed = 0.0
-		m.timer = randf_range(0.6, 1.6)
+		m.timer = randf_range(config.idle_time.x, config.idle_time.y)
 
 # A mouse at a wall that would run into it runs along it instead, the way that
 # takes it farther from `away`.

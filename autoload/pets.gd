@@ -85,7 +85,7 @@ func _follow(p: Node2D, delta: float) -> void:
 		moving = true
 		if absf(to.x) > 8.0:
 			_mouse.flip_h = to.x > 0.0           # the picture faces left
-	_mouse.rotation = sin(_t * 22.0) * 0.1 if moving else lerpf(_mouse.rotation, 0.0, 0.25)
+	_mouse.rotation = sin(_t * 14.0) * 0.035 if moving else lerpf(_mouse.rotation, 0.0, 0.25)
 
 # Keeps the mouse in step with the flags (restarting a run takes it away).
 func _sync() -> void:
