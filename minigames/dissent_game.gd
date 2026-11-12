@@ -34,7 +34,6 @@ var _shot_dir := 1.0
 var _shot_hit := false
 var _killed := false
 var _pause := 0.0
-var _shots := 0
 var _timer := 0.0
 
 func setup(arena: Rect2, player: Node2D, _start_pos: Vector2) -> void:
@@ -184,7 +183,6 @@ func _try_shoot() -> void:
 	_shot_t = 0.0
 	_shot_dir = _side()
 	_shot_hit = absf(_pos.y - config.orange_pos.y) <= config.line_tolerance
-	_shots += 1
 	if _player:
 		_player.set_motion(false, "right" if _shot_dir > 0.0 else "left")
 	if not _shot_hit:
@@ -205,7 +203,6 @@ func _draw() -> void:
 	if not _built or _expand < 0.999:
 		return
 	_draw_gun()
-	_draw_hint()
 
 func _draw_gun() -> void:
 	if config.gun_texture == null:
@@ -245,13 +242,3 @@ func _draw_beam() -> void:
 		x += seg
 		off = 0.0
 	_beam_layer.draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
-
-func _draw_hint() -> void:
-	if _shots > 0 or _state != State.PLAYING:
-		return
-	var f: Font = config.font if config.font else ThemeDB.fallback_font
-	var text := "arrows to move. E to fire."
-	var fs := int(46 * _s)
-	var w := f.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x
-	draw_string(f, _to_room(Vector2(800.0, 440.0)) - Vector2(w * 0.5, 0.0), text,
-			HORIZONTAL_ALIGNMENT_LEFT, -1, fs, Color(0, 0, 0, 0.7))
