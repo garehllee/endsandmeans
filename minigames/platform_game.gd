@@ -72,15 +72,15 @@ func _box_texture() -> Texture2D:
 
 # Every box is its own layer: each one is exclusion-blended over everything drawn
 # behind it, the boxes before it included, so overlaps pile up and go glitchy.
-# That means a fresh copy of the screen in front of each box, over its own patch
-# of screen only, so the cost stays with what is on screen.
+# That means a fresh copy of the whole screen in front of each box; boxes that
+# are off screen are switched off, so only the visible ones pay for it.
 func _build_boxes() -> void:
 	var mat := ShaderMaterial.new()
 	mat.shader = EXCLUSION_SHADER
 	var tex := _box_texture()
 	for i in config.platforms.size():
 		var copy := BackBufferCopy.new()
-		copy.copy_mode = BackBufferCopy.COPY_MODE_RECT
+		copy.copy_mode = BackBufferCopy.COPY_MODE_VIEWPORT   # the whole screen, so nothing stale is ever sampled
 		copy.z_index = 1
 		copy.visible = false
 		add_child(copy)
@@ -174,7 +174,6 @@ func _place() -> void:
 		sp.scale = r.size * _s          # the picture is one pixel, so this is its size
 		var copy: BackBufferCopy = _copies[i]
 		copy.visible = on
-		copy.rect = room.grow(4.0)
 	if _key:
 		_key.visible = show and _state != State.TAKEN
 		_key.position = _to_room(config.key_pos)
