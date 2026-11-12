@@ -399,6 +399,8 @@ func _draw_button(i: int, b: Btn, f: Font, m: Font) -> void:
 			# expansion into the game doesn't change what's behind it.
 			draw_texture_rect_region(config.arena_image, r, _cover_region(config.arena_image, r),
 					Color(1, 1, 1, o))
+			if config.button_dim > 0.0:
+				draw_rect(r, Color(0, 0, 0, config.button_dim * o))
 		else:
 			draw_texture_rect(_grad_tex, r, false, Color(1, 1, 1, o))
 			if config.arena_image and _expand_t > 0.0:
@@ -414,7 +416,7 @@ func _draw_button(i: int, b: Btn, f: Font, m: Font) -> void:
 	var shows_new := i == 0 and new_folder_name != ""
 	var text_y := r.position.y + r.size.y * lerpf(0.5, 0.81, o if shows_new else 0.0)
 	draw_string(f, Vector2(r.position.x, text_y + button_font_size * 0.35), b.label,
-			HORIZONTAL_ALIGNMENT_CENTER, r.size.x, button_font_size, Color(0, 0, 0, fade))
+			HORIZONTAL_ALIGNMENT_CENTER, r.size.x, button_font_size, _button_text(i, fade))
 
 	if shows_new:
 		var a := clampf((o - 0.4) / 0.5, 0.0, 1.0) * fade
@@ -431,10 +433,14 @@ func _draw_button(i: int, b: Btn, f: Font, m: Font) -> void:
 				draw_rect(Rect2(cx - icon_width * 0.5, top, icon_width, ih), Color(1, 1, 1, a * 0.45))
 			var lw := m.get_string_size(new_folder_name, HORIZONTAL_ALIGNMENT_LEFT, -1, small_size).x
 			var ly := r.position.y + r.size.y * 0.54
-			var col := Color(0, 0, 0, a)
+			var col := _button_text(i, a)
 			draw_string(m, Vector2(cx - lw * 0.5, ly), new_folder_name,
 					HORIZONTAL_ALIGNMENT_LEFT, -1, small_size, col)
 			draw_line(Vector2(cx - lw * 0.5, ly + 5), Vector2(cx + lw * 0.5, ly + 5), col, 2.0)
+
+func _button_text(i: int, a: float) -> Color:
+	var c := config.button_text_color if i == 0 and show_game_background and config.arena_image else Color.BLACK
+	return Color(c.r, c.g, c.b, a)
 
 func _cover_region(tex: Texture2D, r: Rect2) -> Rect2:
 	var ts := tex.get_size()

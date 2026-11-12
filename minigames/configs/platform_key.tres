@@ -15,3 +15,5 @@ folder_icon = ExtResource("3_key")
 key_texture = ExtResource("3_key")
 glitch_shapes = Array[Texture2D]([ExtResource("4_shape_a"), ExtResource("5_shape_b")])
 code_font = ExtResource("7_font")
+button_dim = 0.45
+button_text_color = Color(1, 1, 1, 1)
