@@ -214,7 +214,8 @@ func _draw_gun() -> void:
 	var gw := config.gun_width
 	var gh := gw * config.gun_texture.get_height() / float(config.gun_texture.get_width())
 	var at := _to_room(_pos + Vector2(config.gun_offset.x * side, config.gun_offset.y))
-	draw_set_transform(at, 0.0, Vector2(side * _s, _s))
+	# the picture has the muzzle on its left, so it is mirrored to point toward the orange AI
+	draw_set_transform(at, 0.0, Vector2(-side * _s, _s))
 	draw_texture_rect(config.gun_texture, Rect2(-gw * 0.5, -gh * 0.5, gw, gh), false)
 	draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
 
