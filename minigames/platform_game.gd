@@ -13,7 +13,7 @@ class_name PlatformGame
 
 enum State { WAITING, PLAYING, DEAD, TAKEN }
 
-const DIFFERENCE_SHADER := preload("res://shaders/difference.gdshader")
+const EXCLUSION_SHADER := preload("res://shaders/exclusion.gdshader")
 const LAND_TOLERANCE := 60.0        # how far past the top edge a fall can be caught
 
 var config: PlatformConfig
@@ -70,13 +70,13 @@ func _box_texture() -> Texture2D:
 	img.set_pixel(0, 0, config.box_color)
 	return ImageTexture.create_from_image(img)
 
-# Every box is its own layer: each one takes the difference of everything drawn
+# Every box is its own layer: each one is exclusion-blended over everything drawn
 # behind it, the boxes before it included, so overlaps pile up and go glitchy.
 # That means a fresh copy of the screen in front of each box, over its own patch
 # of screen only, so the cost stays with what is on screen.
 func _build_boxes() -> void:
 	var mat := ShaderMaterial.new()
-	mat.shader = DIFFERENCE_SHADER
+	mat.shader = EXCLUSION_SHADER
 	var tex := _box_texture()
 	for i in config.platforms.size():
 		var copy := BackBufferCopy.new()
