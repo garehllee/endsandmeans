@@ -221,5 +221,22 @@
 	"task_more_done": [
 		"another one done.",
 		"that's one more off the list."
+	],
+	"hack_hf_2_open": [
+		"a maze. and a laser that looks at everything.",
+		"they watch the whole room. i have to move between looks."
+	],
+	"task_2_done": [
+		"two of five. the water gun is mine.",
+		"two down. three to go."
+	],
+	"laser_hit": [
+		"it saw me.",
+		"back to the middle.",
+		"caught in the light."
+	],
+	"watergun_taken": [
+		"the water gun.",
+		"got it. out of the maze."
 	]
 }
