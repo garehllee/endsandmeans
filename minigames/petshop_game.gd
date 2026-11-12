@@ -39,9 +39,6 @@ var _timer := 0.0
 var _t := 0.0
 var _hearts: Array[Dictionary] = []   # {pos, vel, age, life, size, sway, color}
 var _heart_layer: Node2D              # draws the hearts over the mice
-var _heart_left := PackedVector2Array()    # the left half of a low-poly heart, one unit across
-var _heart_right := PackedVector2Array()   # and the right half, mirrored, drawn a shade darker
-const HEART_COLORS := [Color("ff4f81"), Color("ff7aa2"), Color("ff2e63"), Color("ff9dbb")]
 
 func setup(arena: Rect2, player: Node2D, _start_pos: Vector2) -> void:
 	_arena = arena
@@ -68,10 +65,6 @@ func prepare(cfg: MinigameConfig) -> void:
 	_heart_layer = Node2D.new()
 	_heart_layer.draw.connect(_draw_hearts)
 	add_child(_heart_layer)              # after the mice, so the hearts are on top of them
-	_heart_left = PackedVector2Array([Vector2(0.0, -0.22), Vector2(-0.24, -0.5), Vector2(-0.5, -0.38),
-			Vector2(-0.5, -0.04), Vector2(0.0, 0.5)])
-	for v in _heart_left:
-		_heart_right.append(Vector2(-v.x, v.y))
 	_built = true
 	set_expand(_arena, 0.0)
 
@@ -237,9 +230,8 @@ func _burst_hearts(at: Vector2) -> void:
 			"vel": Vector2(randf_range(-90.0, 90.0), randf_range(-280.0, -170.0)),
 			"age": -randf_range(0.0, 0.25),               # they don't all leave at once
 			"life": randf_range(0.9, 1.3),
-			"size": randf_range(44.0, 64.0),
+			"size": randf_range(22.0, 32.0),           # small: half the width they were
 			"sway": randf() * TAU,
-			"color": HEART_COLORS[randi() % HEART_COLORS.size()],
 		})
 
 func _tick_hearts(delta: float) -> void:
@@ -253,6 +245,8 @@ func _tick_hearts(delta: float) -> void:
 		_heart_layer.queue_redraw()
 
 func _draw_hearts() -> void:
+	if config.heart == null:
+		return
 	for h in _hearts:
 		var age: float = h["age"]
 		if age <= 0.0:
@@ -260,9 +254,6 @@ func _draw_hearts() -> void:
 		var life: float = h["life"]
 		var pop := clampf(age / 0.18, 0.0, 1.0)                 # pops in
 		var fade := clampf((life - age) / (life * 0.4), 0.0, 1.0) # fades out over the last stretch
-		var c: Color = h["color"]
 		var sz: float = h["size"] * (0.4 + 0.6 * pop) * _s
-		_heart_layer.draw_set_transform(_to_room(h["pos"]), 0.0, Vector2(sz, sz))
-		_heart_layer.draw_colored_polygon(_heart_left, Color(c, fade))
-		_heart_layer.draw_colored_polygon(_heart_right, Color(c.darkened(0.2), fade))
-	_heart_layer.draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
+		_heart_layer.draw_texture_rect(config.heart,
+				Rect2(_to_room(h["pos"]) - Vector2(sz, sz) * 0.5, Vector2(sz, sz)), false, Color(1, 1, 1, fade))

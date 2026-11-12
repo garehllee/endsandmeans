@@ -7,6 +7,7 @@ class_name PetShopConfig
 
 @export_group("Pictures")
 @export var mice: Array[Texture2D] = []
+@export var heart: Texture2D                   # the hearts that float up when a mouse is adopted
 
 @export_group("Layout (picture units)")
 @export var window := Vector2(1600, 1512)
