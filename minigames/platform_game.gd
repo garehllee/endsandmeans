@@ -372,6 +372,6 @@ func _draw_code() -> void:
 
 func _draw_hint() -> void:
 	var f: Font = config.code_font if config.code_font else ThemeDB.fallback_font
-	var p := _to_room(config.start_pos + Vector2(-190, -300))
+	var p := _to_room(config.start_pos + Vector2(-90, -300))
 	draw_string(f, p, "arrows to run, up to jump", HORIZONTAL_ALIGNMENT_LEFT, -1,
 			int(46 * _s), Color(1, 1, 1, 0.75))

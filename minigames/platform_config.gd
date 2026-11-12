@@ -17,35 +17,49 @@ class_name PlatformConfig
 @export_group("Layout (picture units)")
 @export var window := Vector2(1600, 1512)           # one screenful: what the minigame window shows
 @export var level_size := Vector2(7614, 1512)
-@export var start_pos := Vector2(250, 1000)         # where the character stands (its middle)
-@export var key_pos := Vector2(7440, 560)           # middle of the key
+@export var start_pos := Vector2(150, 850)          # where the character stands (its middle)
+@export var key_pos := Vector2(7500, 180)           # middle of the key
 @export var key_width := 240.0
 @export var key_radius := 110.0                     # how close the character has to get to take it
 @export var fall_y := 1700.0                        # below this the character has fallen off
-# The glitched boxes. Each is a one-way platform: you can stand on it and jump
-# up through it from underneath. x, y, width, height, with y the top edge.
+# The glitched boxes, traced from the layout drawing. Each is drawn at its full
+# size and its top edge is a one-way platform: you stand on it and jump up
+# through it from underneath. x, y, width, height, with y the top edge.
 @export var platforms: Array[Rect2] = [
-	Rect2(60, 1150, 520, 70),
-	Rect2(760, 1040, 300, 50),
-	Rect2(1240, 900, 260, 46),
-	Rect2(1560, 660, 160, 38),
-	Rect2(1700, 1000, 380, 54),
-	Rect2(2260, 820, 300, 46),
-	Rect2(2740, 940, 240, 44),
-	Rect2(3180, 760, 220, 42),
-	Rect2(3420, 520, 150, 36),
-	Rect2(3600, 1020, 200, 40),
-	Rect2(4000, 860, 220, 42),
-	Rect2(4420, 700, 240, 44),
-	Rect2(4680, 460, 170, 38),
-	Rect2(4880, 920, 420, 50),
-	Rect2(5480, 1060, 280, 46),
-	Rect2(5920, 880, 260, 44),
-	Rect2(6340, 740, 240, 42),
-	Rect2(6600, 500, 160, 38),
-	Rect2(6740, 900, 260, 44),
-	Rect2(7120, 700, 420, 70),
+	Rect2(0, 1013, 847, 446),
+	Rect2(40, 994, 975, 446),
+	Rect2(528, 929, 886, 193),
+	Rect2(572, 882, 887, 221),
+	Rect2(572, 912, 887, 163),
+	Rect2(870, 368, 707, 40),
+	Rect2(971, 393, 708, 40),
+	Rect2(1414, 984, 114, 528),
+	Rect2(1718, 642, 976, 446),
+	Rect2(1767, 994, 976, 142),
+	Rect2(2066, 992, 676, 143),
+	Rect2(2066, 992, 976, 141),
+	Rect2(3255, 0, 112, 273),
+	Rect2(3498, 1227, 112, 284),
+	Rect2(3531, 1211, 113, 301),
+	Rect2(3751, 1143, 113, 76),
+	Rect2(3751, 1171, 113, 20),
+	Rect2(3768, 1155, 113, 48),
+	Rect2(3825, 260, 112, 339),
+	Rect2(3881, 326, 113, 340),
+	Rect2(4066, 1158, 113, 48),
+	Rect2(4327, 1059, 113, 48),
+	Rect2(4581, 1080, 975, 431),
+	Rect2(4636, 990, 976, 446),
+	Rect2(4691, 942, 523, 447),
+	Rect2(5847, 904, 523, 446),
+	Rect2(6155, 966, 522, 446),
+	Rect2(6778, 656, 144, 446),
+	Rect2(6850, 456, 524, 446),
+	Rect2(6945, 365, 524, 446),
+	Rect2(7397, 318, 167, 446),
+	Rect2(7420, 318, 120, 446),
 ]
+
 
 @export_group("Feel")
 @export var gravity := 2800.0
