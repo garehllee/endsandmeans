@@ -62,6 +62,9 @@ func _draw() -> void:
 	var f: Font = font if font else ThemeDB.fallback_font
 	var pos := Vector2(0, icon_h + 50 + bob)
 	draw_string(f, pos, label_text, HORIZONTAL_ALIGNMENT_CENTER, size.x, LABEL_SIZE, Color.WHITE)
+	var tw := f.get_string_size(label_text, HORIZONTAL_ALIGNMENT_LEFT, -1, LABEL_SIZE).x
+	var ux := (size.x - tw) * 0.5
+	draw_line(Vector2(ux, pos.y + 6.0), Vector2(ux + tw, pos.y + 6.0), Color.WHITE, 2.0)
 
 func _input(event: InputEvent) -> void:
 	if not visible or _busy or Game.active_world in ["ending", "exploit", "analysis"]:
