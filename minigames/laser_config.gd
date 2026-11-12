@@ -36,4 +36,4 @@ class_name LaserConfig
 @export var beam_color := Color("88ff00")
 @export var warn_alpha := 0.16
 @export var fire_alpha := 0.55
-@export var icon_size := 96.0
+@export var warning_size := 96.0

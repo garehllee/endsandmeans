@@ -337,9 +337,9 @@ func _add_beam(out: Array[Dictionary], p: Vector2, a: float, w: float, ray: bool
 	# where it comes into the picture: the "!" goes just inside that end
 	var span := _clip_line(p, d, ray)
 	if span.x < span.y:
-		var at := p + d * (span.x + config.icon_size * 0.9)
-		b["icon"] = Vector2(clampf(at.x, config.icon_size * 0.6, config.window.x - config.icon_size * 0.6),
-				clampf(at.y, config.icon_size * 0.6, config.window.y - config.icon_size * 0.6))
+		var at := p + d * (span.x + config.warning_size * 0.9)
+		b["icon"] = Vector2(clampf(at.x, config.warning_size * 0.6, config.window.x - config.warning_size * 0.6),
+				clampf(at.y, config.warning_size * 0.6, config.window.y - config.warning_size * 0.6))
 	else:
 		b["icon"] = Vector2(-1000.0, -1000.0)       # misses the picture altogether
 	out.append(b)
@@ -416,7 +416,7 @@ func _draw_beams() -> void:
 			if inner.size() >= 3:
 				draw_colored_polygon(inner, Color(0.95, 1.0, 0.75, core))
 	if icons > 0.0 and config.warning_icon:
-		var sz := Vector2.ONE * config.icon_size * _s
+		var sz := Vector2.ONE * config.warning_size * _s
 		for b in _beams:
 			var at: Vector2 = b["icon"]
 			if at.x < 0.0:
