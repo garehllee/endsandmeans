@@ -39,6 +39,7 @@ var _cam := Vector2.ZERO
 var _camera: Camera2D
 
 var _boxes: Array[Sprite2D] = []
+var _copies: Array[BackBufferCopy] = []
 var _key: Sprite2D
 var _code: Array[Dictionary] = []
 var _shapes: Array[Dictionary] = []
@@ -69,15 +70,21 @@ func _box_texture() -> Texture2D:
 	img.set_pixel(0, 0, config.box_color)
 	return ImageTexture.create_from_image(img)
 
+# Every box is its own layer: each one takes the difference of everything drawn
+# behind it, the boxes before it included, so overlaps pile up and go glitchy.
+# That means a fresh copy of the screen in front of each box, over its own patch
+# of screen only, so the cost stays with what is on screen.
 func _build_boxes() -> void:
-	# The screen has to be copied before the boxes can take the difference of it.
-	var copy := BackBufferCopy.new()
-	copy.copy_mode = BackBufferCopy.COPY_MODE_VIEWPORT
-	add_child(copy)
 	var mat := ShaderMaterial.new()
 	mat.shader = DIFFERENCE_SHADER
 	var tex := _box_texture()
 	for i in config.platforms.size():
+		var copy := BackBufferCopy.new()
+		copy.copy_mode = BackBufferCopy.COPY_MODE_RECT
+		copy.z_index = 1
+		copy.visible = false
+		add_child(copy)
+		_copies.append(copy)
 		var sp := Sprite2D.new()
 		sp.texture = tex
 		sp.centered = false
@@ -95,6 +102,11 @@ func _build_key() -> void:
 	_key.visible = false
 	add_child(_key)
 
+# Most of the snippets come out small, a few come out huge.
+func _code_size() -> float:
+	var k := pow(_rng.randf(), config.code_small_bias)
+	return lerpf(config.code_sizes.x, config.code_sizes.y, k)
+
 func _build_code() -> void:
 	var snippets := config.snippets
 	if snippets.is_empty():
@@ -102,7 +114,7 @@ func _build_code() -> void:
 	for i in config.code_layers:
 		var d := {
 			"text": snippets[i % snippets.size()],
-			"size": _rng.randf_range(config.code_sizes.x, config.code_sizes.y),
+			"size": _code_size(),
 			"x": _rng.randf_range(-200.0, config.level_size.x),
 			"y": _rng.randf_range(-100.0, config.level_size.y),
 			"par": _rng.randf_range(config.code_parallax.x, config.code_parallax.y),
@@ -150,12 +162,19 @@ func _to_room(p: Vector2) -> Vector2:
 
 func _place() -> void:
 	var show := _expand >= 0.999
+	var view := Rect2(_cam.x - _arena.size.x * 0.6, _cam.y - _arena.size.y * 0.6,
+			_arena.size.x * 1.2, _arena.size.y * 1.2)
 	for i in _boxes.size():
 		var r: Rect2 = config.platforms[i]
+		var room := Rect2(_to_room(r.position), r.size * _s)
+		var on := show and room.intersects(view)      # off-screen boxes cost nothing
 		var sp: Sprite2D = _boxes[i]
-		sp.visible = show
-		sp.position = _to_room(r.position)
+		sp.visible = on
+		sp.position = room.position
 		sp.scale = r.size * _s          # the picture is one pixel, so this is its size
+		var copy: BackBufferCopy = _copies[i]
+		copy.visible = on
+		copy.rect = room.grow(4.0)
 	if _key:
 		_key.visible = show and _state != State.TAKEN
 		_key.position = _to_room(config.key_pos)
@@ -323,7 +342,7 @@ func _advance_background(delta: float) -> void:
 					d["phase"] = "in"
 					d["t"] = 0.0
 					d["hold"] = _rng.randf_range(config.type_hold.x, config.type_hold.y)
-					d["size"] = _rng.randf_range(config.code_sizes.x, config.code_sizes.y)
+					d["size"] = _code_size()
 					d["x"] = _rng.randf_range(-200.0, config.level_size.x)
 					d["y"] = _rng.randf_range(-100.0, config.level_size.y)
 					if not config.snippets.is_empty():
@@ -361,12 +380,16 @@ func _draw_shapes() -> void:
 func _draw_code() -> void:
 	var f: Font = config.code_font if config.code_font else ThemeDB.fallback_font
 	var scroll := _scroll()
+	var left := _cam.x - _arena.size.x
+	var right := _cam.x + _arena.size.x * 0.7
 	for d in _code:
 		var n := int(d["shown"])
 		if n <= 0:
 			continue
 		var text: String = d["text"].substr(0, n)
 		var p := _to_room(Vector2(d["x"] + scroll * (1.0 - d["par"]), d["y"]))
+		if p.x < left or p.x > right:
+			continue                      # off to the side; not worth drawing
 		draw_multiline_string(f, p, text, HORIZONTAL_ALIGNMENT_LEFT, -1,
 				int(d["size"] * _s), -1, config.code_color)
 

@@ -82,12 +82,13 @@ class_name PlatformConfig
 @export_group("Background")
 @export var box_color := Color("ffd8d8")        # the glitched boxes, difference-blended
 @export var code_color := Color.WHITE
-@export var code_layers := 14                   # how many snippets drift about
-@export var code_sizes := Vector2(26, 120)      # smallest and largest type
+@export var code_layers := 46                   # how many snippets drift about
+@export var code_sizes := Vector2(13, 130)      # smallest and largest type
+@export var code_small_bias := 2.6              # higher means more of the snippets are tiny
 @export var code_drift := Vector2(6.0, 34.0)    # how fast a snippet slides up or down
 @export var code_parallax := Vector2(0.25, 0.9) # how much a snippet moves with the camera
-@export var type_speed := Vector2(18.0, 70.0)   # characters a second as a snippet types itself in
-@export var type_hold := Vector2(1.5, 5.0)      # how long it stays before it types out again
+@export var type_speed := Vector2(18.0, 120.0)  # characters a second as a snippet types itself in
+@export var type_hold := Vector2(0.8, 5.0)      # how long it stays before it types out again
 @export var shape_count := 10
 @export var shape_scale := Vector2(0.6, 3.2)
 @export var shape_drift := Vector2(4.0, 26.0)
