@@ -37,6 +37,9 @@ func _draw() -> void:
 	if texture:
 		draw_texture_rect(texture, Rect2((size.x - ICON) * 0.5, 0, ICON, ICON), false, tint)
 	draw_string(FONT, Vector2(0, ICON + 56), label_text, HORIZONTAL_ALIGNMENT_CENTER, size.x, LABEL_SIZE, Color.WHITE)
+	var lw := FONT.get_string_size(label_text, HORIZONTAL_ALIGNMENT_LEFT, -1, LABEL_SIZE).x
+	var ux := (size.x - lw) * 0.5
+	draw_line(Vector2(ux, ICON + 62.0), Vector2(ux + lw, ICON + 62.0), Color.WHITE, 2.0)
 
 func _input(event: InputEvent) -> void:
 	if not visible or Game.active_world in ["ending", "exploit", "analysis"]:
