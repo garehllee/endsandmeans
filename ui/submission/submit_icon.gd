@@ -7,7 +7,7 @@ class_name SubmitIcon
 signal dropped(icon: SubmitIcon, mouse_global: Vector2)
 
 const ICON_H := 130.0
-const LABEL_SIZE := 38
+const LABEL_SIZE := 44
 
 var item_id := ""
 var label_text := ""
