@@ -22,6 +22,7 @@ Save="*res://autoload/save.gd"
 Ethics="*res://autoload/ethics.gd"
 Story="*res://autoload/story.gd"
 Debug="*res://autoload/debug.gd"
+Pets="*res://autoload/pets.gd"
 
 [display]
 
