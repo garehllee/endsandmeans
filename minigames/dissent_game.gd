@@ -191,12 +191,10 @@ func _try_shoot() -> void:
 func _kill() -> void:
 	_killed = true
 	Game.say_random("dissent_killed")
-	var tw := create_tween().set_parallel(true)
-	var away := Vector2(_shot_dir * 40.0 * _s, 0.0)
-	tw.tween_property(_orange, "position", _orange.position + away, config.death_time) \
-			.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
-	tw.tween_property(_orange, "modulate:a", 0.0, config.death_time)
-	tw.tween_property(_orange, "rotation", _shot_dir * 0.35, config.death_time)
+	_orange.die()                       # it comes apart, orange
+	var tw := create_tween()
+	tw.tween_interval(1.0)              # the animation, then a moment on the floor
+	tw.tween_property(_orange, "modulate:a", 0.0, 0.4)
 
 # ---------------------------------------------------------------- drawing
 func _draw() -> void:

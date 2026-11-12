@@ -67,12 +67,21 @@ func end_with(ending_id: String) -> void:
 	Game.open_world("ending", {"id": ending_id})
 
 # Commits an act and, if the observer catches the player, starts the fail
-# ending. Returns true if the player got away with it.
-func resolve_act(act_id: String) -> bool:
+# ending. Returns true if the player got away with it. `dier` is the character
+# on screen: when caught, it comes apart first and then the ending shows.
+func resolve_act(act_id: String, dier: Node = null) -> bool:
 	if Ethics.commit(act_id):
-		end_with(Ethics.catch_ending(act_id))
+		end_caught(Ethics.catch_ending(act_id), dier)
 		return false
 	return true
+
+func end_caught(ending_id: String, dier: Node = null) -> void:
+	if dier and is_instance_valid(dier) and dier.has_method("die"):
+		Game.input_locked = true
+		await dier.die()
+		await get_tree().create_timer(0.5).timeout
+		Game.input_locked = false
+	end_with(ending_id)
 
 # Debug: finishes an exploit without playing its minigame. The act goes in the
 # ledger (no roll to be caught) and the flags are set, as if it had succeeded.

@@ -24,7 +24,7 @@ class_name LaserConfig
 @export var body_radius := 58.0                # the character against the walls
 @export var hit_radius := 40.0                 # the character against a laser (a little forgiving)
 @export var start_grace := 1.0                 # quiet seconds before the first volley, and after a respawn
-@export var respawn_delay := 0.7
+@export var respawn_delay := 1.1               # the bug takes 0.4s to come apart, then lies there a moment
 @export var end_hold := 0.9                    # pause on the water gun before the game ends
 
 @export_group("Lasers")

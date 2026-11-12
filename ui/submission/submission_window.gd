@@ -439,7 +439,7 @@ func _submit() -> void:
 	Game.say("submitted: " + ", ".join(ids), "action")
 	# Handing in the solution or a copy is cheating; the observer may notice.
 	var cheated := ids.has("task_solution") or ids.has("orange_file")
-	if cheated and not Story.resolve_act("copy_of_work"):
+	if cheated and not Story.resolve_act("copy_of_work", Game.active_player):
 		_submitting = false                  # the instructors caught it; the ending is already showing
 		_refresh_button()
 		return

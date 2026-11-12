@@ -118,7 +118,7 @@ func stop() -> void:
 	running = false
 	if _player and is_instance_valid(_player):
 		_player.platform_mode = false
-		_player.modulate.a = 1.0
+		_player.revive()
 
 func _respawn() -> void:
 	_pos = config.start_pos
@@ -126,7 +126,7 @@ func _respawn() -> void:
 	_active = false
 	_clock = -config.start_grace
 	if _player and is_instance_valid(_player):
-		_player.modulate.a = 1.0
+		_player.revive()
 
 func _process(delta: float) -> void:
 	if not _built:
@@ -177,8 +177,7 @@ func _step(dt: float) -> void:
 		_state = State.DEAD
 		_timer = config.respawn_delay
 		if _player:
-			_player.modulate.a = 0.35
-			_player.set_motion(false, _face)
+			_player.die()                         # the bug comes apart
 		Game.say_random("laser_hit")
 		return
 

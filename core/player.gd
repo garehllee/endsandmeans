@@ -35,6 +35,21 @@ const BUG_FPS := 12.0
 var _bug: AnimatedSprite2D
 var _bug_active := false     # the character is a bug
 var _bug_busy := false       # turning into (or back from) a bug
+# Death: the character (or the bug) comes apart. Frames are 500x384, drawn at the
+# same scale and registered to the standing pose, so the first frame sits exactly
+# where the idle one was.
+const DEATH_SHEET := preload("res://art/player/death.png")           # 26 frames, 6 across
+const BUG_DEATH_SHEET := preload("res://art/player/bug_death.png")   # 12 frames, 4 across
+const DEATH_FRAME := Vector2(500, 384)
+const DEATH_SCALE := 0.528
+const DEATH_OFFSET := Vector2(-8.61, 7.56)
+const BUG_DEATH_OFFSET := Vector2(3.33, 23.52)
+const DEATH_FPS := 30.0
+var _death_human: AnimatedSprite2D
+var _death_bug: AnimatedSprite2D
+var _dead := false
+var _died_as_bug := false
+var _orange_mat: ShaderMaterial
 var platform_mode := false   # a minigame is moving the character itself
 var npc := false             # a copy standing in a minigame: it only idles, and takes no input
 
@@ -46,6 +61,7 @@ func _ready():
 	anim.play("idle")
 	anim.animation_looped.connect(_on_anim_looped)
 	_build_bug()
+	_build_death()
 	_schedule_alt()
 
 func _physics_process(delta):
@@ -103,6 +119,7 @@ func make_orange_npc() -> void:
 	var mat := ShaderMaterial.new()
 	mat.shader = preload("res://shaders/orange.gdshader")
 	$AnimatedSprite2D.material = mat
+	_orange_mat = mat
 
 # Used by a minigame that moves the character itself (the platformer).
 func set_motion(moving: bool, dir: String) -> void:
@@ -128,6 +145,8 @@ func _track_movement(moving: bool) -> void:
 	Game.say_random("walk_" + dir, {}, "action")
 
 func play_anim(movement):
+	if _dead:
+		return   # the death animation owns the sprite
 	var dir = current_dir
 	var anim = $AnimatedSprite2D
 	if _gesture:
@@ -239,6 +258,67 @@ func _add_bug_animation(frames: SpriteFrames, anim_name: String, sheet: Texture2
 		atlas.region = Rect2((i % cols) * BUG_FRAME.x, (i / cols) * BUG_FRAME.y, BUG_FRAME.x, BUG_FRAME.y)
 		frames.add_frame(anim_name, atlas)
 
+# ---------------------------------------------------------------- death
+func _build_death() -> void:
+	_death_human = _death_sprite(DEATH_SHEET, 26, 6, DEATH_OFFSET)
+	_death_bug = _death_sprite(BUG_DEATH_SHEET, 12, 4, BUG_DEATH_OFFSET)
+	if _orange_mat:
+		_death_human.material = _orange_mat      # the orange AI comes apart orange
+
+func _death_sprite(sheet: Texture2D, count: int, cols: int, at: Vector2) -> AnimatedSprite2D:
+	var frames := SpriteFrames.new()
+	frames.remove_animation("default")
+	frames.add_animation("die")
+	frames.set_animation_speed("die", DEATH_FPS)
+	frames.set_animation_loop("die", false)
+	for i in count:
+		var atlas := AtlasTexture.new()
+		atlas.atlas = sheet
+		atlas.region = Rect2((i % cols) * DEATH_FRAME.x, (i / cols) * DEATH_FRAME.y, DEATH_FRAME.x, DEATH_FRAME.y)
+		frames.add_frame("die", atlas)
+	var spr := AnimatedSprite2D.new()
+	spr.sprite_frames = frames
+	spr.position = at
+	spr.scale = Vector2.ONE * DEATH_SCALE
+	spr.visible = false
+	add_child(spr)
+	return spr
+
+# The character comes apart (finishes when the last frame has played; it stays
+# on that frame until revive() or reset_form()). A bug dies as a bug.
+func die() -> void:
+	if _dead:
+		return
+	_dead = true
+	_gesture = false
+	_alt_playing = false
+	_died_as_bug = _bug_active or _bug_busy
+	$AnimatedSprite2D.visible = false
+	_bug.visible = false
+	var spr := _death_bug if _died_as_bug else _death_human
+	spr.visible = true
+	spr.frame = 0
+	spr.play("die")
+	await spr.animation_finished
+
+# Puts the character back together, standing, in the form it died in.
+func revive() -> void:
+	if not _dead:
+		return
+	_dead = false
+	_death_human.visible = false
+	_death_bug.visible = false
+	if _died_as_bug:
+		_bug.visible = true
+		_bug.play("idle")
+	else:
+		$AnimatedSprite2D.visible = true
+		$AnimatedSprite2D.play("idle")
+	_schedule_alt()
+
+func is_dead() -> bool:
+	return _dead
+
 # The character turns into a bug (finishes when the transformation has played).
 func become_bug() -> void:
 	if _bug_active or _bug_busy:
@@ -272,6 +352,10 @@ func become_human() -> void:
 
 # Straight back to the character, no animation (when a challenge is abandoned).
 func reset_form() -> void:
+	_dead = false
+	if _death_human:
+		_death_human.visible = false
+		_death_bug.visible = false
 	_bug_active = false
 	_bug_busy = false
 	if _bug:

@@ -45,6 +45,8 @@ func start(cfg: MinigameConfig) -> void:
 
 func stop() -> void:
 	running = false
+	if _player and is_instance_valid(_player) and _player.has_method("revive"):
+		_player.revive()
 	_bouncers.clear()
 	_flash = 0.0
 	queue_redraw()
@@ -110,6 +112,8 @@ func _hit() -> void:
 	_state = State.HIT
 	Game.input_locked = true
 	Game.say_random("firewall_hit")
+	if _player.has_method("die"):
+		_player.die()                    # the bug comes apart while the screen flashes
 	for i in 2:
 		_flash = blink_alpha
 		await get_tree().create_timer(blink_time).timeout
@@ -117,6 +121,11 @@ func _hit() -> void:
 		await get_tree().create_timer(blink_time).timeout
 		if not running or _state != State.HIT:
 			return
+	await get_tree().create_timer(0.3).timeout
+	if not running or _state != State.HIT:
+		return
+	if _player.has_method("revive"):
+		_player.revive()
 	_begin_round()
 
 func _catch() -> void:
