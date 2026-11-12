@@ -10,7 +10,6 @@ class_name PetShopConfig
 
 @export_group("Layout (picture units)")
 @export var window := Vector2(1600, 1512)
-@export var start_pos := Vector2(718, 805)               # where the character stands (its middle)
 @export var walk_rect := Rect2(205, 265, 1190, 985)       # where the character can walk: the shop floor
 @export var mouse_rect := Rect2(205, 265, 1190, 985)      # where the mice can go
 @export var mouse_starts := PackedVector2Array([Vector2(290, 330), Vector2(750, 330),

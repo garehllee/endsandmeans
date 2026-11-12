@@ -35,10 +35,12 @@ var _shot_hit := false
 var _killed := false
 var _pause := 0.0
 var _timer := 0.0
+var _start_room := Vector2.ZERO     # where the button was pressed, in room units
 
-func setup(arena: Rect2, player: Node2D, _start_pos: Vector2) -> void:
+func setup(arena: Rect2, player: Node2D, start_pos: Vector2) -> void:
 	_arena = arena
 	_player = player
+	_start_room = start_pos
 
 # ---------------------------------------------------------------- building
 func prepare(cfg: MinigameConfig) -> void:
@@ -54,7 +56,6 @@ func prepare(cfg: MinigameConfig) -> void:
 	_beam_layer = Node2D.new()
 	_beam_layer.draw.connect(_draw_beam)
 	add_child(_beam_layer)              # after the orange AI, so the water covers it
-	_pos = config.start_pos
 	_built = true
 	set_expand(_arena, 0.0)
 
@@ -89,7 +90,7 @@ func start(cfg: MinigameConfig) -> void:
 		finished.emit(true)
 		return
 	set_expand(_arena, 1.0)
-	_pos = config.start_pos
+	_pos = (_start_room - _layer.position) / maxf(_s, 0.0001)   # stays where the button was pressed
 	_state = State.PLAYING
 	running = true
 	if _player:
@@ -156,8 +157,11 @@ func _walk(dt: float) -> void:
 	if dir != Vector2.ZERO:
 		var next := _pos + dir * config.move_speed * dt
 		var r := config.walk_rect
-		next = Vector2(clampf(next.x, r.position.x, r.end.x), clampf(next.y, r.position.y, r.end.y))
-		if next.distance_to(config.orange_pos) >= config.keep_clear:
+		# stays inside the room; if it began outside, it just can't go farther out
+		next.x = minf(maxf(next.x, minf(_pos.x, r.position.x)), maxf(_pos.x, r.end.x))
+		next.y = minf(maxf(next.y, minf(_pos.y, r.position.y)), maxf(_pos.y, r.end.y))
+		var from_orange := next.distance_to(config.orange_pos)
+		if from_orange >= config.keep_clear or from_orange >= _pos.distance_to(config.orange_pos):
 			_pos = next
 	if _player:
 		_player.set_motion(dir != Vector2.ZERO, _face)

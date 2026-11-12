@@ -11,7 +11,6 @@ class_name DissentConfig
 
 @export_group("Layout (picture units)")
 @export var window := Vector2(1600, 1512)
-@export var start_pos := Vector2(460, 590)      # where the character stands (its middle)
 @export var orange_pos := Vector2(1145, 745)    # where the orange AI stands
 @export var walk_rect := Rect2(400, 470, 800, 430)   # the part of the room the character can walk in
 @export var keep_clear := 125.0                 # the character can't walk into the orange AI

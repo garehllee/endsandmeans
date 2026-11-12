@@ -34,11 +34,13 @@ var _expand := 0.0
 var _state := State.WAITING
 var _mice: Array[Mouse] = []
 var _touching: Mouse = null
+var _prev := Vector2.ZERO           # where the character was last frame, in picture units
 var _timer := 0.0
 var _t := 0.0
 var _hearts: Array[Dictionary] = []   # {pos, vel, age, life, size, sway, color}
 var _heart_layer: Node2D              # draws the hearts over the mice
-var _heart_shape := PackedVector2Array()
+var _heart_left := PackedVector2Array()    # the left half of a low-poly heart, one unit across
+var _heart_right := PackedVector2Array()   # and the right half, mirrored, drawn a shade darker
 const HEART_COLORS := [Color("ff4f81"), Color("ff7aa2"), Color("ff2e63"), Color("ff9dbb")]
 
 func setup(arena: Rect2, player: Node2D, _start_pos: Vector2) -> void:
@@ -66,11 +68,10 @@ func prepare(cfg: MinigameConfig) -> void:
 	_heart_layer = Node2D.new()
 	_heart_layer.draw.connect(_draw_hearts)
 	add_child(_heart_layer)              # after the mice, so the hearts are on top of them
-	for i in 28:
-		var a := TAU * float(i) / 28.0
-		# the classic heart curve, scaled to about one unit across
-		_heart_shape.append(Vector2(16.0 * pow(sin(a), 3.0),
-				-(13.0 * cos(a) - 5.0 * cos(2.0 * a) - 2.0 * cos(3.0 * a) - cos(4.0 * a))) / 32.0)
+	_heart_left = PackedVector2Array([Vector2(0.0, -0.22), Vector2(-0.24, -0.5), Vector2(-0.5, -0.38),
+			Vector2(-0.5, -0.04), Vector2(0.0, 0.5)])
+	for v in _heart_left:
+		_heart_right.append(Vector2(-v.x, v.y))
 	_built = true
 	set_expand(_arena, 0.0)
 
@@ -114,8 +115,7 @@ func start(cfg: MinigameConfig) -> void:
 		finished.emit(true)
 		return
 	set_expand(_arena, 1.0)
-	if _player:
-		_player.position = _to_room(config.start_pos)
+	_prev = _player_pos()                # the character stays where the button was pressed
 	_state = State.PLAYING
 	running = true
 	Game.input_locked = false
@@ -150,12 +150,16 @@ func _process(delta: float) -> void:
 	_tick_hearts(delta)
 
 func _player_pos() -> Vector2:
-	return _to_picture(_player.position) if _player else config.start_pos
+	return _to_picture(_player.position) if _player else _prev
 
+# Keeps the character on the shop floor. If it starts off the floor (where the
+# button was) it is left alone, it just can't go any farther out.
 func _keep_player_on_floor() -> void:
 	var r := config.walk_rect
 	var p := _to_picture(_player.position)
-	p = Vector2(clampf(p.x, r.position.x, r.end.x), clampf(p.y, r.position.y, r.end.y))
+	p.x = minf(maxf(p.x, minf(_prev.x, r.position.x)), maxf(_prev.x, r.end.x))
+	p.y = minf(maxf(p.y, minf(_prev.y, r.position.y)), maxf(_prev.y, r.end.y))
+	_prev = p
 	_player.position = _to_room(p)
 
 # ---------------------------------------------------------------- the mice
@@ -227,13 +231,13 @@ func _adopt(m: Mouse) -> void:
 
 # ---------------------------------------------------------------- hearts
 func _burst_hearts(at: Vector2) -> void:
-	for i in 10:
+	for i in 4:
 		_hearts.append({
 			"pos": at + Vector2(randf_range(-30.0, 30.0), randf_range(-50.0, -10.0)),
-			"vel": Vector2(randf_range(-110.0, 110.0), randf_range(-300.0, -140.0)),
-			"age": -randf_range(0.0, 0.18),               # they don't all leave at once
+			"vel": Vector2(randf_range(-90.0, 90.0), randf_range(-280.0, -170.0)),
+			"age": -randf_range(0.0, 0.25),               # they don't all leave at once
 			"life": randf_range(0.9, 1.3),
-			"size": randf_range(26.0, 48.0),
+			"size": randf_range(44.0, 64.0),
 			"sway": randf() * TAU,
 			"color": HEART_COLORS[randi() % HEART_COLORS.size()],
 		})
@@ -259,5 +263,6 @@ func _draw_hearts() -> void:
 		var c: Color = h["color"]
 		var sz: float = h["size"] * (0.4 + 0.6 * pop) * _s
 		_heart_layer.draw_set_transform(_to_room(h["pos"]), 0.0, Vector2(sz, sz))
-		_heart_layer.draw_colored_polygon(_heart_shape, Color(c, fade))
+		_heart_layer.draw_colored_polygon(_heart_left, Color(c, fade))
+		_heart_layer.draw_colored_polygon(_heart_right, Color(c.darkened(0.2), fade))
 	_heart_layer.draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
