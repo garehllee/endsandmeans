@@ -33,6 +33,7 @@ func _ready() -> void:
 	Game.world_opened.connect(_on_world_opened)
 	Game.world_closed.connect(_on_world_closed)
 	Game.flag_changed.connect(func(_f: StringName, _v: bool): _apply_additions())
+	Story.debug_completed.connect(_debug_refresh)
 
 # Tags every entry whose name appears in story.json's "events" with its event id.
 func _tag_events(folder: Dictionary, events: Dictionary) -> void:
@@ -187,12 +188,42 @@ func _apply_leave_additions() -> void:
 		if not placed:
 			# The room isn't open right now; put them in its data so they're there next time.
 			var target := _find_entry(_tree, parent_name)
+			if target.is_empty():
+				_added.erase(id)          # its folder isn't there yet; try again later
+				continue
 			for e in entries:
 				var entry: Dictionary = e.duplicate(true)
 				_tag_events({"children": [entry]}, _events)
 				target.get("children", []).append(entry)
 		if a.has("say"):
 			Game.say_random(a["say"])
+
+# F1 "complete": brings the files up to date as if the player had walked out of
+# the finished folders. Finished exploits' folders go and whatever they unlock
+# appears. The folder the player is standing in stays until they leave it.
+func _debug_refresh() -> void:
+	var inside := ""
+	if walls.size() > 1:
+		inside = (walls.back().get_meta("entry", {}) as Dictionary).get("name", "")
+	await _prune_done(_tree, walls[0], inside)
+	_apply_leave_additions()
+	_apply_additions()
+
+func _prune_done(host: Dictionary, wall_node: FileWall, inside: String) -> void:
+	var kids: Array = host.get("children", [])
+	for i in range(kids.size() - 1, -1, -1):
+		var e: Dictionary = kids[i]
+		var ev: String = e.get("event", "")
+		if ev != "" and Story.is_done(ev) and e.get("name", "") != inside:
+			kids.remove_at(i)
+			if wall_node:
+				await wall_node.remove_entry(e["name"])
+		elif e.get("type", "") == "folder":
+			var shown: FileWall = null
+			for w in walls:
+				if w != walls[0] and (w.get_meta("entry", {}) as Dictionary).get("name", "") == e.get("name", ""):
+					shown = w
+			await _prune_done(e, shown, inside)
 
 func _find_entry(folder: Dictionary, entry_name: String) -> Dictionary:
 	for c in folder.get("children", []):

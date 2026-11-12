@@ -6,6 +6,8 @@ extends Node
 
 const EXPLOITS_PATH := "res://data/exploits.json"
 
+signal debug_completed          # the F1 menu finished an exploit; the file room tidies itself up
+
 var _exploits := {}
 
 func _ready() -> void:
@@ -87,3 +89,4 @@ func debug_complete(event_id: String) -> void:
 		if step.has("act"):
 			Ethics.record(step["act"])
 		Game.set_flag(flag)
+	debug_completed.emit()
