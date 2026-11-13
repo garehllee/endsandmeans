@@ -103,6 +103,11 @@ func _apply_additions() -> void:
 		_added[id] = true
 		var entry: Dictionary = a.get("entry", {}).duplicate(true)
 		_tag_events({"children": [entry]}, _events)
+		# into the data as well as onto the wall, so later files can be put inside
+		# it (or taken out of it) while the player is somewhere else
+		if not _tree.has("children"):
+			_tree["children"] = []
+		_tree["children"].append(entry)
 		var idx: int = walls[0].add_entry(entry)
 		walls[0].blink_entry(idx, a.get("blink", 3))
 		if a.has("say"):
