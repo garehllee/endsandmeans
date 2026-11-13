@@ -322,7 +322,14 @@ func _draw() -> void:
 	var down := config.button_down if config.button_down else up
 	var tex := down if _wall - _press_at < PRESS_SHOW else up
 	if tex:
-		draw_texture_rect(tex, Rect2(_to_room(config.button_pos), tex.get_size() * _s), false)
+		# the button throbs on every beat: it jumps a little bigger and settles back
+		var throb := 1.0
+		if _state == State.PLAYING:
+			var phase := fposmod(_time / _tick, 1.0)
+			throb = 1.0 + config.button_throb * exp(-phase * 7.0)
+		var size := tex.get_size()
+		var mid := config.button_pos + size * 0.5
+		draw_texture_rect(tex, Rect2(_to_room(mid - size * throb * 0.5), size * throb * _s), false)
 	_draw_countdown()
 	_draw_terminal()
 

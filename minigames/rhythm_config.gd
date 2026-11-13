@@ -28,6 +28,7 @@ class_name RhythmConfig
 @export var countdown_cells := 3               # one fills on each of this many beats before a commit
 @export var countdown_inset := 9.0             # gap between a cell's edge and its filling
 @export var button_pos := Vector2(86, 1232)    # top left of the COMMIT button (drawn at its own size)
+@export var button_throb := 0.07               # how much bigger the button jumps on each beat (0.07 is 7%)
 @export var stand_pos := Vector2(578, 1265)    # where the character stands to press it
 @export var walk_to_button := true             # the character walks over there first
 @export var walk_speed := 650.0
