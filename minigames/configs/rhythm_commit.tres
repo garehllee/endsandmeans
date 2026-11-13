@@ -5,6 +5,7 @@
 [ext_resource type="Texture2D" path="res://art/rhythm/commit_unpressed.png" id="3_up"]
 [ext_resource type="Texture2D" path="res://art/rhythm/commit_pressed.png" id="4_down"]
 [ext_resource type="FontFile" path="res://fonts/lmmono10-regular.otf" id="5_font"]
+[ext_resource type="Texture2D" path="res://art/rhythm/countdown.png" id="7_count"]
 [ext_resource type="AudioStreamOggVorbis" path="res://audio/music/commit_loop.ogg" id="6_music"]
 
 [resource]
@@ -15,3 +16,4 @@ button_up = ExtResource("3_up")
 button_down = ExtResource("4_down")
 font = ExtResource("5_font")
 music = ExtResource("6_music")
+countdown = ExtResource("7_count")

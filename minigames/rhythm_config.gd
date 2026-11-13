@@ -11,6 +11,7 @@ class_name RhythmConfig
 @export_group("Pictures and sound")
 @export var button_up: Texture2D
 @export var button_down: Texture2D
+@export var countdown: Texture2D                # the strip of cells under the terminal
 @export var font: Font                         # the terminal's type (a monospace)
 @export var music: AudioStream
 @export var music_db := -4.0
@@ -23,6 +24,9 @@ class_name RhythmConfig
 @export var font_size := 54
 @export var row_left := 100.0                  # the highlight bar runs between these
 @export var row_right := 1500.0
+@export var countdown_pos := Vector2(86, 1040) # top left of the countdown strip (drawn at its own size)
+@export var countdown_cells := 3               # one fills on each of this many beats before a commit
+@export var countdown_inset := 9.0             # gap between a cell's edge and its filling
 @export var button_pos := Vector2(86, 1232)    # top left of the COMMIT button (drawn at its own size)
 @export var stand_pos := Vector2(578, 1265)    # where the character stands to press it
 @export var walk_to_button := true             # the character walks over there first

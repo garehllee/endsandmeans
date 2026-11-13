@@ -323,7 +323,37 @@ func _draw() -> void:
 	var tex := down if _wall - _press_at < PRESS_SHOW else up
 	if tex:
 		draw_texture_rect(tex, Rect2(_to_room(config.button_pos), tex.get_size() * _s), false)
+	_draw_countdown()
 	_draw_terminal()
+
+# The strip under the terminal: its cells fill one a beat over the beats before
+# a commit, so the last one filling means "the next beat is yours". On that
+# beat they all flash together with the line.
+func _draw_countdown() -> void:
+	var tex := config.countdown
+	if tex == null:
+		return
+	var size := tex.get_size()
+	draw_texture_rect(tex, Rect2(_to_room(config.countdown_pos), size * _s), false)
+	if _state != State.PLAYING or _next_cue >= _cues.size():
+		return
+	var cells := maxi(config.countdown_cells, 1)
+	var c: Dictionary = _cues[_next_cue]
+	var beats_in: float = (_time - (float(c["t"]) - float(cells) * _tick)) / _tick   # 0 as the first cell's beat lands
+	if beats_in < 0.0:
+		return
+	var alpha := 1.0
+	if absf(_time - float(c["t"])) <= config.tolerance and fposmod(_wall * FLASH_HZ, 1.0) >= 0.6:
+		alpha = 0.3                                # the off half of the flash
+	var cell_w := size.x / float(cells)
+	var inset := config.countdown_inset
+	for i in cells:
+		var grown := clampf((beats_in - float(i)) / 0.22, 0.0, 1.0)    # each one snaps full just after its beat
+		if grown <= 0.0:
+			break
+		var at := config.countdown_pos + Vector2(cell_w * i + inset, inset)
+		var full := Vector2(cell_w - inset * 2.0, size.y - inset * 2.0)
+		draw_rect(Rect2(_to_room(at), Vector2(full.x * grown, full.y) * _s), Color(config.text_color, alpha))
 
 func _draw_terminal() -> void:
 	var f: Font = config.font if config.font else ThemeDB.fallback_font
