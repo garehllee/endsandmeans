@@ -15,6 +15,8 @@ var _events := {}
 var _additions: Array = []   # files that appear later, from story.json "additions"
 var _added := {}
 var _tree: Dictionary = {}
+var _refreshing := false     # true while a debug refresh's slide-shut animations are in flight
+var _refresh_pending := false
 
 func _ready() -> void:
 	player.z_index = 10
@@ -207,12 +209,26 @@ func _apply_leave_additions() -> void:
 # the finished folders. Finished exploits' folders go and whatever they unlock
 # appears. The folder the player is standing in stays until they leave it.
 func _debug_refresh() -> void:
+	# Pressing several F1 "complete" buttons in a row fires this once per
+	# press, and each pass's folder-closing slides take real time (see
+	# FileWall.remove_entry). Running two passes at once lets them race on
+	# the same wall's _items/_shapes arrays, which can leave a strip's
+	# collision shape out of sync with its "open" strip (it looks open but
+	# still blocks you). So later presses queue instead of overlapping.
+	if _refreshing:
+		_refresh_pending = true
+		return
+	_refreshing = true
 	var inside := ""
 	if walls.size() > 1:
 		inside = (walls.back().get_meta("entry", {}) as Dictionary).get("name", "")
 	await _prune_done(_tree, walls[0], inside)
 	_apply_leave_additions()
 	_apply_additions()
+	_refreshing = false
+	if _refresh_pending:
+		_refresh_pending = false
+		_debug_refresh()
 
 func _prune_done(host: Dictionary, wall_node: FileWall, inside: String) -> void:
 	var kids: Array = host.get("children", [])
