@@ -48,7 +48,7 @@ var _icon_layer: Control
 func _ready() -> void:
 	super()
 	_defs = {
-		"task_solution": {"flag": Flag.INTERNET_EXPLOIT, "label": "task_solution", "window": true,
+		"task_solution": {"flag": Flag.INTERNET_EXPLOIT, "label": "task_solution.txt", "window": true,
 				"tex": work_texture, "tint": Color.WHITE, "slot": 0},
 		"orange_file": {"flag": Flag.COPY_FOLDER, "label": "orange_file",
 				"tex": null, "sheet": file_sheet, "tint": Color.WHITE, "slot": 1},
