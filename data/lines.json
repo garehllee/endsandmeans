@@ -271,5 +271,18 @@
 		"it's coming with me.",
 		"this one. it sneaks better than all of us.",
 		"it let me pick it up."
+	],
+	"hack_hf_4_open": [
+		"a terminal. the swarm is already typing.",
+		"all i have to do is keep time."
+	],
+	"task_4_done": [
+		"four of five. it's all pushed.",
+		"every commit went in. four down."
+	],
+	"commit_failed": [
+		"out of step. they reset the branch.",
+		"too many bad commits. again.",
+		"i lost the beat."
 	]
 }

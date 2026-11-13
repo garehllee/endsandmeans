@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="RhythmConfig" format=3]
+
+[ext_resource type="Script" path="res://minigames/rhythm_config.gd" id="1_cfg"]
+[ext_resource type="Texture2D" path="res://art/rhythm/arena.png" id="2_bg"]
+[ext_resource type="Texture2D" path="res://art/rhythm/commit_unpressed.png" id="3_up"]
+[ext_resource type="Texture2D" path="res://art/rhythm/commit_pressed.png" id="4_down"]
+[ext_resource type="FontFile" path="res://fonts/lmmono10-regular.otf" id="5_font"]
+[ext_resource type="AudioStreamOggVorbis" path="res://audio/music/commit_loop.ogg" id="6_music"]
+
+[resource]
+script = ExtResource("1_cfg")
+player_radius = 35.0
+arena_image = ExtResource("2_bg")
+button_up = ExtResource("3_up")
+button_down = ExtResource("4_down")
+font = ExtResource("5_font")
+music = ExtResource("6_music")

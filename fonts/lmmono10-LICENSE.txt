@@ -1,0 +1,4 @@
+lmmono10-regular.otf is Latin Modern Mono 10 Regular, from the Latin Modern
+family by GUST (B. Jackowski and J. M. Nowacki). It is distributed under the
+GUST Font License (GFL), which permits use and redistribution:
+https://www.gust.org.pl/projects/e-foundry/licenses
