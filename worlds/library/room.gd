@@ -34,7 +34,14 @@ func _ready() -> void:
 	_follow_camera(999.0)   # snap on the first frame
 	Game.world_opened.connect(_on_world_opened)
 	Game.world_closed.connect(_on_world_closed)
-	Game.flag_changed.connect(func(_f: StringName, _v: bool): _apply_additions())
+	Game.flag_changed.connect(func(_f: StringName, _v: bool):
+		_apply_additions()
+		# The flag an on_leave addition is waiting on can be set after the
+		# minigame's world already closed (exploit_room._finish() closes the
+		# world, then sets the flag), so closing alone can be too early to
+		# tell. Reacting to the flag itself catches it the moment it's
+		# actually true, whichever order those two happen in.
+		_apply_leave_additions())
 	Story.debug_completed.connect(_debug_refresh)
 
 # Tags every entry whose name appears in story.json's "events" with its event id.
