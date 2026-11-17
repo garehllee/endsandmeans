@@ -23,10 +23,7 @@ func _show(_params: Dictionary) -> void:
 	if visible:
 		bring_to_front()
 		return
-	visible = true
-	modulate.a = 0.0
-	bring_to_front()
-	create_tween().tween_property(self, "modulate:a", 1.0, 0.3)
+	open_fresh()
 
 func _hide(_result: Dictionary) -> void:
 	if keep_open_when_closed:

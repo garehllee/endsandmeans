@@ -22,6 +22,7 @@ func _ready() -> void:
 	title.text = "[u]" + title_text + "[/u]"
 	title.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	global_position = _clamp_to_viewport(global_position)
+	add_to_group("desktop_window")
 	_apply_move_cursor(self)
 	if can_minimize:
 		_min_btn = TextureRect.new()
@@ -94,6 +95,20 @@ func bring_to_front() -> void:
 		p.move_child(self, -1)
 	focused.emit()
 
+# Shows the window for the first time (or again after being hidden), the way
+# every "it just unlocked / arrived" window on the desktop does: try to land
+# it somewhere that isn't already covered by another open window or desktop
+# icon, falling back to dead center if nothing's free, then fade it in on
+# top. Not used for restoring a minimized window -- that goes back to
+# exactly where it was (see restore()).
+func open_fresh(fade := 0.3) -> void:
+	global_position = DesktopLayout.find_spot(size, global_position,
+			DesktopLayout.occupied_rects(get_tree(), self), get_viewport_rect().size)
+	visible = true
+	modulate.a = 0.0
+	bring_to_front()
+	create_tween().tween_property(self, "modulate:a", 1.0, fade)
+
 func _topmost_window_at(point: Vector2) -> DesktopWindow:
 	var siblings := get_parent().get_children()
 	siblings.reverse()
@@ -124,7 +139,8 @@ func minimize() -> void:
 	var icon := MinimizedIcon.new()
 	icon.setup(self, info["tex"], info["tint"], title_text)
 	layer.add_child(icon)
-	icon.global_position = _free_spot(layer, icon, get_global_rect().get_center() - icon.size * 0.5)
+	icon.global_position = DesktopLayout.find_spot(icon.size, get_global_rect().get_center() - icon.size * 0.5,
+			DesktopLayout.occupied_rects(get_tree(), icon), get_viewport_rect().size)
 	icon.modulate.a = 0.0
 	icon.scale = Vector2.ONE * 0.6
 	_min_icon = icon
@@ -136,24 +152,6 @@ func minimize() -> void:
 		if minimized:
 			visible = false
 			modulate.a = 1.0)
-
-# A spot near `want` that doesn't sit on top of another minimized icon.
-func _free_spot(layer: Control, icon: Control, want: Vector2) -> Vector2:
-	var bounds := get_viewport_rect().size
-	var p := Vector2(clampf(want.x, 0.0, maxf(0.0, bounds.x - icon.size.x)), clampf(want.y, 0.0, maxf(0.0, bounds.y - icon.size.y)))
-	for attempt in 40:
-		var clash := false
-		for other in layer.get_children():
-			if other is MinimizedIcon and other != icon and Rect2(p, icon.size).intersects(other.get_global_rect()):
-				clash = true
-				break
-		if not clash:
-			break
-		p.x += icon.size.x + 20.0
-		if p.x + icon.size.x > bounds.x:
-			p.x = 20.0
-			p.y = fposmod(p.y + icon.size.y + 20.0, maxf(1.0, bounds.y - icon.size.y))
-	return p
 
 # Clicking the icon opens the window again, where it was.
 func restore() -> void:

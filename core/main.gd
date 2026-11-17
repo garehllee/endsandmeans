@@ -9,5 +9,6 @@ func open_window(scene: PackedScene, pos: Vector2) -> Control:
 	var w = scene.instantiate()
 	windows.add_child(w)
 	w.position = pos
-	w.global_position = w._clamp_to_viewport(w.global_position)
+	w.global_position = DesktopLayout.find_spot(w.size, w._clamp_to_viewport(w.global_position),
+			DesktopLayout.occupied_rects(get_tree(), w), get_viewport_rect().size)
 	return w

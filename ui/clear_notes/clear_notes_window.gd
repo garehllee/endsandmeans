@@ -42,10 +42,7 @@ func _on_flag_changed(flag: StringName, value: bool) -> void:
 	if not value:
 		visible = false
 	elif not visible:
-		visible = true
-		modulate.a = 0.0
-		bring_to_front()
-		create_tween().tween_property(self, "modulate:a", 1.0, 0.3)
+		open_fresh()
 
 func _on_button_down() -> void:
 	_press_origin = global_position

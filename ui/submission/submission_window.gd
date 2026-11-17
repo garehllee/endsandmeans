@@ -105,10 +105,7 @@ func _on_flag_changed(flag: StringName, value: bool) -> void:
 		if not value:
 			visible = false
 		elif not visible:
-			visible = true
-			modulate.a = 0.0
-			bring_to_front()
-			create_tween().tween_property(self, "modulate:a", 1.0, 0.3)
+			open_fresh()
 			Game.say_random("submission_added")
 	for id in _defs:
 		if _defs[id]["flag"] == flag:
@@ -144,7 +141,15 @@ func _make_available(id: String, animate: bool) -> void:
 	var d: Dictionary = _defs[id]
 	var icon := _new_icon(id)
 	layer.add_child(icon)
-	icon.home = _clamp_icon(_homes.get(id, _home_for(d["slot"])), icon)
+	var preferred: Vector2 = _homes.get(id, _home_for(d["slot"]))
+	if not _homes.has(id):
+		# Brand new: try to land it somewhere that isn't already covered by
+		# an open window or another icon, instead of always sitting in its
+		# usual row no matter what's there. A remembered home (it was taken
+		# out of the box before, or dragged) is left exactly where it was.
+		preferred = DesktopLayout.find_spot(icon.size, preferred,
+				DesktopLayout.occupied_rects(get_tree(), icon), get_viewport_rect().size)
+	icon.home = _clamp_icon(preferred, icon)
 	icon.global_position = icon.home
 	_homes[id] = icon.home
 	_icons[id] = icon
