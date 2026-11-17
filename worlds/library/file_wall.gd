@@ -88,6 +88,7 @@ var _blink_a := 0.0
 var _blink_pending_ids: Array[int] = []
 var _blink_pending_n := 0
 var _blink_tween: Tween
+var _entry_grace := 0.0   # seconds left during which no strip can auto-trigger entry
 
 func _ready() -> void:
 	for p in PALETTES:
@@ -198,10 +199,23 @@ func unlock() -> void:
 		await get_tree().create_timer(0.4).timeout   # let the strips settle first
 		_play_blink(ids, n)
 
+# Briefly blocks auto-entry on this wall. Used right when new strips appear
+# live (story.json's "on_leave" additions) on a wall the player is already
+# standing in: a neighboring strip can still be mid-open from before the
+# player walked off toward the folder they just finished with, and reaching
+# whatever just appeared further down the wall means passing that neighbor's
+# own (also proximity-grown) hit-box. Without a pause here, that neighbor can
+# auto-trigger before the new folder has even had a moment to be seen, which
+# silently locks the room behind it. This doesn't touch ordinary walking up
+# to a folder for the first time anywhere else.
+func grace(seconds: float) -> void:
+	_entry_grace = maxf(_entry_grace, seconds)
+
 func _process(delta: float) -> void:
 	_poll_textures()
 	if not active or _items.is_empty():
 		return
+	_entry_grace = maxf(_entry_grace - delta, 0.0)
 	if _player == null:
 		for n in get_tree().get_nodes_in_group("player"):
 			if n.get_viewport() == get_viewport():
@@ -279,6 +293,8 @@ func _update_collision() -> void:
 		c.set_deferred("disabled", walkable)
 
 func _check_entry(p: Vector2) -> void:
+	if _entry_grace > 0.0:
+		return
 	if p.y > wall_size.y + entry_margin:
 		_inside = -1
 		return

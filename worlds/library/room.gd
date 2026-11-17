@@ -80,6 +80,15 @@ func _on_world_closed(id: String, _result: Dictionary) -> void:
 	if id == "analysis":
 		create_tween().tween_property(player, "modulate:a", 1.0, 0.3)
 	_apply_additions()
+	# Also place any "on_leave" additions whose conditions are already met,
+	# right as the minigame/exploit window closes. The player is still
+	# standing inside the folder they just finished with at this point (they
+	# haven't walked out yet), so the new strip lands on the parent wall while
+	# it's locked behind them and has already settled by the time they leave.
+	# _added[] makes this idempotent: if nothing's newly satisfied yet, this
+	# is a no-op, and whatever genuinely waits on walking out of some OTHER
+	# folder still only appears there, via _leave_child().
+	_apply_leave_additions()
 
 # Adds the files listed under "additions" in story.json once their flag is set.
 # An addition can wait on one flag ("when") or on several ("when_all").
@@ -190,6 +199,10 @@ func _apply_leave_additions() -> void:
 					host.get("children", []).append(entry)
 					idxs.append(w.add_entry(entry))
 				w.blink_entries(idxs, a.get("blink", 3))
+				# A new strip just appeared live on a wall the player may
+				# already be standing in; give it a moment to settle before
+				# anything on this wall can auto-trigger (see FileWall.grace).
+				w.grace(1.0)
 				placed = true
 				break
 		if not placed:
