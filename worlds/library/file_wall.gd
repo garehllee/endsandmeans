@@ -178,6 +178,18 @@ func unlock() -> void:
 	hallway_index = -1
 	_inside = -1
 	active = true
+	# A sibling can be left sitting half (or fully) open from before you walked
+	# into the folder you just came back out of — the ramp keeps tracking
+	# whichever item your x-position is over even while this wall is locked,
+	# it just stops moving. If that frozen value is already past the walk-in
+	# threshold, reactivating the wall would fire entry_entered on it the very
+	# next frame, with no walking required, silently pulling you into it
+	# instead of whatever you actually meant to approach. So every strip
+	# starts fresh and ramps back open from the current position, same as
+	# when the room was first built.
+	for it in _items:
+		it.open = 0.0
+	_layout_now()
 	queue_redraw()
 	if not _blink_pending_ids.is_empty():
 		var ids := _blink_pending_ids.duplicate()
