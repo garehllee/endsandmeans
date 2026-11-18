@@ -40,7 +40,7 @@ static func for_title(title: String) -> Dictionary:
 			return {"tex": TXT, "tint": PURPLE, "bar": PURPLE}
 		"objectives.txt":
 			return {"tex": TXT, "tint": CRIMSON, "bar": CRIMSON}
-		"task_solution.txt":
+		"solution.txt":
 			return {"tex": TXT, "tint": RED_ORANGE, "bar": RED_ORANGE}
 	if title.ends_with(".exe"):
 		return {"tex": EXE_SANDBOX, "tint": Color.WHITE, "bar": ORANGE}
