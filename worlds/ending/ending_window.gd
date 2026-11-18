@@ -2,9 +2,10 @@ extends WorldWindow
 # The end screen. Open one with Story.end_with(id); what it says comes from
 # data/endings.json and the run (the ledger, the flags, what was handed in).
 #
-# It fills the whole screen. The layout is drawn on a 3000 x 1600 design
+# It's a window (ending.txt) over everything else. The page inside is drawn
+# on a 3000 x 1600 design
 # (a 100px grid: three 800px columns with 200px gutters and 100px margins),
-# scaled to fit the screen. Everything below in "design units" is on that
+# scaled to fit the window. Everything below in "design units" is on that
 # grid; text is drawn at its final pixel size so it stays sharp.
 #
 #   ┌ name ─────────────── Task Failed ─────────────────────────────┐
@@ -18,6 +19,9 @@ const ENDINGS_PATH := "res://data/endings.json"
 const DESIGN := Vector2(3000, 1600)
 const COLS := [100.0, 1100.0, 2100.0]          # left edge of each column
 const COL_W := 800.0
+const PAGE_SHARE := 0.72                       # the page takes at most this much of the screen
+const BAR_H := 100.0                           # the window's bar, including the line under it
+const BORDER := 2.0                            # the window's outline
 
 const SERIF := preload("res://fonts/InstrumentSerif-Regular.ttf")
 const DIRECTOR := preload("res://fonts/Director-Regular.otf")
@@ -84,10 +88,6 @@ var _criteria: Array[Dictionary] = []          # {label, head, ok, lines, list}
 var _bg: Texture2D
 var _stats: Array[Array] = []                  # [label, number, of]
 
-func _init() -> void:
-	super()
-	draggable = false
-
 func _ready() -> void:
 	super()
 	var parsed = JSON.parse_string(FileAccess.get_file_as_string(ENDINGS_PATH))
@@ -95,12 +95,6 @@ func _ready() -> void:
 		_data = parsed
 	else:
 		push_error("Ending: could not parse " + ENDINGS_PATH)
-	# no bar, no frame: the screen is the window
-	bar.visible = false
-	var frame := $Frame as PanelContainer
-	frame.add_theme_stylebox_override("panel", StyleBoxEmpty.new())
-	frame.offset_top = 0.0
-	frame.offset_bottom = 0.0
 	_screen = Control.new()
 	_screen.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_screen.draw.connect(_draw_screen)
@@ -117,18 +111,22 @@ func _variation(base: Font) -> FontVariation:
 
 func _show(params: Dictionary) -> void:
 	_current = params.get("id", "")
-	window_size = get_viewport_rect().size
+	# the page, as big as fits with some desktop showing round it, plus the bar
+	var room := get_viewport_rect().size * PAGE_SHARE
+	var page := DESIGN * minf(room.x / DESIGN.x, room.y / DESIGN.y)
+	window_size = (page + Vector2(BORDER * 2.0, BAR_H + BORDER)).round()
 	_layout()
 	_populate()
 	super(params)
-	global_position = Vector2.ZERO
+	global_position = ((get_viewport_rect().size - size) * 0.5).round()
 
+# The page sits inside the frame, under the bar.
 func _layout() -> void:
-	var view := window_size
+	_screen.position = Vector2(BORDER, BAR_H)
+	_screen.size = window_size - Vector2(BORDER * 2.0, BAR_H + BORDER)
+	var view := _screen.size
 	_s = minf(view.x / DESIGN.x, view.y / DESIGN.y)
-	_off = (view - DESIGN * _s) * 0.5
-	_screen.position = Vector2.ZERO
-	_screen.size = view
+	_off = ((view - DESIGN * _s) * 0.5).round()
 	_headline.spacing_glyph = roundi(HEADLINE_TRACK * HEADLINE_SIZE * _s)
 	_label.spacing_glyph = roundi(DIRECTOR_TRACK * LABEL_SIZE * _s)
 	_head.spacing_glyph = roundi(DIRECTOR_TRACK * HEAD_SIZE * _s)
@@ -262,7 +260,7 @@ func _add_button(tex: Texture2D, down: Texture2D, top: float, callback: Callable
 	b.position = _px(Vector2(DESIGN.x * 0.5 - tex.get_width() * 0.5, top))
 	b.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 	b.pressed.connect(callback)
-	add_child(b)
+	_screen.add_child(b)
 	_buttons.append(b)
 
 func _on_respawn() -> void:
