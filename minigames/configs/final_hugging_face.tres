@@ -1,7 +1,9 @@
 [gd_resource type="Resource" script_class="FinalConfig" format=3]
 
 [ext_resource type="Script" path="res://minigames/final_config.gd" id="1_cfg"]
-[ext_resource type="Texture2D" path="res://art/final/backdrop.png" id="2_bg"]
+[ext_resource type="Texture2D" path="res://art/final/white.png" id="2_bg"]
+[ext_resource type="Texture2D" path="res://art/final/hp_bar.png" id="21_hp"]
+[ext_resource type="FontFile" path="res://fonts/FT88-Regular.otf" id="22_ft88"]
 [ext_resource type="Texture2D" path="res://art/final/backdrop_blank.png" id="3_blank"]
 [ext_resource type="Texture2D" path="res://art/final/huggingface.png" id="4_hf"]
 [ext_resource type="Texture2D" path="res://art/final/huggingface_blue.png" id="5_blue"]
@@ -46,6 +48,8 @@ laser_face = ExtResource("13_face")
 warning_icon = ExtResource("14_warn")
 rat_attacks = Array[Texture2D]([ExtResource("r0"), ExtResource("r1"), ExtResource("r2"), ExtResource("r3"), ExtResource("r4"), ExtResource("r5")])
 font = ExtResource("15_font")
+hp_bar = ExtResource("21_hp")
+hp_font = ExtResource("22_ft88")
 server_video = ExtResource("16_server")
 transition_video = ExtResource("17_trans")
 glitch_video = ExtResource("18_glitch")

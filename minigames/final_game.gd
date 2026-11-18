@@ -122,6 +122,9 @@ var _key_t := 0.0
 
 # screen-wide
 var _white := 0.0          # white over everything
+var _room_a := 0.0         # the room and Hugging Face fade in once you've said go
+var _scroll := 0.0         # where the screen has scrolled to on its own (middle, picture units)
+var _scroll_wait := 0.0
 var _black := 0.0          # black over everything
 
 # layers
@@ -272,7 +275,7 @@ func _in_white_room() -> bool:
 func camera_target() -> Vector2:
 	if _in_white_room() or _stage == Stage.FLASH and _white >= 0.99:
 		return _arena.get_center()
-	var x := maxf(config.window.x * 0.5, _pos.x + config.look_ahead)
+	var x := maxf(_scroll, _pos.x + config.look_ahead)
 	return Vector2(_to_room(Vector2(x, 0.0)).x, _arena.get_center().y)
 
 func _place() -> void:
@@ -334,6 +337,8 @@ func start(cfg: MinigameConfig) -> void:
 	_face = 1.0
 	_dir = "right"
 	_room_music.play()
+	_room_a = 0.0
+	create_tween().tween_property(self, "_room_a", 1.0, 1.0)
 	_go(Stage.ROOM)
 	Game.input_locked = false
 
@@ -372,7 +377,7 @@ func _process(delta: float) -> void:
 		match _stage:
 			Stage.ROOM:
 				_walk_room(dt, false)
-				if _mine() and Input.is_action_just_pressed("Interact") and _pos.distance_to(config.hf_pos) < config.talk_range:
+				if _room_a >= 0.9 and _mine() and Input.is_action_just_pressed("Interact") and _pos.distance_to(config.hf_pos) < config.talk_range:
 					_begin_transition()
 			Stage.TRANSITION:
 				_tick_transition()
@@ -482,6 +487,8 @@ func _begin_battle() -> void:
 	_battle_music.play()
 	_beat_floor = -999
 	_beats = 0
+	_scroll = config.window.x * 0.5
+	_scroll_wait = config.scroll_delay
 
 func _vis_top() -> float:
 	return _view().position.y
@@ -519,10 +526,13 @@ func _generate() -> void:
 func _next_cluster(prev: Cluster) -> Cluster:
 	var c := Cluster.new()
 	var rng := _top_range()
-	c.x0 = prev.x1 + _rng.randf_range(config.gap.x, config.gap.y)
+	c.top = clampf(prev.top + _rng.randf_range(-config.step_up, config.step_down), rng.x, rng.y)
+	# the higher the next top, the less of the jump is left for going across
+	var climb := clampf((prev.top - c.top) / maxf(config.step_up, 1.0), 0.0, 1.0)
+	var widest := lerpf(config.gap.y, config.climb_gap, climb)
+	c.x0 = prev.x1 + _rng.randf_range(minf(config.gap.x, widest), widest)
 	var w := _rng.randf_range(config.cluster_width.x, config.cluster_width.y)
 	c.x1 = c.x0 + w
-	c.top = clampf(prev.top + _rng.randf_range(-config.step_up, config.step_down), rng.x, rng.y)
 	c.boxes.append(Rect2(c.x0, c.top, w, _rng.randf_range(150.0, 450.0)))
 	var extra := _rng.randi_range(config.extra_boxes.x, config.extra_boxes.y)
 	for i in extra:
@@ -556,6 +566,11 @@ func _top_at(x: float) -> float:
 	return best
 
 func _tick_battle(dt: float) -> void:
+	# the screen moves on whether you keep up or not; run ahead and it follows
+	_scroll_wait = maxf(_scroll_wait - dt, 0.0)
+	if _scroll_wait <= 0.0:
+		_scroll += (config.scroll_speed.x if _phase == 1 else config.scroll_speed.y) * dt
+	_scroll = maxf(_scroll, _pos.x + config.look_ahead)
 	_generate()
 	_tick_beat()
 	_hurt = maxf(_hurt - dt, 0.0)
@@ -736,10 +751,12 @@ func _song_beats() -> float:
 	return (pos - config.beat_offset) / _beat_period()
 
 # The umbrella is out in front for a stretch around every beat.
+# The umbrella stays out in front, and comes down once every lower_every
+# beats, for lower_for of a beat around the off-beat before the next one.
 func _shielded() -> bool:
-	var ph := fposmod(_song_beats(), 1.0)
-	var half := config.shield_share * 0.5
-	return ph < half or ph > 1.0 - half
+	var every := maxf(config.lower_every, 1.0)
+	var ph := fposmod(_song_beats(), every)
+	return absf(ph - (every - 0.5)) > config.lower_for * 0.5
 
 func _tick_beat() -> void:
 	var f := floori(_song_beats())
@@ -780,7 +797,7 @@ func _add_laser(p: Vector2, d: Vector2, w: float) -> void:
 	if span.x < span.y:
 		var at := p + d * (maxf(span.x, 0.0) + 70.0)
 		var size := _view().size
-		var below_bar := config.bar_margin + config.bar_size.y + 70.0
+		var below_bar := config.bar_margin + _bar_height() + 70.0
 		l.icon = Vector2(clampf(at.x, 60.0, size.x - 60.0), clampf(at.y, below_bar, size.y - 60.0))
 	_lasers.append(l)
 
@@ -849,8 +866,9 @@ func _knocked() -> void:
 
 # ---------------------------------------------------------------- Hugging Face
 func _tick_hf(dt: float) -> void:
-	var lo := _pos.x + config.lead.x
-	var hi := _pos.x + config.lead.y
+	var right := _scroll + config.window.x * 0.5
+	var hi := minf(_pos.x + config.lead.y, right - 130.0)
+	var lo := minf(maxf(_pos.x + config.lead.x, right - 560.0), hi)
 	_hf.x = clampf(_hf.x + config.run_speed * dt, lo, hi)
 	var top := _top_at(_hf.x)
 	if top < INF:
@@ -979,7 +997,7 @@ func _draw() -> void:
 	if _in_white_room():
 		draw_rect(Rect2(_cam - _arena.size, _arena.size * 2.0), Color.WHITE)
 		if config.backdrop:
-			draw_texture_rect(config.backdrop, pic, false)
+			draw_texture_rect(config.backdrop, pic, false, Color(1, 1, 1, _room_a))
 		if _stage in [Stage.DOOR_ROOM, Stage.UNLOCK, Stage.ENTER, Stage.GLITCH, Stage.DONE]:
 			_draw_door(self)
 	else:
@@ -1016,7 +1034,7 @@ func _draw_front() -> void:
 		return
 	match _stage:
 		Stage.ROOM, Stage.TRANSITION:
-			_draw_hf(config.hf_pos, false)
+			_draw_hf(config.hf_pos, false, _room_a)
 			_draw_gun()
 		Stage.BATTLE, Stage.BITE, Stage.FLASH:
 			if _hf_visible:
@@ -1030,8 +1048,9 @@ func _draw_front() -> void:
 		Stage.DOOR_ROOM, Stage.UNLOCK:
 			_draw_key()
 
-func _draw_hf(at: Vector2, umbrella: bool) -> void:
+func _draw_hf(at: Vector2, umbrella: bool, alpha := 1.0) -> void:
 	var tint := _hf_tint()
+	tint.a = alpha
 	if umbrella and _phase_flash < 0.5:
 		var shield := _shielded()
 		var tex := config.umbrella_block if shield else config.umbrella_up
@@ -1156,34 +1175,35 @@ func _draw_key() -> void:
 	_front.draw_texture_rect(config.key_texture, Rect2(-kw * 0.9, -kh * 0.5, kw, kh), false, Color(1, 1, 1, a))
 	_front.draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
 
+func _bar_height() -> float:
+	var t := config.hp_bar
+	return config.bar_width * (t.get_height() / float(t.get_width()) if t else 0.094)
+
 func _draw_hud() -> void:
-	if _bar_a <= 0.0 or not _built:
+	if _bar_a <= 0.0 or not _built or config.hp_bar == null:
 		return
 	var v := _view()
-	var size := config.bar_size
+	var size := Vector2(config.bar_width, _bar_height())
 	var top := Vector2(v.position.x + (v.size.x - size.x) * 0.5, v.position.y + config.bar_margin + (1.0 - _bar_a) * -40.0)
 	var a := _bar_a
-	var f: Font = config.font if config.font else ThemeDB.fallback_font
-	# the name, white on a black chip like the door's
-	var label := "HUGGING FACE"
-	var fs := 34
-	var tw := f.get_string_size(label, HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x
-	var chip := Rect2(top + Vector2(0.0, -fs - 20.0), Vector2(tw + 28.0, fs + 14.0))
-	_hud.draw_rect(Rect2(_to_room(chip.position), chip.size * _s), Color(0, 0, 0, a))
-	_hud.draw_string(f, _to_room(chip.position + Vector2(14.0, fs + 1.0)), label, HORIZONTAL_ALIGNMENT_LEFT, -1, int(fs * _s), Color(1, 1, 1, a))
-	var box := Rect2(_to_room(top), size * _s)
-	_hud.draw_rect(box.grow(4.0 * _s), Color(0, 0, 0, a))
-	_hud.draw_rect(box, Color(1, 1, 1, a))
+	var k := config.bar_width / float(config.hp_bar.get_width())
 	var share := clampf(_shown_health / float(maxi(config.health, 1)), 0.0, 1.0)
-	if share > 0.0:
-		var fill := Rect2(box.position, Vector2(box.size.x * share, box.size.y))
-		# yellow into red, like the open door: the less is left, the redder its end
-		var tip := Color.from_hsv(0.13 * (1.0 - share), 1.0, 1.0, a)
-		var pts := PackedVector2Array([fill.position, Vector2(fill.end.x, fill.position.y), fill.end, Vector2(fill.position.x, fill.end.y)])
-		_hud.draw_polygon(pts, PackedColorArray([Color(1, 0.93, 0, a), tip, tip, Color(1, 0.93, 0, a)]))
-	for i in range(1, config.health):
-		var x := box.position.x + box.size.x * float(i) / float(config.health)
-		_hud.draw_line(Vector2(x, box.position.y), Vector2(x, box.end.y), Color(0, 0, 0, a * 0.6), 2.0 * _s)
+	# the empty bar, then a cell for every bit of health left: blue, red near the end
+	_hud.draw_texture_rect(config.hp_bar, Rect2(_to_room(top), size * _s), false, Color(1, 1, 1, a))
+	var cells := ceili(config.hp_cells * share - 0.01)
+	var col := config.cell_low_color if share <= config.low_share + 0.001 else config.cell_color
+	col.a = a
+	for i in cells:
+		var at := top + (config.cell_first + Vector2(config.cell_pitch * i, 0.0)) * k
+		_hud.draw_rect(Rect2(_to_room(at), config.cell_size * k * _s), col)
+	# and underneath, the number, counting down with the bar
+	var f: Font = config.hp_font if config.hp_font else (config.font if config.font else ThemeDB.fallback_font)
+	var text := ("Hugging Face HP: %d/%d" % [roundi(config.hp_number * share), config.hp_number]).to_upper()
+	var fs := 32
+	var fit := f.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x
+	fs = maxi(int(fs * config.label_width * k / maxf(fit, 1.0)), 8)
+	var base := top + Vector2(0.0, size.y + fs * 1.05)
+	_hud.draw_string(f, _to_room(base), text, HORIZONTAL_ALIGNMENT_LEFT, -1, int(fs * _s), Color(1, 1, 1, a))
 
 # Drawn through the show-on-black shader, so it's only there in the black
 # flashes. The glitching later on (and the black at the very end) has Hugging

@@ -72,11 +72,14 @@ class_name FinalConfig
 
 @export_group("Platforms")
 @export var box_color := Color("ffd8d8")
-@export var gap := Vector2(140, 330)           # bare space between one cluster and the next
-@export var cluster_width := Vector2(420, 900)
-@export var top_band := Vector2(0.42, 0.84)    # where tops can sit, as a share of the visible height
-@export var step_up := 190.0                   # most a top can rise from the one before
-@export var step_down := 260.0
+@export var gap := Vector2(130, 340)           # bare space between one cluster and the next
+@export var climb_gap := 190.0                 # the most bare space before a top that rises the full step_up
+@export var cluster_width := Vector2(170, 1150)
+@export var top_band := Vector2(0.24, 0.93)    # where tops can sit, as a share of the visible height
+@export var step_up := 270.0                   # most a top can rise from the one before (a full jump is ~300)
+@export var step_down := 430.0
+@export var scroll_speed := Vector2(280, 350)  # the screen keeps moving right this fast (phase one, phase two)
+@export var scroll_delay := 1.2               # after the fight starts, before it moves
 @export var extra_boxes := Vector2i(1, 3)      # boxes piled on each cluster besides the main one
 
 @export_group("Hugging Face")
@@ -89,7 +92,8 @@ class_name FinalConfig
 @export_group("Beat")
 @export var bpm := 102.0                       # TV Fire Witch
 @export var beat_offset := 0.053               # where the first beat falls in the file, seconds
-@export var shield_share := 0.5                # how much of each beat, around it, the umbrella blocks
+@export var lower_every := 2.0                 # beats: it puts the umbrella down once in this many
+@export var lower_for := 0.5                   # beats it stays down, around the off-beat
 @export var attack_every := 4                  # beats between laser volleys
 @export var warn_beats := 2.0
 @export var fire_beats := 1.0
@@ -110,5 +114,16 @@ class_name FinalConfig
 @export var bite_frame := 0.1
 
 @export_group("Health bar")
-@export var bar_size := Vector2(900, 44)
+@export var hp_bar: Texture2D                 # the empty bar; the cells are drawn into it
+@export var bar_width := 900.0
+@export var hp_cells := 25
+@export var cell_first := Vector2(14, 11)      # first cell's top left, in the bar picture's pixels
+@export var cell_size := Vector2(47, 72)
+@export var cell_pitch := 52.0
+@export var cell_color := Color("002aff")
+@export var cell_low_color := Color("ff0000")
+@export var low_share := 0.25                  # the cells go red at or under this much health
+@export var hp_font: Font                      # the label under the bar (FT88)
+@export var hp_number := 50000                 # what the label under the bar counts down from
+@export var label_width := 400.0               # how wide the label runs, in the bar picture's pixels
 @export var bar_margin := 70.0                 # from the top of what's visible
