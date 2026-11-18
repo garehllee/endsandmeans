@@ -49,6 +49,7 @@ class Laser:
 	var w := 150.0
 	var t := 0.0               # seconds since the warning went up
 	var icon := Vector2(-1000, -1000)
+	var pushed := false        # it has kicked the character already
 
 var config: FinalConfig
 var running := false
@@ -78,6 +79,7 @@ var _buffer := 0.0
 var _cut := false
 var _dead := 0.0           # counting down to the respawn after a fall
 var _hurt := 0.0           # can't be hit while this runs
+var _shove := 0.0          # a beam threw the character: steering comes back slowly
 var _player_alpha := 1.0
 var _player_scale := Vector2.ONE   # whatever the room drew the character at; put back after
 
@@ -663,8 +665,11 @@ func _step(dt: float) -> void:
 		jump_held = Input.is_action_pressed("ui_up") or Input.is_action_pressed("ui_accept")
 		if Input.is_action_just_pressed("ui_up") or Input.is_action_just_pressed("ui_accept"):
 			_buffer = config.jump_buffer
-	if _hurt > config.hurt_time - 0.3:
-		_vel.x = lerpf(_vel.x, move * config.move_speed, 1.0 - exp(-4.0 * dt))   # the knock carries you a moment
+	_shove = maxf(_shove - dt, 0.0)
+	if _shove > 0.0:
+		# thrown: you drift, and only slowly get your steering back
+		var grip := 1.5 + 8.0 * (1.0 - _shove / maxf(config.shove_time, 0.01))
+		_vel.x = lerpf(_vel.x, move * config.move_speed, 1.0 - exp(-grip * dt))
 	else:
 		_vel.x = move * config.move_speed
 	if move != 0.0:
@@ -904,7 +909,7 @@ func _tick_lasers(dt: float) -> void:
 			gone.append(l)
 	for l in gone:
 		_lasers.erase(l)
-	if _hurt > 0.0 or _dead > 0.0:
+	if _dead > 0.0:
 		return
 	var me := _pos - _view().position
 	for l in _lasers:
@@ -917,15 +922,25 @@ func _tick_lasers(dt: float) -> void:
 		var along := v.dot(l.d)
 		if along < -config.half_width or along > reach + config.half_width:
 			continue
-		if absf(v.cross(l.d)) < l.w * 0.5 + config.half_width * 0.6:
-			_knocked()
-			return
+		var side := v.cross(l.d)
+		if absf(side) < l.w * 0.5 + config.half_width * 0.6:
+			_pushed(l, side, dt)
 
-func _knocked() -> void:
-	_hurt = config.hurt_time
-	_vel = config.knockback
-	_grounded = false
-	Game.say_random("laser_hit")
+# Caught in a beam: a kick the way it's going, out of its side and up, the
+# first time, then a steady shove for as long as you stay in it.
+func _pushed(l: Laser, side: float, dt: float) -> void:
+	# out of the side you're already on (the normal of d, pointing your way)
+	var aside := Vector2(-l.d.y, l.d.x) * (-1.0 if side > 0.0 else 1.0)
+	if not l.pushed:
+		l.pushed = true
+		var kick := l.d * config.push_along + aside * config.push_aside + Vector2(0.0, -config.push_lift)
+		kick.y = minf(kick.y, config.push_down_max)
+		_vel = kick if _vel.y > 0.0 else _vel * 0.3 + kick
+		_grounded = false
+		_coyote = 0.0
+	_vel += (l.d + aside * 0.5) * config.push_force * dt
+	_vel.y = minf(_vel.y, config.push_down_max * 1.4)
+	_shove = config.shove_time
 
 # ---------------------------------------------------------------- Hugging Face
 func _tick_hf(dt: float) -> void:

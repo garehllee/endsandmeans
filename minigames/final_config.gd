@@ -102,8 +102,13 @@ class_name FinalConfig
 @export var beam_width := 150.0
 @export var laser_grow := 0.22                 # seconds for a beam to shoot across
 @export var face_spacing := 12.0               # the stack: one face every this far
-@export var knockback := Vector2(-650, -900)
-@export var hurt_time := 1.3                   # can't be hit again for this long
+# A beam doesn't hurt: it shoves. The danger is being shoved off the boxes.
+@export var push_along := 950.0                # the kick the way the beam is going
+@export var push_aside := 650.0                # and out of the side of it
+@export var push_lift := 550.0                 # and upward, so you leave the ground
+@export var push_force := 2600.0               # it keeps shoving while you're in it
+@export var push_down_max := 900.0             # the most it throws you downward at once
+@export var shove_time := 0.55                 # how long you drift before your steering comes back
 
 @export_group("Pet")
 @export var pet_width := 120.0           # the same as the mouse that follows you everywhere else
