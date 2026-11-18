@@ -122,7 +122,11 @@ var _pet := Vector2.ZERO
 var _pet_flip := false
 var _pet_t := 0.0
 var _bite_from := Vector2.ZERO
-var _bite_t := 0.0
+var _bite_t := 0.0         # how far the jump and bite have got, in the bite's own (slowed) time
+var _freeze_t := 0.0       # real seconds since everything stopped
+var _dim_a := 0.0          # the black over the background during the bite
+var _dim: Node2D
+var _player_z := 0
 
 # the door
 var _door_open := false
@@ -185,6 +189,7 @@ func prepare(cfg: MinigameConfig) -> void:
 		_door_pad_px = ceili(HOVER_WIDTH) + 3
 		_door_pad = _padded(config.door_texture, _door_pad_px)
 	_build_boxes()
+	_dim = _make_layer(2, _draw_dim)     # under _front: the background darkens, not the fight
 	_front = _make_layer(2, _draw_front)
 	_hud = _make_layer(2, _draw_hud)
 	var copy := BackBufferCopy.new()
@@ -356,7 +361,7 @@ func _place() -> void:
 
 func _redraw() -> void:
 	queue_redraw()
-	for n in [_back, _prop, _front, _hud, _blue, _over]:
+	for n in [_back, _prop, _dim, _front, _hud, _blue, _over]:
 		if n:
 			(n as Node2D).queue_redraw()
 
@@ -374,6 +379,7 @@ func start(cfg: MinigameConfig) -> void:
 	if _player:
 		_player.platform_mode = true
 		_player_scale = _player.scale
+		_player_z = _player.z_index
 		# stay right where the button was pressed (inside the room's walls)
 		var r := config.walk_rect
 		var here := _from_room(_player.position)
@@ -402,6 +408,7 @@ func stop() -> void:
 		_player.platform_mode = false
 		_player.modulate.a = 1.0
 		_player.scale = _player_scale
+		_player.z_index = _player_z
 
 func _go(s: Stage) -> void:
 	_stage = s
@@ -932,17 +939,45 @@ func _tick_hf(dt: float) -> void:
 	_hf.y = lerpf(_hf.y, _hf_goal_y, 1.0 - exp(-7.0 * dt))
 
 # ---------------------------------------------------------------- the bite
+# Everything stops; the background darkens; then the mouse jumps, in slow
+# motion at first and up to full speed while it's in the air.
 func _begin_bite() -> void:
 	_go(Stage.BITE)
 	_lasers.clear()
 	_bite_from = _pet
 	_bite_t = 0.0
+	_freeze_t = 0.0
 	_hurt = 0.0
 	_player_alpha = 1.0
 	if _player:
 		_player.set_motion(false, "right")
+		_player_z = _player.z_index
+		_player.z_index = 3              # over the darkening, with the fight
+	_server.paused = true
+	_battle_music.stream_paused = true
+	create_tween().tween_property(self, "_dim_a", config.dim, config.dim_time)
+
+# How fast the bite's time runs: stopped, then slow, easing up to full speed.
+func _bite_rate() -> float:
+	var t := _freeze_t - config.freeze_time
+	if t < 0.0:
+		return 0.0
+	var k := clampf(t / maxf(config.slow_ramp, 0.01), 0.0, 1.0)
+	return lerpf(config.slow_start, 1.0, k * k * (3.0 - 2.0 * k))
 
 func _tick_bite(dt: float) -> void:
+	_freeze_t += dt
+	var rate := _bite_rate()
+	if rate <= 0.0:
+		return
+	if _battle_music.stream_paused:
+		_battle_music.stream_paused = false
+	if _bite_t < config.lunge_time:
+		_battle_music.pitch_scale = maxf(rate, 0.05)     # the music drags with it
+	elif _server.paused:
+		_server.paused = false                       # it lands: back to normal
+		_battle_music.pitch_scale = 1.0
+	dt *= rate
 	_bite_t += dt
 	_tick_hf(dt * 0.3)
 	var lunge := config.lunge_time
@@ -964,6 +999,14 @@ func _bite_frame() -> int:
 # the window goes to black.
 func _begin_dying() -> void:
 	_go(Stage.DYING)
+	_server.paused = false
+	_battle_music.stream_paused = false
+	_battle_music.pitch_scale = 1.0
+	var undim := create_tween()
+	undim.tween_property(self, "_dim_a", 0.0, 0.4)
+	undim.tween_callback(func():
+		if _player and is_instance_valid(_player):
+			_player.z_index = _player_z)
 	_lasers.clear()
 	_health = 0
 	_dying_t = 0.0
@@ -1146,6 +1189,13 @@ func _draw_prop() -> void:
 				mat.set_shader_parameter("width", HOVER_WIDTH * _hover_a)
 				var at := config.door_pos - Vector2.ONE * _door_pad_px
 				_prop.draw_texture_rect(_door_pad, Rect2(_to_room(at), _door_pad.get_size() * _s), false)
+
+# Half black over the background (the servers, the boxes, the mouse waiting):
+# everything under the fight itself.
+func _draw_dim() -> void:
+	if not _built or _expand < 0.999 or _dim_a <= 0.0:
+		return
+	_dim.draw_rect(Rect2(_cam - _arena.size, _arena.size * 2.0), Color(0, 0, 0, _dim_a))
 
 func _draw_back() -> void:
 	if not _built or _expand < 0.999 or _pet_tex == null or _mouse_biting():

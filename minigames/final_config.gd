@@ -110,8 +110,13 @@ class_name FinalConfig
 @export var pet_gap := 135.0
 @export var pet_foot := 35.0
 @export var bite_width := 240.0
-@export var lunge_time := 0.35
+@export var lunge_time := 0.35          # the jump at full speed
 @export var bite_frame := 0.12
+@export var freeze_time := 0.6          # before the jump, everything stops
+@export var dim := 0.5                  # the black over the background while it happens
+@export var dim_time := 0.35            # the black coming up, during the stop
+@export var slow_start := 0.1           # the jump starts this slow (1 is full speed)...
+@export var slow_ramp := 0.9            # ...and gets to full speed over this many seconds, in the air
 
 @export_group("Health bar")
 @export var hp_bar: Texture2D                 # the empty bar; the cells are drawn into it
