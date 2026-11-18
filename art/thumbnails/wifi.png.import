@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://ddrbf2c6auhhf"
-path="res://.godot/imported/backdrop.png-ae32373bf82c0656dd0bd80ab740c45d.ctex"
+uid="uid://dryfhgm5iaq61"
+path="res://.godot/imported/wifi.png-1669de0e5d312603ddd915243daa5f80.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://art/final/backdrop.png"
-dest_files=["res://.godot/imported/backdrop.png-ae32373bf82c0656dd0bd80ab740c45d.ctex"]
+source_file="res://art/thumbnails/wifi.png"
+dest_files=["res://.godot/imported/wifi.png-1669de0e5d312603ddd915243daa5f80.ctex"]
 
 [params]
 
