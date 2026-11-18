@@ -94,6 +94,9 @@ var _hf := Vector2.ZERO
 var _hf_goal_y := 0.0
 var _health := 6
 var _shown_health := 6.0
+var _trail_health := 6.0   # the white cells left behind when it's hit, which drain after
+var _trail_wait := 0.0
+var _last_health := 6
 var _phase := 1
 var _hits := 0             # hits in this phase
 var _hf_flash := 0.0       # white blinks after a hit
@@ -417,7 +420,7 @@ func _process(delta: float) -> void:
 	_stage_t += dt
 	_hf_flash = maxf(_hf_flash - dt, 0.0)
 	_phase_flash = maxf(_phase_flash - dt, 0.0)
-	_shown_health = lerpf(_shown_health, float(_health), 1.0 - exp(-8.0 * dt))
+	_tick_bar(dt)
 	if running:
 		match _stage:
 			Stage.ROOM:
@@ -529,6 +532,8 @@ func _begin_battle() -> void:
 	_hits = 0
 	_health = config.health
 	_shown_health = float(_health)
+	_trail_health = _shown_health
+	_last_health = _health
 	_make_start()
 	_spawn_on(_clusters[0], config.start_x)
 	_hf = Vector2(_pos.x + config.lead.x + 100.0, _pos.y)
@@ -1307,6 +1312,22 @@ func _draw_key() -> void:
 	_front.draw_texture_rect(config.key_texture, Rect2(-kw * 0.9, -kh * 0.5, kw, kh), false, Color(1, 1, 1, a))
 	_front.draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
 
+# When Hugging Face is hit the bar drains a cell at a time, the lost cells
+# staying white a moment and then draining after it. Healing (after a fall)
+# just fills back up.
+func _tick_bar(dt: float) -> void:
+	var target := float(_health)
+	if _health < _last_health:
+		_trail_wait = config.trail_wait
+	_last_health = _health
+	_shown_health = move_toward(_shown_health, target, dt * config.drain_speed * (1.0 if _shown_health > target else 1.5))
+	if _trail_health < _shown_health:
+		_trail_health = _shown_health
+	elif _trail_wait > 0.0:
+		_trail_wait -= dt
+	else:
+		_trail_health = move_toward(_trail_health, _shown_health, dt * config.drain_speed)
+
 func _bar_height() -> float:
 	var t := config.hp_bar
 	return config.bar_width * (t.get_height() / float(t.get_width()) if t else 0.094)
@@ -1325,6 +1346,10 @@ func _draw_hud() -> void:
 	var cells := ceili(config.hp_cells * share - 0.01)
 	var col := config.cell_low_color if share <= config.low_share + 0.001 else config.cell_color
 	col.a = a
+	var trail_share := clampf(_trail_health / float(maxi(config.health, 1)), 0.0, 1.0)
+	for i in range(cells, ceili(config.hp_cells * trail_share - 0.01)):
+		var at2 := top + (config.cell_first + Vector2(config.cell_pitch * i, 0.0)) * k
+		_hud.draw_rect(Rect2(_to_room(at2), config.cell_size * k * _s), Color(1, 1, 1, a))
 	for i in cells:
 		var at := top + (config.cell_first + Vector2(config.cell_pitch * i, 0.0)) * k
 		_hud.draw_rect(Rect2(_to_room(at), config.cell_size * k * _s), col)
@@ -1334,7 +1359,14 @@ func _draw_hud() -> void:
 	var fs := 32
 	var fit := f.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x
 	fs = maxi(int(fs * config.label_width * k / maxf(fit, 1.0)), 8)
-	var base := top + Vector2(0.0, size.y + fs * 1.05)
+	# white on a black strip, tucked under the bar's left end
+	var pad := Vector2(8.0, 4.0) * k
+	var tw := f.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x
+	var asc := f.get_ascent(fs)
+	var desc := f.get_descent(fs)
+	var strip := Rect2(top + Vector2(0.0, size.y), Vector2(tw + pad.x * 2.0, asc + desc + pad.y * 2.0))
+	_hud.draw_rect(Rect2(_to_room(strip.position), strip.size * _s), Color(0, 0, 0, a))
+	var base := strip.position + Vector2(pad.x, pad.y + asc)
 	_hud.draw_string(f, _to_room(base), text, HORIZONTAL_ALIGNMENT_LEFT, -1, int(fs * _s), Color(1, 1, 1, a))
 
 # Drawn through the show-on-black shader, so it's only there in the black

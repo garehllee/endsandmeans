@@ -125,5 +125,7 @@ class_name FinalConfig
 @export var low_share := 0.25                  # the cells go red at or under this much health
 @export var hp_font: Font                      # the label under the bar (FT88)
 @export var hp_number := 50000                 # what the label under the bar counts down from
-@export var label_width := 400.0               # how wide the label runs, in the bar picture's pixels
+@export var label_width := 450.0               # how wide the label runs, in the bar picture's pixels
+@export var drain_speed := 2.0                 # health the bar loses a second, cell by cell, when it's hit
+@export var trail_wait := 0.35                 # the lost cells stay white this long before following
 @export var bar_margin := 70.0                 # from the top of what's visible
