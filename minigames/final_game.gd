@@ -24,7 +24,6 @@ class_name FinalGame
 
 enum Stage { WAITING, ROOM, TRANSITION, BATTLE, BITE, FLASH, DOOR_ROOM, UNLOCK, ENTER, GLITCH, DONE }
 
-const PLAYER_SCALE := 1.5
 const DARKEN_SHADER := preload("res://shaders/darken.gdshader")
 const EXCLUSION_SHADER := preload("res://shaders/exclusion.gdshader")
 const SHOW_ON_BLACK := preload("res://shaders/show_on_black.gdshader")
@@ -75,6 +74,7 @@ var _cut := false
 var _dead := 0.0           # counting down to the respawn after a fall
 var _hurt := 0.0           # can't be hit while this runs
 var _player_alpha := 1.0
+var _player_scale := Vector2.ONE   # whatever the room drew the character at; put back after
 
 # the gun
 var _shot_t := -1.0
@@ -308,7 +308,6 @@ func _place() -> void:
 
 	if _player and is_instance_valid(_player) and running:
 		_player.position = _to_room(_pos)
-		_player.scale = Vector2.ONE * PLAYER_SCALE * _s
 		_player.modulate.a = _player_alpha
 
 func _redraw() -> void:
@@ -329,6 +328,7 @@ func start(cfg: MinigameConfig) -> void:
 	running = true
 	if _player:
 		_player.platform_mode = true
+		_player_scale = _player.scale
 	_pos = config.spawn
 	_pet = _pos + Vector2(-config.pet_gap, config.pet_foot)
 	_face = 1.0
@@ -348,7 +348,7 @@ func stop() -> void:
 	if _player and is_instance_valid(_player):
 		_player.platform_mode = false
 		_player.modulate.a = 1.0
-		_player.scale = Vector2.ONE * PLAYER_SCALE
+		_player.scale = _player_scale
 
 func _go(s: Stage) -> void:
 	_stage = s

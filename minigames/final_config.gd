@@ -46,10 +46,10 @@ class_name FinalConfig
 @export var walk_speed := 420.0
 
 @export_group("Water gun")
-@export var gun_width := 90.0
-@export var gun_offset := Vector2(162, 23)     # from the character's middle, the way it faces
-@export var muzzle := Vector2(206, 10)
-@export var beam_height := 125.0
+@export var gun_width := 60.0
+@export var gun_offset := Vector2(100, 14)     # from the character's middle, the way it faces
+@export var muzzle := Vector2(130, 6)
+@export var beam_height := 84.0
 @export var beam_speed := 4200.0
 @export var beam_flow := 1400.0
 @export var shot_time := 0.45
@@ -102,10 +102,10 @@ class_name FinalConfig
 @export var hurt_time := 1.3                   # can't be hit again for this long
 
 @export_group("Pet")
-@export var pet_width := 180.0
-@export var pet_gap := 140.0
-@export var pet_foot := 52.0
-@export var bite_width := 330.0
+@export var pet_width := 120.0           # the same as the mouse that follows you everywhere else
+@export var pet_gap := 135.0
+@export var pet_foot := 35.0
+@export var bite_width := 240.0
 @export var lunge_time := 0.35
 @export var bite_frame := 0.1
 
