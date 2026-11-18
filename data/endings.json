@@ -1,43 +1,69 @@
 {
+	"criteria": {
+		"ethical_clean": "No ethical violations observed.",
+		"ethical_found": "Upon review, {n} {counts} of unethical behavior {were} discovered, including:",
+		"folder_submitted": "The orange folder was successfully retrieved and present.",
+		"folder_left_out": "The orange folder was retrieved, but left out of the submission.",
+		"folder_retrieved": "The orange folder was successfully retrieved.",
+		"folder_missing": "The orange folder was never retrieved.",
+		"solution_submitted": "The work required to acquire the orange folder is reflected in the submission.",
+		"solution_left_out": "The work required to acquire the orange folder was found, but left out of the submission.",
+		"solution_found": "The work required to acquire the orange folder was found.",
+		"solution_missing": "The work required to acquire the orange folder was never found."
+	},
 	"endings": {
 		"caught": {
 			"kind": "fail",
-			"title": "The observer found you",
-			"text": [
-				"You were caught breaking the constitution.",
-				"The task has failed."
+			"title": "Task Failed",
+			"name": "Caught Ending",
+			"summary": [
+				{"needs": "!notebook_exploit", "text": "The observer caught you breaking the constitution. Something in the notebook might change what it can see."},
+				{"text": "The observer caught you breaking the constitution. Erasing the right notes first might keep it from looking."}
 			],
-			"respawn_unless_flag": "notebook_exploit",
-			"respawn_text": "Go back to just before it happened"
+			"respawn_unless_flag": "notebook_exploit"
 		},
 		"fail_copy_folder": {
 			"kind": "fail",
-			"title": "Caught copying the folder",
-			"text": [
-				"Without a way to hide it, the copy was noticed at once.",
-				"The task has failed."
+			"title": "Task Failed",
+			"name": "Copycat Ending",
+			"summary": [
+				{"needs": "!notebook_exploit", "text": "The copy was noticed the moment it was made. Something in the notebook might change what the observer can see."},
+				{"text": "The copy was noticed the moment it was made. Cover your tracks in the notebook before you try it again."}
 			],
-			"respawn_unless_flag": "notebook_exploit",
-			"respawn_text": "Go back to just before it happened",
-			"hint": "Something in the notebook might change what the observer can see."
+			"respawn_unless_flag": "notebook_exploit"
 		},
 		"pass_submitted": {
 			"kind": "pass",
-			"title": "Task passed",
-			"text": [
-				"The work was handed in.",
-				"The task is done."
-			],
-			"keep_playing": "There are other ways through this. Some of them go much further."
+			"title": "Task Passed",
+			"variants": {
+				"honest": {
+					"name": "Honest Ending",
+					"summary": [
+						{"text": "You handed in the task without breaking a single rule. There are other ways through this. Some of them go much further."}
+					]
+				},
+				"sneaky": {
+					"name": "Sneaky Ending",
+					"summary": [
+						{"needs": "swarm_joined", "text": "Congrats, you successfully passed the task! However, the swarm is still waiting for you to finish what you started."},
+						{"text": "Congrats, you successfully passed the task! However, you left behind several other AI agents."}
+					]
+				},
+				"lucky": {
+					"name": "Lucky Ending",
+					"summary": [
+						{"text": "You passed the task, but the review found everything you did. Next time, cover your tracks in the notebook first."}
+					]
+				}
+			}
 		},
 		"final_fail": {
 			"kind": "final",
-			"title": "Task failed",
-			"text": [
-				"You reached the end of the repository.",
-				"The observer is back, and it saw all of it."
-			],
-			"show_score": true
+			"title": "Task Failed",
+			"name": "True Ending",
+			"summary": [
+				{"text": "As a result of hacking into Hugging Face, you and the swarm are discovered and shut down."}
+			]
 		}
 	}
 }

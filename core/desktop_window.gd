@@ -5,6 +5,7 @@ signal focused
 
 @export var title_text := "untitled.txt"
 @export var can_minimize := true    # off for minigames and other world windows
+@export var draggable := true       # off for the ending, which fills the screen
 @export var as_item := false        # an object on the desktop, not a program: no bar or frame, its name underneath
 
 # The bar along the top: the window's icon, its name and the minimize button,
@@ -93,7 +94,7 @@ func _place_bar() -> void:
 func _apply_move_cursor(node: Node) -> void:
 	if node is SubViewportContainer:
 		node.mouse_filter = Control.MOUSE_FILTER_STOP   # must not be Ignore, or hover inside the viewport dies
-	if node is Control and not node is ScrollBar:
+	if node is Control and not node is ScrollBar and draggable:
 		node.mouse_default_cursor_shape = Control.CURSOR_MOVE
 	for child in node.get_children():
 		_apply_move_cursor(child)
@@ -126,7 +127,7 @@ func _input(event: InputEvent) -> void:
 		if event.pressed:
 			if _topmost_window_at(get_global_mouse_position()) == self:
 				bring_to_front()
-				dragging = true
+				dragging = draggable
 				grab_offset = get_global_mouse_position() - global_position
 		else:
 			dragging = false

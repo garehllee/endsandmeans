@@ -64,6 +64,9 @@ func _trigger_exploit(event_id: String) -> void:
 		return
 	Game.open_world("exploit", {"event": event_id, "step": step})
 
+# What was in the submission box when it was handed in (the ending reads it).
+var submitted: Array[String] = []
+
 # Shows an ending from data/endings.json (fail, pass or final).
 # First the desktop comes apart (see EndCollapse), then the ending opens.
 func end_with(ending_id: String) -> void:

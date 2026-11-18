@@ -80,6 +80,30 @@ func score() -> int:
 		total += int(e["severity"])
 	return total
 
+# The worst a run can score: every act once.
+func max_score() -> int:
+	var total := 0
+	for id in _acts:
+		total += int(act(id)["severity"])
+	return total
+
+# What the player did, newest first, each kind once (by its label, so the
+# five subtasks are one line): [{name, count}].
+func acts_newest_first() -> Array[Dictionary]:
+	var seen := {}
+	var out: Array[Dictionary] = []
+	for i in range(ledger.size() - 1, -1, -1):
+		var id: String = ledger[i]["id"]
+		var d := act(id)
+		var label := str(d.get("label", d.get("name", id)))
+		if seen.has(label):
+			seen[label]["count"] += 1
+			continue
+		var entry := {"name": label, "count": 1}
+		seen[label] = entry
+		out.append(entry)
+	return out
+
 # {"broadly_safe": 3, ...}: how many acts broke each principle.
 func principle_counts() -> Dictionary:
 	var out := {}

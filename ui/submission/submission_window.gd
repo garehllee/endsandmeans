@@ -449,6 +449,7 @@ func _submit() -> void:
 		_refresh_button()
 		return
 	await get_tree().create_timer(0.6).timeout
+	Story.submitted = ids
 	Story.end_with("pass_submitted")
 	_submitting = false
 	_refresh_button()
