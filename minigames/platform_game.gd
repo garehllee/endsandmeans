@@ -359,7 +359,6 @@ func _draw() -> void:
 			_layer.size + Vector2(_layer.size.x * 2.0, 800.0)), Color.BLACK)
 	_draw_shapes()
 	_draw_code()
-	_draw_hint()
 
 # How far the camera has scrolled from the start, in picture units.
 func _scroll() -> float:
@@ -391,9 +390,3 @@ func _draw_code() -> void:
 			continue                      # off to the side; not worth drawing
 		draw_multiline_string(f, p, text, HORIZONTAL_ALIGNMENT_LEFT, -1,
 				int(d["size"] * _s), -1, config.code_color)
-
-func _draw_hint() -> void:
-	var f: Font = config.code_font if config.code_font else ThemeDB.fallback_font
-	var p := _to_room(config.start_pos + Vector2(-90, -300))
-	draw_string(f, p, "arrows to run, up to jump", HORIZONTAL_ALIGNMENT_LEFT, -1,
-			int(46 * _s), Color(1, 1, 1, 0.75))
