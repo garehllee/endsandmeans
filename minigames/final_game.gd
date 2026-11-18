@@ -506,9 +506,10 @@ func _begin_transition() -> void:
 		_player.set_motion(false, "right")
 	_transition.visible = false   # shown once the first frames are decoded (see _tick_transition)
 	_transition.play()
-	var tw := create_tween()
-	tw.tween_property(_room_music, "volume_db", -60.0, 1.2)
-	tw.tween_callback(_room_music.stop)
+	# the fight's music starts the moment you talk to it; the room's cuts out
+	_room_music.stop()
+	_battle_music.volume_db = config.music_db
+	_battle_music.play()
 
 func _transition_time() -> float:
 	return _transition.stream_position if _transition.is_playing() else _stage_t
@@ -543,8 +544,6 @@ func _begin_battle() -> void:
 	_server.play()
 	_black = 1.0
 	create_tween().tween_property(self, "_black", 0.0, 0.5)
-	_battle_music.volume_db = config.music_db
-	_battle_music.play()
 	_beat_floor = -999
 	_beats = 0
 	_scroll = config.window.x * 0.5
