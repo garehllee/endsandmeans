@@ -7,5 +7,5 @@
 script = ExtResource("2_ending")
 can_minimize = false
 world_id = "ending"
-window_size = Vector2(1600, 1200)
+window_size = Vector2(1600, 1218)
 title_text = "ending.txt"

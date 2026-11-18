@@ -6,9 +6,14 @@ signal focused
 @export var title_text := "untitled.txt"
 @export var can_minimize := true    # off for minigames and other world windows
 
-const MIN_SIZE := 50.0              # the minimize button, top right
-const MIN_PAD := 25.0
-@onready var title: RichTextLabel = $Title
+# The bar along the top: the window's icon, its name and the minimize button,
+# all in the colour of the icon. Its outline and the frame's share the line
+# between them.
+const MIN_SIZE := 60.0              # the minimize button, right end of the bar
+const MIN_PAD := 20.0
+const TITLE_SIZE := 52              # shrinks to fit narrow windows
+@onready var bar: Panel = $Bar
+@onready var title: RichTextLabel = $Bar/Title
 
 var dragging := false
 var grab_offset := Vector2.ZERO
@@ -19,8 +24,7 @@ var _min_icon: MinimizedIcon
 var _home_pos := Vector2.ZERO
 
 func _ready() -> void:
-	title.text = "[u]" + title_text + "[/u]"
-	title.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_dress_bar()
 	global_position = _clamp_to_viewport(global_position)
 	add_to_group("desktop_window")
 	_apply_move_cursor(self)
@@ -32,12 +36,36 @@ func _ready() -> void:
 		_min_btn.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		_min_btn.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 		_min_btn.modulate.a = 0.5       # faint until hovered
-		add_child(_min_btn)
-		resized.connect(_place_min_btn)
-		_place_min_btn.call_deferred()
+		bar.add_child(_min_btn)
+	resized.connect(_place_bar)
+	_place_bar.call_deferred()
 	visibility_changed.connect(_on_visibility_changed)
 	Game.world_opened.connect(func(_id: String, _p: Dictionary): _update_min_btn())
 	Game.world_closed.connect(func(_id: String, _r: Dictionary): _update_min_btn())
+
+func _dress_bar() -> void:
+	var info := MinimizeIcons.for_title(title_text)
+	var colour: Color = info["bar"]
+	var box := (bar.get_theme_stylebox("panel") as StyleBoxFlat).duplicate() as StyleBoxFlat
+	box.bg_color = colour
+	bar.add_theme_stylebox_override("panel", box)
+	var icon := $Bar/Icon as TextureRect
+	icon.texture = info["tex"]
+	icon.self_modulate = info["tint"]
+	title.add_theme_color_override("default_color", MinimizeIcons.text_on(colour))
+	title.text = "[u]" + title_text + "[/u]"
+
+func _place_bar() -> void:
+	if _min_btn:
+		_min_btn.position = Vector2(bar.size.x - MIN_PAD - MIN_SIZE, (bar.size.y - MIN_SIZE) * 0.5)
+	# The name gets the room between the icon and the button, smaller if it must.
+	var room := bar.size.x - title.offset_left - (MIN_PAD * 2.0 + MIN_SIZE if _min_btn else MIN_PAD)
+	title.offset_right = -(bar.size.x - title.offset_left - room)
+	var font := title.get_theme_font("normal_font")
+	var px := TITLE_SIZE
+	while px > 12 and font.get_string_size(title_text, HORIZONTAL_ALIGNMENT_LEFT, -1, px).x > room - 12.0:
+		px -= 2
+	title.add_theme_font_size_override("normal_font_size", px)
 
 func _apply_move_cursor(node: Node) -> void:
 	if node is SubViewportContainer:
@@ -46,10 +74,6 @@ func _apply_move_cursor(node: Node) -> void:
 		node.mouse_default_cursor_shape = Control.CURSOR_MOVE
 	for child in node.get_children():
 		_apply_move_cursor(child)
-
-func _place_min_btn() -> void:
-	if _min_btn:
-		_min_btn.position = Vector2(size.x - MIN_PAD - MIN_SIZE, MIN_PAD)
 
 # No minimizing (and no button) while a minigame, choice screen or ending is open.
 func _minimize_blocked() -> bool:

@@ -8,7 +8,7 @@
 [node name="DesktopWindow" instance=ExtResource("1_dw")]
 custom_minimum_size = Vector2(1, 1)
 offset_right = 480.0
-offset_bottom = 560.0
+offset_bottom = 578.0
 script = ExtResource("2_script")
 normal_texture = ExtResource("3_normal")
 hover_texture = ExtResource("4_hover")

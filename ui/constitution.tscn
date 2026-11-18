@@ -6,11 +6,8 @@
 [node name="DesktopWindow" unique_id=1510619503 instance=ExtResource("1_df4r5")]
 custom_minimum_size = Vector2(1, 1)
 offset_right = 800.0
-offset_bottom = 1044.32
+offset_bottom = 1082.32
 title_text = "constitution.txt"
-
-[node name="Frame" parent="." index="0" unique_id=1580076577]
-offset_bottom = -59.99994
 
 [node name="Content" parent="Frame" index="0" unique_id=844016969]
 clip_contents = true

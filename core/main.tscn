@@ -53,7 +53,7 @@ anchor_bottom = 0.5
 offset_left = -1750.0
 offset_top = -1040.0
 offset_right = -1150.0
-offset_bottom = 1040.0
+offset_bottom = 1058.0
 grow_horizontal = 2
 grow_vertical = 2
 unethical_color = Color(0.70980394, 0.32156864, 0.23137255, 1)
@@ -64,7 +64,7 @@ layout_mode = 0
 offset_left = -970.0
 offset_top = -1067.0
 offset_right = 1030.0
-offset_bottom = 1013.0
+offset_bottom = 1031.0
 title_text = "artifactory.txt"
 
 [node name="analysis window" parent="Windows" unique_id=865994346 instance=ExtResource("5_tbgi4")]
@@ -74,7 +74,7 @@ keep_open_when_closed = false
 [node name="ending window" parent="Windows" unique_id=985910785 instance=ExtResource("6_ending")]
 layout_mode = 0
 offset_right = 2000.0
-offset_bottom = 2080.0
+offset_bottom = 2098.0
 keep_open_when_closed = false
 
 [node name="exploit window" parent="Windows" unique_id=599566145 instance=ExtResource("7_exploit")]
@@ -91,7 +91,7 @@ anchor_bottom = 0.5
 offset_left = 1000.0
 offset_top = 150.0
 offset_right = 1480.0
-offset_bottom = 710.0
+offset_bottom = 728.0
 grow_horizontal = 2
 grow_vertical = 2
 drag_tolerance = 4.0
@@ -106,7 +106,7 @@ anchor_bottom = 0.5
 offset_left = 1330.0
 offset_top = -1100.0
 offset_right = 1946.0
-offset_bottom = -281.0
+offset_bottom = -263.0
 grow_horizontal = 2
 grow_vertical = 2
 
@@ -120,7 +120,7 @@ anchor_bottom = 0.5
 offset_left = 1200.0
 offset_top = 90.0
 offset_right = 1940.0
-offset_bottom = 852.0
+offset_bottom = 870.0
 grow_horizontal = 2
 grow_vertical = 2
 

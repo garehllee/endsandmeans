@@ -14,7 +14,7 @@ offset_bottom = 2080.0
 script = ExtResource("2_qfw5u")
 can_minimize = false
 world_id = "analysis"
-window_size = Vector2(2000, 1916)
+window_size = Vector2(2000, 1934)
 title_text = "analysis.txt"
 
 [node name="SubViewportContainer" type="SubViewportContainer" parent="Frame/Content" parent_id_path=PackedInt32Array(844016969) index="0" unique_id=444019941]

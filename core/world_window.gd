@@ -4,7 +4,7 @@ class_name WorldWindow
 # Game.world_closed and shows or hides itself when its world_id matches.
 
 @export var world_id := ""
-@export var window_size := Vector2(1000, 1040)
+@export var window_size := Vector2(1000, 1058)
 @export var keep_open_when_closed := false   # library: true, analysis: false
 
 func _init() -> void:

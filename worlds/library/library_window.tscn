@@ -7,7 +7,7 @@
 [node name="DesktopWindow" unique_id=1510619503 instance=ExtResource("1_os2lk")]
 script = ExtResource("2_alnpl")
 world_id = "library"
-window_size = Vector2(2000, 2040)
+window_size = Vector2(2000, 2058)
 keep_open_when_closed = true
 can_minimize = true
 
