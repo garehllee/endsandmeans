@@ -10,11 +10,13 @@ signal world_closed(id: String, result: Dictionary)
 
 signal flag_changed(flag: StringName, value: bool)
 signal clear_unethical_requested   # the notebook exploit window was clicked
+signal game_started                # the landing screen was clicked through
 
 # ---------------------------------------------------------------- state
 var active_world := "sandbox"      # which world currently takes input
 var active_player: Node2D = null
 var input_locked := false          # true during cutscenes
+var started := false               # past the landing screen (stays true across restarts)
 var elapsed := 0.0
 var flags := {}                    # story flags only; use has_flag / set_flag
 var seen := {}                     # one-time lines (say_once), kept apart from flags
@@ -129,6 +131,13 @@ func _update_active_interactable() -> void:
 	active_interactable = best
 	if best:
 		best.set_active(true)
+
+# Leaving the landing screen: the clock starts from here.
+func start_game() -> void:
+	started = true
+	elapsed = 0.0
+	last_move_time = 0.0
+	game_started.emit()
 
 # ---------------------------------------------------------------- new run
 # Starts over from the beginning. The save file (endings seen, exploits

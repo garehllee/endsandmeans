@@ -15,6 +15,8 @@ func _ready() -> void:
 	else:
 		push_warning("World: AnimatedSprite2D missing")
 	
+	if not Game.started:
+		await Game.game_started     # the landing screen is still up
 	for beat in INTRO:
 		await get_tree().create_timer(beat[0]).timeout
 		Game.say(beat[1])

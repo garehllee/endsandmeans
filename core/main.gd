@@ -4,6 +4,8 @@ extends Control
 
 func _ready() -> void:
 	Game.open_window_requested.connect(open_window)
+	if not Game.started:
+		add_child(preload("res://ui/landing/landing.gd").new())
 
 func open_window(scene: PackedScene, pos: Vector2) -> Control:
 	var w = scene.instantiate()
