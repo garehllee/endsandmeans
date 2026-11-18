@@ -33,6 +33,7 @@ var _glitch: ColorRect
 var _copy: BackBufferCopy             # grabs the screen just before the glitch draws
 var _amount := 0.0
 var _seed_t := 0.0
+var _patch_t := 0.0
 var _running := false
 var _copying := false
 var _copy_t := 0.0
@@ -241,6 +242,10 @@ func _process(delta: float) -> void:
 	if _seed_t <= 0.0:
 		_seed_t = randf_range(0.03, 0.09)
 		(_glitch.material as ShaderMaterial).set_shader_parameter("seed", randf() * 100.0)
+	_patch_t -= delta
+	if _patch_t <= 0.0:
+		_patch_t = randf_range(0.12, 0.45)    # which parts of the screen are broken, and how
+		(_glitch.material as ShaderMaterial).set_shader_parameter("patches", randf() * 100.0)
 	(_glitch.material as ShaderMaterial).set_shader_parameter("amount", _amount)
 	_glitch.visible = _amount > 0.005
 
