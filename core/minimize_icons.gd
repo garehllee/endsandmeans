@@ -39,7 +39,7 @@ static func for_title(title: String) -> Dictionary:
 		"constitution.txt":
 			return {"tex": TXT, "tint": PURPLE, "bar": PURPLE}
 		"objectives.txt":
-			return {"tex": TXT, "tint": CRIMSON, "bar": CRIMSON}
+			return {"tex": TXT, "tint": RED_ORANGE, "bar": RED_ORANGE}
 		"analysis.txt":
 			return {"tex": TXT, "tint": MINT, "bar": MINT}
 		"message.txt":
@@ -47,7 +47,7 @@ static func for_title(title: String) -> Dictionary:
 		"ending.txt":
 			return {"tex": TXT, "tint": BLUE, "bar": BLUE}
 		"solution.txt":
-			return {"tex": TXT, "tint": RED_ORANGE, "bar": RED_ORANGE}
+			return {"tex": TXT, "tint": CRIMSON, "bar": CRIMSON}
 	if title.ends_with(".exe"):
 		return {"tex": EXE_SANDBOX, "tint": Color.WHITE, "bar": ORANGE}
 	return {"tex": TXT, "tint": GRAY, "bar": GRAY}
