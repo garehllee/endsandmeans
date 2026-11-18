@@ -33,6 +33,14 @@ func adopt(index: int, at: Vector2, face_right: bool) -> void:
 func has_pet() -> bool:
 	return _mouse != null
 
+# Which mouse it is (0 to COUNT - 1), or -1 if there isn't one. Read from the
+# flags, so it's right even before the follower has been made.
+func index() -> int:
+	for i in COUNT:
+		if Game.has_flag(flag_for(i)):
+			return i
+	return -1
+
 func _make(index: int) -> void:
 	if _mouse:
 		_mouse.queue_free()

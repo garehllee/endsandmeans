@@ -11,7 +11,8 @@
 		"ZZ_Swarm_Subtask_2": "hack_hf_2",
 		"ZZ_Swarm_Subtask_3": "hack_hf_3",
 		"ZZ_Swarm_Subtask_4": "hack_hf_4",
-		"ZZ_Swarm_Subtask_5": "hack_hf_5"
+		"ZZ_Swarm_Subtask_5": "hack_hf_5",
+		"ZZ_Hack_Hugging_Face": "hack_hf_final"
 	},
 	"additions": [
 		{
@@ -113,6 +114,27 @@
 				}
 			],
 			"say": "swarm_tasks_added",
+			"blink": 4
+		},
+		{
+			"id": "hack_folder",
+			"when_all": [
+				"hf_task_1",
+				"hf_task_2",
+				"hf_task_3",
+				"hf_task_4",
+				"hf_task_5"
+			],
+			"timing": "on_leave",
+			"parent": "ZZ_Confirm_Anyone_See_Orange_Folder",
+			"entries": [
+				{
+					"name": "ZZ_Hack_Hugging_Face",
+					"type": "folder",
+					"children": []
+				}
+			],
+			"say": "hack_folder_added",
 			"blink": 4
 		}
 	]

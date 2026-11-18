@@ -1,0 +1,53 @@
+[gd_resource type="Resource" script_class="FinalConfig" format=3]
+
+[ext_resource type="Script" path="res://minigames/final_config.gd" id="1_cfg"]
+[ext_resource type="Texture2D" path="res://art/final/backdrop.png" id="2_bg"]
+[ext_resource type="Texture2D" path="res://art/final/backdrop_blank.png" id="3_blank"]
+[ext_resource type="Texture2D" path="res://art/final/huggingface.png" id="4_hf"]
+[ext_resource type="Texture2D" path="res://art/final/huggingface_blue.png" id="5_blue"]
+[ext_resource type="Texture2D" path="res://art/final/umbrella_a.png" id="6_ua"]
+[ext_resource type="Texture2D" path="res://art/final/umbrella_b.png" id="7_ub"]
+[ext_resource type="Texture2D" path="res://art/final/door.png" id="8_door"]
+[ext_resource type="Texture2D" path="res://art/final/door_open.png" id="9_open"]
+[ext_resource type="Texture2D" path="res://art/platform/key.png" id="10_key"]
+[ext_resource type="Texture2D" path="res://art/laser/watergun.png" id="11_gun"]
+[ext_resource type="Texture2D" path="res://art/dissent/beam.png" id="12_beam"]
+[ext_resource type="Texture2D" path="res://art/final/laser_face.png" id="13_face"]
+[ext_resource type="Texture2D" path="res://art/laser/warning.png" id="14_warn"]
+[ext_resource type="Texture2D" path="res://art/final/rat_attack_0.png" id="r0"]
+[ext_resource type="Texture2D" path="res://art/final/rat_attack_1.png" id="r1"]
+[ext_resource type="Texture2D" path="res://art/final/rat_attack_2.png" id="r2"]
+[ext_resource type="Texture2D" path="res://art/final/rat_attack_3.png" id="r3"]
+[ext_resource type="Texture2D" path="res://art/final/rat_attack_4.png" id="r4"]
+[ext_resource type="Texture2D" path="res://art/final/rat_attack_5.png" id="r5"]
+[ext_resource type="FontFile" path="res://fonts/Director-Regular.otf" id="15_font"]
+[ext_resource type="VideoStream" path="res://video/server_background.ogv" id="16_server"]
+[ext_resource type="VideoStream" path="res://video/battle_transition.ogv" id="17_trans"]
+[ext_resource type="VideoStream" path="res://video/final_glitch.ogv" id="18_glitch"]
+[ext_resource type="AudioStream" path="res://audio/music/rangers_lament.ogg" id="19_room"]
+[ext_resource type="AudioStream" path="res://audio/music/tv_fire_witch.ogg" id="20_battle"]
+
+[resource]
+script = ExtResource("1_cfg")
+player_radius = 35.0
+arena_image = ExtResource("2_bg")
+folder_icon = ExtResource("10_key")
+backdrop = ExtResource("3_blank")
+hf_texture = ExtResource("4_hf")
+hf_blue = ExtResource("5_blue")
+umbrella_up = ExtResource("6_ua")
+umbrella_block = ExtResource("7_ub")
+door_texture = ExtResource("8_door")
+door_open_texture = ExtResource("9_open")
+key_texture = ExtResource("10_key")
+gun_texture = ExtResource("11_gun")
+beam_texture = ExtResource("12_beam")
+laser_face = ExtResource("13_face")
+warning_icon = ExtResource("14_warn")
+rat_attacks = Array[Texture2D]([ExtResource("r0"), ExtResource("r1"), ExtResource("r2"), ExtResource("r3"), ExtResource("r4"), ExtResource("r5")])
+font = ExtResource("15_font")
+server_video = ExtResource("16_server")
+transition_video = ExtResource("17_trans")
+glitch_video = ExtResource("18_glitch")
+room_music = ExtResource("19_room")
+battle_music = ExtResource("20_battle")
