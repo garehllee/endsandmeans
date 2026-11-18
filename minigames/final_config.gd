@@ -111,7 +111,7 @@ class_name FinalConfig
 @export var pet_foot := 35.0
 @export var bite_width := 240.0
 @export var lunge_time := 0.35
-@export var bite_frame := 0.1
+@export var bite_frame := 0.12
 
 @export_group("Health bar")
 @export var hp_bar: Texture2D                 # the empty bar; the cells are drawn into it

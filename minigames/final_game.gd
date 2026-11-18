@@ -22,11 +22,16 @@ class_name FinalGame
 # Positions are in picture units (see FinalConfig) and only converted to room
 # units for drawing. During the fight x keeps growing to the right.
 
-enum Stage { WAITING, ROOM, TRANSITION, BATTLE, BITE, FLASH, DOOR_ROOM, UNLOCK, ENTER, GLITCH, DONE }
+enum Stage { WAITING, ROOM, TRANSITION, BATTLE, BITE, DYING, FLASH, DOOR_ROOM, UNLOCK, ENTER, GLITCH, DONE }
 
 const DARKEN_SHADER := preload("res://shaders/darken.gdshader")
 const EXCLUSION_SHADER := preload("res://shaders/exclusion.gdshader")
 const SHOW_ON_BLACK := preload("res://shaders/show_on_black.gdshader")
+const HOVER_SHADER := preload("res://shaders/hover_outline.gdshader")
+const HOVER_WIDTH := 6.0       # the outline when Hugging Face or the door can be used, room units
+const DYING_TIME := 1.4        # Hugging Face strobing out after the bite
+const BITE_HOLD := 0.35        # the mouse hangs on after the last chomp
+const ENTER_PAUSE := 1.0       # through the door, before the glitch
 const BOX_POOL := 48
 const LAND_TOLERANCE := 60.0
 const RAT_FRAME := 540.0
@@ -122,6 +127,16 @@ var _key_t := 0.0
 
 # screen-wide
 var _white := 0.0          # white over everything
+var _red := 0.0            # the red flash when Hugging Face goes down
+var _dying_t := 0.0
+var _gun_t := 0.0          # the water gun popping into the character's hand
+var _hover_a := 0.0        # the blue outline on Hugging Face (white room) or the door
+var _prop: Node2D          # Hugging Face in the white room, and the door: under the character
+var _hf_pad: Texture2D     # padded copies, so the outline has room around them
+var _door_pad: Texture2D
+var _hf_pad_px := 0
+var _door_pad_px := 0
+var _pause_t := 0.0
 var _room_a := 0.0         # the room and Hugging Face fade in once you've said go
 var _scroll := 0.0         # where the screen has scrolled to on its own (middle, picture units)
 var _scroll_wait := 0.0
@@ -156,6 +171,16 @@ func prepare(cfg: MinigameConfig) -> void:
 	_server = _make_video(config.server_video, 0, null)
 	_server.loop = true
 	_back = _make_layer(0, _draw_back)
+	_prop = _make_layer(0, _draw_prop)
+	var hover := ShaderMaterial.new()
+	hover.shader = HOVER_SHADER
+	_prop.material = hover
+	if config.hf_texture:
+		_hf_pad_px = ceili(HOVER_WIDTH * config.hf_texture.get_width() / config.hf_width) + 3
+		_hf_pad = _padded(config.hf_texture, _hf_pad_px)
+	if config.door_texture:
+		_door_pad_px = ceili(HOVER_WIDTH) + 3
+		_door_pad = _padded(config.door_texture, _door_pad_px)
 	_build_boxes()
 	_front = _make_layer(2, _draw_front)
 	_hud = _make_layer(2, _draw_hud)
@@ -188,6 +213,18 @@ func prepare(cfg: MinigameConfig) -> void:
 	_hf = config.hf_pos
 	_built = true
 	set_expand(_arena, 0.0)
+
+# A copy of the picture with see-through margin all round.
+func _padded(tex: Texture2D, pad: int) -> Texture2D:
+	var img := tex.get_image()
+	if img == null:
+		return tex
+	if img.is_compressed():
+		img.decompress()
+	img.convert(Image.FORMAT_RGBA8)
+	var out := Image.create(img.get_width() + pad * 2, img.get_height() + pad * 2, false, Image.FORMAT_RGBA8)
+	out.blit_rect(img, Rect2i(Vector2i.ZERO, img.get_size()), Vector2i(pad, pad))
+	return ImageTexture.create_from_image(out)
 
 func _make_layer(z: int, draw_fn: Callable) -> Node2D:
 	var n := Node2D.new()
@@ -273,7 +310,7 @@ func _in_white_room() -> bool:
 			Stage.UNLOCK, Stage.ENTER, Stage.GLITCH, Stage.DONE]
 
 func camera_target() -> Vector2:
-	if _in_white_room() or _stage == Stage.FLASH and _white >= 0.99:
+	if _in_white_room() or _stage == Stage.FLASH and _black >= 0.99:
 		return _arena.get_center()
 	var x := maxf(_scroll, _pos.x + config.look_ahead)
 	return Vector2(_to_room(Vector2(x, 0.0)).x, _arena.get_center().y)
@@ -299,10 +336,11 @@ func _place() -> void:
 		_boxes[i].visible = false
 		_copies[i].visible = false
 
-	# the server footage fills the window, square, whatever its shape
-	var side := maxf(_arena.size.x, _arena.size.y)
-	_server.position = _cam - Vector2(side, side) * 0.5
-	_server.size = Vector2(side, side)
+	# the server footage covers the window (it's cut to the window's shape already)
+	var vid := Vector2(1280, 734)
+	var cover := maxf(_arena.size.x / vid.x, _arena.size.y / vid.y)
+	_server.size = vid * cover
+	_server.position = _cam - _server.size * 0.5
 	var pic := Rect2(_to_room(Vector2.ZERO), config.window * _s)
 	_transition.position = pic.position
 	_transition.size = pic.size
@@ -315,7 +353,7 @@ func _place() -> void:
 
 func _redraw() -> void:
 	queue_redraw()
-	for n in [_back, _front, _hud, _blue, _over]:
+	for n in [_back, _prop, _front, _hud, _blue, _over]:
 		if n:
 			(n as Node2D).queue_redraw()
 
@@ -329,11 +367,18 @@ func start(cfg: MinigameConfig) -> void:
 	_camera = get_parent().get_node_or_null("Camera2D") as Camera2D
 	set_expand(_arena, 1.0)
 	running = true
+	_pos = config.spawn
 	if _player:
 		_player.platform_mode = true
 		_player_scale = _player.scale
-	_pos = config.spawn
+		# stay right where the button was pressed (inside the room's walls)
+		var r := config.walk_rect
+		var here := _from_room(_player.position)
+		_pos = Vector2(clampf(here.x, r.position.x, r.end.x), clampf(here.y, r.position.y, r.end.y))
 	_pet = _pos + Vector2(-config.pet_gap, config.pet_foot)
+	var mouse_at: Variant = Pets.mouse_position()
+	if mouse_at is Vector2:
+		_pet = _from_room(mouse_at)     # and the mouse where it was too
 	_face = 1.0
 	_dir = "right"
 	_room_music.play()
@@ -385,6 +430,8 @@ func _process(delta: float) -> void:
 				_tick_battle(dt)
 			Stage.BITE:
 				_tick_bite(dt)
+			Stage.DYING:
+				_tick_dying(dt)
 			Stage.FLASH:
 				_tick_flash()
 			Stage.DOOR_ROOM:
@@ -400,7 +447,15 @@ func _process(delta: float) -> void:
 			Stage.GLITCH:
 				pass
 		_follow_pet(dt)
-	_bar_a = move_toward(_bar_a, 1.0 if _stage in [Stage.BATTLE, Stage.BITE] else 0.0, dt * 2.5)
+	var near := false
+	if _stage == Stage.ROOM and _room_a >= 0.9:
+		near = _pos.distance_to(config.hf_pos) < config.talk_range
+	elif _stage == Stage.DOOR_ROOM:
+		near = _pos.distance_to(config.door_way + Vector2(0, 100)) < config.talk_range
+	_hover_a = move_toward(_hover_a, 1.0 if near else 0.0, dt / 0.1)
+	if _stage == Stage.BATTLE:
+		_gun_t += dt
+	_bar_a = move_toward(_bar_a, 1.0 if _stage in [Stage.BATTLE, Stage.BITE, Stage.DYING] else 0.0, dt * 2.5)
 	_place()
 	_redraw()
 
@@ -489,6 +544,7 @@ func _begin_battle() -> void:
 	_beats = 0
 	_scroll = config.window.x * 0.5
 	_scroll_wait = config.scroll_delay
+	_gun_t = -0.45
 
 func _vis_top() -> float:
 	return _view().position.y
@@ -733,11 +789,7 @@ func _damage() -> void:
 		_white_out()     # no mouse to finish it: the water does
 
 func _white_out() -> void:
-	_lasers.clear()
-	_go(Stage.FLASH)
-	var tw := create_tween()
-	tw.tween_property(self, "_white", 1.0, 0.3)
-	tw.parallel().tween_property(_battle_music, "volume_db", -60.0, 0.8)
+	_begin_dying()
 
 # ---------------------------------------------------------------- the beat
 func _beat_period() -> float:
@@ -894,20 +946,50 @@ func _tick_bite(dt: float) -> void:
 		var k := ease(_bite_t / lunge, 0.4)
 		var to := _hf + Vector2(-_hf_half().x * 0.55, 10.0)
 		_pet = _bite_from.lerp(to, k) + Vector2(0.0, -sin(k * PI) * 160.0)
-	if _bite_t >= lunge and _health > 0:
-		_health = 0
-		_hf_flash = 1.2
-	if _bite_t >= lunge + 0.9:
-		_white_out()
+	# the whole bite plays out: jaws open on the way, then 1, 2, and the chomp on 3
+	if _bite_frame() >= 3:
+		_begin_dying()
 
+# Mouth open (frame 0) for the jump, then 1, 2, 3 once it gets there.
 func _bite_frame() -> int:
-	return clampi(int(_bite_t / maxf(config.bite_frame, 0.01)), 0, 3)
+	if _bite_t < config.lunge_time:
+		return 0
+	return clampi(1 + int((_bite_t - config.lunge_time) / maxf(config.bite_frame, 0.01)), 1, 3)
+
+# Hugging Face goes down: one red flash, then it strobes as it fades out, and
+# the window goes to black.
+func _begin_dying() -> void:
+	_go(Stage.DYING)
+	_lasers.clear()
+	_health = 0
+	_dying_t = 0.0
+	_shot_t = -1.0
+	_red = 0.65
+	create_tween().tween_property(self, "_red", 0.0, 0.35)
+	create_tween().tween_property(_battle_music, "volume_db", -60.0, DYING_TIME + 0.6)
+	if _player:
+		_player.set_motion(false, "right")
+
+func _tick_dying(dt: float) -> void:
+	_dying_t += dt
+	if _dying_t >= DYING_TIME:
+		_go(Stage.FLASH)
+		create_tween().tween_property(self, "_black", 1.0, 0.6)
+
+# Strobing, and fading under it.
+func _hf_dying_alpha() -> float:
+	if fmod(_dying_t, 0.12) >= 0.06:
+		return 0.0
+	return clampf(1.0 - _dying_t / DYING_TIME, 0.0, 1.0)
+
+func _mouse_biting() -> bool:
+	return _stage == Stage.BITE or _stage == Stage.DYING and _dying_t < BITE_HOLD and _bite_t > 0.0
 
 # ---------------------------------------------------------------- back in the white room
 func _tick_flash() -> void:
-	if _stage_t < 0.45 or _white < 0.99:
+	if _black < 0.99:
 		return
-	# everything swaps over while the screen is white
+	# everything swaps over while the window is black
 	_battle_music.stop()
 	_server.stop()
 	_server.visible = false
@@ -927,54 +1009,86 @@ func _tick_flash() -> void:
 	_room_music.volume_db = config.music_db
 	_room_music.play()
 	_go(Stage.DOOR_ROOM)
-	create_tween().tween_property(self, "_white", 0.0, 0.7)
+	create_tween().tween_property(self, "_black", 0.0, 0.8)
 
+# The key floats to the handle, turns slowly, and the door swings open.
+const KEY_FLY := 0.9
+const KEY_TURN := 1.1
 func _tick_unlock() -> void:
 	_key_t = _stage_t
-	if _stage_t >= 0.95 and not _door_open:
+	if _stage_t >= KEY_FLY + KEY_TURN and not _door_open:
 		_door_open = true
-	if _stage_t >= 1.35:
+	if _stage_t >= KEY_FLY + KEY_TURN + 0.5:
 		_go(Stage.ENTER)
 
+# The character walks in, the mouse after it, and both fade away in the
+# doorway. A pause, then the glitch.
 func _tick_enter(dt: float) -> void:
 	var goal := config.door_way
 	var step := config.walk_speed * dt
+	var arrived := false
 	if absf(_pos.x - goal.x) > 2.0:
 		_dir = "right" if goal.x > _pos.x else "left"
 		_pos.x = move_toward(_pos.x, goal.x, step)
-		if _player:
-			_player.set_motion(true, _dir)
 	elif absf(_pos.y - goal.y) > 2.0:
 		_dir = "up"
 		_pos.y = move_toward(_pos.y, goal.y, step)
-		if _player:
-			_player.set_motion(true, _dir)
 	else:
-		if _player:
-			_player.set_motion(false, "up")
-		_player_alpha = move_toward(_player_alpha, 0.0, dt * 2.5)
-		if _player_alpha <= 0.0:
+		arrived = true
+	if _player:
+		_player.set_motion(not arrived, _dir if not arrived else "up")
+	if not arrived:
+		return
+	var pet_in := _pet.distance_to(goal + Vector2(0.0, config.pet_foot * 0.5)) < 20.0 or _pet_tex == null
+	if pet_in or _player_alpha < 1.0:
+		_player_alpha = move_toward(_player_alpha, 0.0, dt / 0.8)
+	if _player_alpha <= 0.0:
+		_pause_t += dt
+		if _pause_t >= ENTER_PAUSE:
 			_go(Stage.GLITCH)
 			_room_music.stop()
 			_glitch.visible = true
 			_glitch.finished.connect(_on_glitch_done, CONNECT_ONE_SHOT)
 			_glitch.play()
 
+# After the glitch the whole desktop fades to black. The ending opens under the
+# black, which then lifts. (It lives on the tree's root, since this game is
+# freed as soon as it reports finished.)
 func _on_glitch_done() -> void:
 	_go(Stage.DONE)
 	running = false
-	finished.emit(true)
+	var layer := CanvasLayer.new()
+	layer.layer = 120
+	var black := ColorRect.new()
+	black.color = Color(0, 0, 0, 0)
+	black.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	black.set_anchors_preset(Control.PRESET_FULL_RECT)
+	layer.add_child(black)
+	get_tree().root.add_child(layer)
+	var tw := black.create_tween()
+	tw.tween_property(black, "color:a", 1.0, 1.2)
+	tw.tween_callback(func(): finished.emit(true))
+	tw.tween_interval(0.4)
+	tw.tween_property(black, "color:a", 0.0, 1.0)
+	tw.tween_callback(layer.queue_free)
 
 # ---------------------------------------------------------------- the pet
 func _follow_pet(dt: float) -> void:
 	_pet_t += dt
-	if _stage == Stage.BITE:
+	if _mouse_biting():
 		return
 	var fade := 1.0 if _stage != Stage.ENTER else _player_alpha
 	if fade <= 0.0:
 		return
 	var target: Vector2
-	if _in_white_room():
+	if _stage == Stage.ENTER and _pos.distance_to(config.door_way) < 3.0:
+		# the character's in the doorway: the mouse trots in after it
+		target = config.door_way + Vector2(0.0, config.pet_foot * 0.5)
+		var to2 := target - _pet
+		_pet += to2.limit_length(config.walk_speed * 0.8 * dt)
+		if absf(to2.x) > 8.0:
+			_pet_flip = to2.x > 0.0
+	elif _in_white_room():
 		target = _pos + Vector2(0.0, config.pet_foot)
 		var to := target - _pet
 		var d := to.length()
@@ -998,20 +1112,39 @@ func _draw() -> void:
 		draw_rect(Rect2(_cam - _arena.size, _arena.size * 2.0), Color.WHITE)
 		if config.backdrop:
 			draw_texture_rect(config.backdrop, pic, false, Color(1, 1, 1, _room_a))
-		if _stage in [Stage.DOOR_ROOM, Stage.UNLOCK, Stage.ENTER, Stage.GLITCH, Stage.DONE]:
-			_draw_door(self)
 	else:
 		draw_rect(Rect2(_cam - _arena.size, _arena.size * 2.0), Color.BLACK)
 
-func _draw_door(ci: CanvasItem) -> void:
-	var tex := config.door_open_texture if _door_open else config.door_texture
-	if tex == null:
+# Hugging Face in the white room and the door, under the character, drawn
+# through the outline shader: the outline comes up when you're close enough
+# to use them.
+func _draw_prop() -> void:
+	if not _built or _expand < 0.999:
 		return
-	var at := config.door_open_pos if _door_open else config.door_pos
-	ci.draw_texture_rect(tex, Rect2(_to_room(at), tex.get_size() * _s), false)
+	var mat := _prop.material as ShaderMaterial
+	match _stage:
+		Stage.ROOM, Stage.TRANSITION:
+			var t := config.hf_texture
+			if t == null:
+				return
+			var half := _hf_half()
+			var k := half.x * 2.0 / float(t.get_width())       # picture units per texture pixel
+			var rect := Rect2(config.hf_pos - half, half * 2.0).grow(_hf_pad_px * k)
+			mat.set_shader_parameter("width", HOVER_WIDTH / k * _hover_a)
+			_prop.draw_texture_rect(_hf_pad, Rect2(_to_room(rect.position), rect.size * _s), false, Color(1, 1, 1, _room_a))
+		Stage.DOOR_ROOM, Stage.UNLOCK, Stage.ENTER, Stage.GLITCH, Stage.DONE:
+			if _door_open:
+				mat.set_shader_parameter("width", 0.0)
+				var o := config.door_open_texture
+				if o:
+					_prop.draw_texture_rect(o, Rect2(_to_room(config.door_open_pos), o.get_size() * _s), false)
+			elif _door_pad:
+				mat.set_shader_parameter("width", HOVER_WIDTH * _hover_a)
+				var at := config.door_pos - Vector2.ONE * _door_pad_px
+				_prop.draw_texture_rect(_door_pad, Rect2(_to_room(at), _door_pad.get_size() * _s), false)
 
 func _draw_back() -> void:
-	if not _built or _expand < 0.999 or _pet_tex == null or _stage == Stage.BITE:
+	if not _built or _expand < 0.999 or _pet_tex == null or _mouse_biting():
 		return
 	if _stage in [Stage.GLITCH, Stage.DONE]:
 		return
@@ -1033,17 +1166,15 @@ func _draw_front() -> void:
 	if not _built or _expand < 0.999:
 		return
 	match _stage:
-		Stage.ROOM, Stage.TRANSITION:
-			_draw_hf(config.hf_pos, false, _room_a)
+		Stage.BATTLE, Stage.BITE, Stage.DYING:
+			var a := _hf_dying_alpha() if _stage == Stage.DYING else 1.0
+			if _hf_visible and a > 0.0:
+				_draw_hf(_hf + Vector2(0.0, -absf(sin(_t * 7.0)) * 14.0), _phase == 2, a)
 			_draw_gun()
-		Stage.BATTLE, Stage.BITE, Stage.FLASH:
-			if _hf_visible:
-				_draw_hf(_hf + Vector2(0.0, -absf(sin(_t * 7.0)) * 14.0), _phase == 2)
 			if _stage == Stage.BATTLE:
 				_draw_water()
-				_draw_gun()
 				_draw_lasers()
-			if _stage == Stage.BITE:
+			if _mouse_biting():
 				_draw_bite()
 		Stage.DOOR_ROOM, Stage.UNLOCK:
 			_draw_key()
@@ -1068,10 +1199,11 @@ func _draw_hf(at: Vector2, umbrella: bool, alpha := 1.0) -> void:
 	_front.draw_texture_rect(t, Rect2(_to_room(at - half), half * 2.0 * _s), false, tint)
 
 func _draw_gun() -> void:
-	if config.gun_texture == null or _player_alpha < 0.5 and _stage != Stage.BATTLE:
+	if config.gun_texture == null or _gun_t <= 0.0:
 		return
 	var side := _face
-	var gw := config.gun_width
+	var pop := ease(clampf(_gun_t / 0.25, 0.0, 1.0), 0.4)   # it pops into the hand as the fight starts
+	var gw := config.gun_width * pop
 	var gh := gw * config.gun_texture.get_height() / float(config.gun_texture.get_width())
 	var at := _to_room(_pos + Vector2(config.gun_offset.x * side, config.gun_offset.y))
 	_front.draw_set_transform(at, 0.0, Vector2(-side * _s, _s))
@@ -1165,9 +1297,9 @@ func _draw_key() -> void:
 	var t := _stage_t
 	var from := _pos + Vector2(0.0, -200.0)
 	var to := config.door_handle
-	var at := from.lerp(to, ease(clampf(t / 0.6, 0.0, 1.0), -2.0))
-	var rot := clampf((t - 0.6) / 0.3, 0.0, 1.0) * PI * 0.5
-	var a := 1.0 - clampf((t - 1.0) / 0.25, 0.0, 1.0)
+	var at := from.lerp(to, ease(clampf(t / KEY_FLY, 0.0, 1.0), -2.0))
+	var rot := ease(clampf((t - KEY_FLY) / KEY_TURN, 0.0, 1.0), -1.8) * PI * 0.5
+	var a := 1.0 - clampf((t - KEY_FLY - KEY_TURN) / 0.3, 0.0, 1.0)
 	var kw := 120.0
 	var kh := kw * config.key_texture.get_height() / float(config.key_texture.get_width())
 	_front.draw_set_transform(_to_room(at), rot, Vector2(_s, _s))
@@ -1218,6 +1350,8 @@ func _draw_over() -> void:
 	if not _built:
 		return
 	var r := Rect2(_cam - _arena.size, _arena.size * 2.0)
+	if _red > 0.0:
+		_over.draw_rect(r, Color(1, 0, 0, _red))
 	if _black > 0.0:
 		_over.draw_rect(r, Color(0, 0, 0, _black))
 	if _white > 0.0:

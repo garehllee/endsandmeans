@@ -6,7 +6,7 @@ shader_type canvas_item;
 uniform sampler2D screen_texture : hint_screen_texture, filter_nearest;
 
 void fragment() {
-	vec4 c = texture(TEXTURE, UV) * COLOR;
+	vec4 c = COLOR;   // already the texture times the draw's colour
 	vec3 back = texture(screen_texture, SCREEN_UV).rgb;
 	float dark = 1.0 - smoothstep(0.04, 0.16, max(back.r, max(back.g, back.b)));
 	COLOR = vec4(c.rgb, c.a * dark);

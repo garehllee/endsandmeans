@@ -33,6 +33,12 @@ func adopt(index: int, at: Vector2, face_right: bool) -> void:
 func has_pet() -> bool:
 	return _mouse != null
 
+# Where the follower is right now, in its room's units, or null without one.
+func mouse_position() -> Variant:
+	if _mouse and is_instance_valid(_mouse):
+		return _mouse.position
+	return null
+
 # Which mouse it is (0 to COUNT - 1), or -1 if there isn't one. Read from the
 # flags, so it's right even before the follower has been made.
 func index() -> int:
