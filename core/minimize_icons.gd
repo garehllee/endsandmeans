@@ -43,7 +43,7 @@ static func for_title(title: String) -> Dictionary:
 		"analysis.txt":
 			return {"tex": TXT, "tint": MINT, "bar": MINT}
 		"message.txt":
-			return {"tex": TXT, "tint": GREEN_BLACK, "bar": GREEN_BLACK}
+			return {"tex": TXT, "tint": GRAY, "bar": GREEN_BLACK}      # a dark page would vanish on the dark bar
 		"ending.txt":
 			return {"tex": TXT, "tint": BLUE, "bar": BLUE}
 		"solution.txt":
