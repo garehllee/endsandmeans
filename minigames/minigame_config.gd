@@ -11,6 +11,7 @@ class_name MinigameConfig
 @export var safe_radius := 450.0         # icons never spawn this close to the player
 @export var player_radius := 35.0
 @export var arena_image: Texture2D
+@export var thumbnail: Texture2D          # what the button shows instead, when set; the game then ripples in through it
 @export var firewall_icon: Texture2D
 @export var folder_icon: Texture2D
 @export var button_dim := 0.0                  # tint laid over the picture on the open button (0 to 1)

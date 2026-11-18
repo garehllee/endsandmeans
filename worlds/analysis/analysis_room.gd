@@ -30,6 +30,11 @@ enum Phase { CHOOSE, EXPANDING, ARENA, DONE }
 @export var ripple_speed := 700.0      # how fast the wave travels across the paragraph
 @export var ripple_start := 0.25       # wait before the first letter (the window is still fading in)
 @export var icon_width := 210.0
+@export var ripple_in_time := 1.1       # the game rippling in through the folder's thumbnail
+@export var ripple_in_amp := 10.0       # how far that wave pushes the picture
+@export var ripple_in_wavelength := 220.0
+@export var ripple_in_speed := 600.0
+@export var ripple_in_band := 260.0
 
 @export_group("Layout (in room units; the window scales these to fit)")
 @export var room_size := Vector2(1600, 1500)
@@ -70,6 +75,7 @@ var active := false
 var _phase := Phase.CHOOSE
 var _transforming := false     # the character is turning into a bug
 var _btns: Array[Btn] = []
+const RIPPLE_IN := preload("res://shaders/ripple_in.gdshader")
 const REACT_TIME := 0.5        # how long the nod or head shake lasts
 
 var _game: Minigame
@@ -81,6 +87,9 @@ var _msg_bottom := 0.0
 var _expand_t := 0.0
 var _a_from := Rect2()
 var _arena := Rect2()
+var _ripple: Node2D                       # the thumbnail over the game while it ripples in
+var _ripple_t := -1.0                     # seconds into the ripple; under 0 it just covers
+var _player_z := 0
 var _grad_tex: GradientTexture2D
 var _chip_style := StyleBoxFlat.new()
 var _start_pos := Vector2.ZERO
@@ -143,6 +152,7 @@ func _reset() -> void:
 	_focus = -1
 	_prev_focus = -1
 	_stop_game()
+	_end_ripple()
 	for b in _btns:
 		b.open = 0.0
 	player.position = Vector2(room_size.x * 0.5, player_start_y)
@@ -168,6 +178,7 @@ func _process(delta: float) -> void:
 		_layout()
 		if _game:
 			_game.set_expand(_btns[0].rect, _expand_t)
+		_tick_ripple(delta)
 	_follow_camera(delta)
 	queue_redraw()
 
@@ -296,6 +307,66 @@ func _make_game() -> void:
 	_game.world_id = world_id
 	_game.setup(_arena, player, _start_pos)   # stay where the button was pressed
 	_game.prepare(config)
+	_begin_ripple()
+
+# ---------- the game rippling in ----------
+
+# With a thumbnail, the button shows it, and it stays over the game while the
+# button grows; once the game starts, the game ripples in through it. Above
+# everything the games draw, with the character (and its mouse) kept on top.
+func _begin_ripple() -> void:
+	if config.thumbnail == null or _ripple:
+		return
+	var copy := BackBufferCopy.new()
+	copy.copy_mode = BackBufferCopy.COPY_MODE_VIEWPORT
+	copy.z_index = 10
+	_ripple = Node2D.new()
+	_ripple.z_index = 10
+	var mat := ShaderMaterial.new()
+	mat.shader = RIPPLE_IN
+	_ripple.material = mat
+	_ripple.draw.connect(_draw_ripple)
+	_ripple.add_child(copy)
+	add_child(_ripple)
+	_ripple_t = -1.0
+	_player_z = player.z_index
+	player.z_index = 11
+
+func _tick_ripple(delta: float) -> void:
+	if _ripple == null:
+		return
+	if _phase == Phase.ARENA:
+		_ripple_t = maxf(_ripple_t, 0.0) + delta
+		if _ripple_t >= ripple_in_time:
+			_end_ripple()
+			return
+	_ripple.queue_redraw()
+
+func _end_ripple() -> void:
+	if _ripple:
+		_ripple.queue_free()
+		_ripple = null
+		player.z_index = _player_z
+	_ripple_t = -1.0
+
+func _draw_ripple() -> void:
+	var tex := config.thumbnail
+	var r := _btns[0].rect
+	if _phase == Phase.ARENA:
+		var size := get_viewport_rect().size / cam.zoom
+		r = Rect2(cam.position - size * 0.5, size)
+	var src := _cover_region(tex, r)
+	var ts := tex.get_size()
+	var mat := _ripple.material as ShaderMaterial
+	var p := clampf(_ripple_t / ripple_in_time, 0.0, 1.0) if _ripple_t >= 0.0 else 0.0
+	mat.set_shader_parameter("progress", 1.0 - pow(1.0 - p, 1.6))
+	mat.set_shader_parameter("travel", maxf(_ripple_t, 0.0) * ripple_in_speed)
+	mat.set_shader_parameter("rect_size", r.size)
+	mat.set_shader_parameter("region", Vector4(src.position.x / ts.x, src.position.y / ts.y, src.size.x / ts.x, src.size.y / ts.y))
+	mat.set_shader_parameter("amp", ripple_in_amp * cam.zoom.x)
+	mat.set_shader_parameter("wavelength", ripple_in_wavelength)
+	mat.set_shader_parameter("band", ripple_in_band)
+	_ripple.draw_texture_rect_region(tex, r, src)
 
 func _start_arena() -> void:
 	_phase = Phase.ARENA
@@ -328,6 +399,7 @@ func _on_game_finished(success: bool) -> void:
 	_close(true)
 
 func _close(caught: bool) -> void:
+	_end_ripple()
 	player.reset_form()
 	active = false
 	Game.input_locked = false
@@ -397,17 +469,19 @@ func _draw_button(i: int, b: Btn, f: Font, m: Font) -> void:
 	var o := b.open
 	draw_rect(r, Color.WHITE)
 	if i == 0:
-		if show_game_background and config.arena_image:
-			# The open button already shows the minigame's background, so the
+		var pic := _button_picture()
+		if show_game_background and pic:
+			# The open button already shows the minigame's background (or its
+			# thumbnail, which the game then ripples in through), so the
 			# expansion into the game doesn't change what's behind it.
-			draw_texture_rect_region(config.arena_image, r, _cover_region(config.arena_image, r),
+			draw_texture_rect_region(pic, r, _cover_region(pic, r),
 					Color(1, 1, 1, o))
 			if config.button_dim > 0.0:
 				draw_rect(r, Color(config.button_dim_color, config.button_dim * o))
 		else:
 			draw_texture_rect(_grad_tex, r, false, Color(1, 1, 1, o))
-			if config.arena_image and _expand_t > 0.0:
-				draw_texture_rect_region(config.arena_image, r, _cover_region(config.arena_image, r),
+			if pic and _expand_t > 0.0:
+				draw_texture_rect_region(pic, r, _cover_region(pic, r),
 						Color(1, 1, 1, _expand_t))
 	else:
 		draw_rect(r, Color(0.851, 0.851, 0.851, o))
@@ -442,8 +516,15 @@ func _draw_button(i: int, b: Btn, f: Font, m: Font) -> void:
 			draw_line(Vector2(cx - lw * 0.5, ly + 5), Vector2(cx + lw * 0.5, ly + 5), col, 2.0)
 
 func _button_text(i: int, a: float) -> Color:
-	var c := config.button_text_color if i == 0 and show_game_background and config.arena_image else Color.BLACK
+	var c := config.button_text_color if i == 0 and show_game_background and _button_picture() else Color.BLACK
 	return Color(c.r, c.g, c.b, a)
+
+# The thumbnail while you're choosing; after that the real backdrop (several
+# games use the open button as theirs), which the ripple then reveals.
+func _button_picture() -> Texture2D:
+	if config.thumbnail and _phase == Phase.CHOOSE:
+		return config.thumbnail
+	return config.arena_image
 
 func _cover_region(tex: Texture2D, r: Rect2) -> Rect2:
 	var ts := tex.get_size()

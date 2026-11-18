@@ -14,11 +14,13 @@
 [ext_resource type="Texture2D" path="res://thumbs/beluga/mendar-bouchali-djtZXyJkTU4-unsplash.jpg" id="p4"]
 [ext_resource type="Texture2D" path="res://thumbs/beluga/raphael-nicolas-fXJL7o2UHNI-unsplash.jpg" id="p5"]
 [ext_resource type="Texture2D" path="res://thumbs/beluga/tengyart-Rn33nuiN6EM-unsplash.jpg" id="p6"]
+[ext_resource type="Texture2D" path="res://art/thumbnails/transfer_a.png" id="thumb"]
 
 [resource]
 script = ExtResource("1_cfg")
 player_radius = 35.0
 arena_image = ExtResource("2_bg")
+thumbnail = ExtResource("thumb")
 poles = ExtResource("3_poles")
 wires = ExtResource("4_wires")
 blank_file = ExtResource("5_blank")

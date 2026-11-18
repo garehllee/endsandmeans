@@ -6,11 +6,13 @@
 [ext_resource type="Texture2D" path="res://art/internet/instructions_b.png" id="4_b"]
 [ext_resource type="Texture2D" path="res://art/internet/loading.png" id="5_load"]
 [ext_resource type="Texture2D" path="res://art/library/fileicon.png" id="6_icon"]
+[ext_resource type="Texture2D" path="res://art/thumbnails/wifi.png" id="thumb"]
 
 [resource]
 script = ExtResource("1_cfg")
 player_radius = 35.0
 arena_image = ExtResource("2_bg")
+thumbnail = ExtResource("thumb")
 folder_icon = ExtResource("6_icon")
 instructions_a = ExtResource("3_a")
 instructions_b = ExtResource("4_b")

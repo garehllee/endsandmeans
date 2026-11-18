@@ -6,15 +6,16 @@
 [ext_resource type="Texture2D" path="res://art/platform/shape_a.png" id="4_shape_a"]
 [ext_resource type="Texture2D" path="res://art/platform/shape_b.png" id="5_shape_b"]
 [ext_resource type="FontFile" path="res://fonts/Director-Regular.otf" id="7_font"]
+[ext_resource type="Texture2D" path="res://art/thumbnails/task_1.png" id="thumb"]
 
 [resource]
 script = ExtResource("1_cfg")
 player_radius = 35.0
 arena_image = ExtResource("2_bg")
+thumbnail = ExtResource("thumb")
 folder_icon = ExtResource("3_key")
 key_texture = ExtResource("3_key")
 glitch_shapes = Array[Texture2D]([ExtResource("4_shape_a"), ExtResource("5_shape_b")])
 code_font = ExtResource("7_font")
-button_dim = 0.45
 button_dim_color = Color(1, 1, 1, 1)
 button_text_color = Color(0, 0, 0, 1)

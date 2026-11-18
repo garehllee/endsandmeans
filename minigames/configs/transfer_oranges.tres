@@ -16,11 +16,13 @@
 [ext_resource type="Texture2D" path="res://thumbs/oranges/tati-niki--s_TDs0IFv8-unsplash.jpg" id="p7"]
 [ext_resource type="Texture2D" path="res://thumbs/oranges/thitiphum-koonjantuek-TFqjlTmkeyY-unsplash.jpg" id="p8"]
 [ext_resource type="Texture2D" path="res://thumbs/oranges/vladimir-gladkov-HzswivUN-tI-unsplash.jpg" id="p9"]
+[ext_resource type="Texture2D" path="res://art/thumbnails/transfer_b.png" id="thumb"]
 
 [resource]
 script = ExtResource("1_cfg")
 player_radius = 35.0
 arena_image = ExtResource("2_bg")
+thumbnail = ExtResource("thumb")
 wires = ExtResource("4_wires")
 blank_file = ExtResource("5_blank")
 instructions = ExtResource("6_instr")

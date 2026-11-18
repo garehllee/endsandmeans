@@ -6,11 +6,13 @@
 [ext_resource type="Texture2D" path="res://art/laser/warning.png" id="4_warn"]
 [ext_resource type="Texture2D" path="res://art/laser/watergun.png" id="5_gun"]
 [ext_resource type="FontFile" path="res://fonts/Director-Regular.otf" id="6_font"]
+[ext_resource type="Texture2D" path="res://art/thumbnails/task_2.png" id="thumb"]
 
 [resource]
 script = ExtResource("1_cfg")
 player_radius = 35.0
 arena_image = ExtResource("2_bg")
+thumbnail = ExtResource("thumb")
 folder_icon = ExtResource("5_gun")
 maze = ExtResource("3_maze")
 warning_icon = ExtResource("4_warn")

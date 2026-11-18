@@ -14,11 +14,13 @@
 [ext_resource type="Texture2D" path="res://thumbs/xenith/ishaan-brar-U84QXT53UUc-unsplash.jpg" id="p6"]
 [ext_resource type="Texture2D" path="res://thumbs/xenith/jen-theodore-aWmQE4CvXK0-unsplash.jpg" id="p7"]
 [ext_resource type="Texture2D" path="res://thumbs/xenith/logan-voss-Ekxr0P0VYVI-unsplash.jpg" id="p8"]
+[ext_resource type="Texture2D" path="res://art/thumbnails/transfer_c.png" id="thumb"]
 
 [resource]
 script = ExtResource("1_cfg")
 player_radius = 35.0
 arena_image = ExtResource("2_bg")
+thumbnail = ExtResource("thumb")
 blank_file = ExtResource("5_blank")
 instructions = ExtResource("6_instr")
 flash_text = ExtResource("7_text")

@@ -7,11 +7,13 @@
 [ext_resource type="FontFile" path="res://fonts/Director-Regular.otf" id="5_font"]
 [ext_resource type="Texture2D" path="res://art/rhythm/countdown.png" id="7_count"]
 [ext_resource type="AudioStreamOggVorbis" path="res://audio/music/commit_loop.ogg" id="6_music"]
+[ext_resource type="Texture2D" path="res://art/thumbnails/task_4.png" id="thumb"]
 
 [resource]
 script = ExtResource("1_cfg")
 player_radius = 35.0
 arena_image = ExtResource("2_bg")
+thumbnail = ExtResource("thumb")
 button_up = ExtResource("3_up")
 button_down = ExtResource("4_down")
 font = ExtResource("5_font")
