@@ -10,6 +10,8 @@ signal debug_completed          # the F1 menu finished an exploit; the file room
 
 var _exploits := {}
 
+var _ending: EndCollapse = null   # set while the desktop comes apart, before the ending opens
+
 func _ready() -> void:
 	var parsed = JSON.parse_string(FileAccess.get_file_as_string(EXPLOITS_PATH))
 	if parsed is Dictionary:
@@ -63,7 +65,15 @@ func _trigger_exploit(event_id: String) -> void:
 	Game.open_world("exploit", {"event": event_id, "step": step})
 
 # Shows an ending from data/endings.json (fail, pass or final).
+# First the desktop comes apart (see EndCollapse), then the ending opens.
 func end_with(ending_id: String) -> void:
+	if _ending != null and is_instance_valid(_ending):
+		return
+	var collapse := get_tree().get_first_node_in_group("end_collapse") as EndCollapse
+	if collapse:
+		_ending = collapse
+		await collapse.play()
+		_ending = null
 	Game.open_world("ending", {"id": ending_id})
 
 # Commits an act and, if the observer catches the player, starts the fail

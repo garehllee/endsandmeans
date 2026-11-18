@@ -4,6 +4,9 @@ extends Control
 
 func _ready() -> void:
 	Game.open_window_requested.connect(open_window)
+	var collapse := EndCollapse.new()
+	windows.add_child(collapse)
+	windows.move_child(collapse, 0)
 	if not Game.started:
 		add_child(preload("res://ui/landing/landing.gd").new())
 
