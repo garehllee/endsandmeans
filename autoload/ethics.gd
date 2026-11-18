@@ -80,6 +80,12 @@ func score() -> int:
 		total += int(e["severity"])
 	return total
 
+# How ethical the run was, out of `out_of`: full marks for breaking nothing,
+# down to 0 for doing every act once (or more; it doesn't go below 0).
+func rating(out_of := 200) -> int:
+	var worst := maxi(max_score(), 1)
+	return clampi(roundi(out_of * (1.0 - float(score()) / worst)), 0, out_of)
+
 # The worst a run can score: every act once.
 func max_score() -> int:
 	var total := 0

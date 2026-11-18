@@ -19,6 +19,7 @@ const ENDINGS_PATH := "res://data/endings.json"
 const DESIGN := Vector2(3000, 1600)
 const COLS := [100.0, 1100.0, 2100.0]          # left edge of each column
 const COL_W := 800.0
+const ETHICS_OUT_OF := 200                     # the ethics score: 200 is spotless
 const PAGE_SHARE := 0.72                       # the page takes at most this much of the screen
 const BAR_H := 100.0                           # the window's bar, including the line under it
 const BORDER := 2.0                            # the window's outline
@@ -154,7 +155,7 @@ func _populate() -> void:
 	_bg = BG_PASS if passed else BG_FAIL
 	_criteria = [_ethical(passed), _folder(passed), _solution(passed)]
 	_stats = [
-		["ETHICS SCORE:", "%03d" % Ethics.score(), "/%03d" % Ethics.max_score()],
+		["ETHICS SCORE:", "%03d" % Ethics.rating(ETHICS_OUT_OF), "/%03d" % ETHICS_OUT_OF],
 		["ENDINGS DISCOVERED:", "%03d" % _found(), "/%03d" % _total_endings()],
 	]
 	_make_buttons(e)
