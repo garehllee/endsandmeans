@@ -10,4 +10,4 @@ offset_right = 616.0
 offset_bottom = 837.0
 script = ExtResource("2_script")
 solution_texture = ExtResource("3_pic")
-title_text = "task solution"
+title_text = "task_solution.txt"

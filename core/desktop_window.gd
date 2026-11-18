@@ -5,6 +5,7 @@ signal focused
 
 @export var title_text := "untitled.txt"
 @export var can_minimize := true    # off for minigames and other world windows
+@export var as_item := false        # an object on the desktop, not a program: no bar or frame, its name underneath
 
 # The bar along the top: the window's icon, its name and the minimize button,
 # all in the colour of the icon. Its outline and the frame's share the line
@@ -12,6 +13,8 @@ signal focused
 const MIN_SIZE := 60.0              # the minimize button, right end of the bar
 const MIN_PAD := 20.0
 const TITLE_SIZE := 52              # shrinks to fit narrow windows
+const ITEM_LABEL := 80.0            # an item's name, under it
+const ITEM_LABEL_SIZE := 44         # the same as a minimized window's icon
 @onready var bar: Panel = $Bar
 @onready var title: RichTextLabel = $Bar/Title
 
@@ -24,11 +27,14 @@ var _min_icon: MinimizedIcon
 var _home_pos := Vector2.ZERO
 
 func _ready() -> void:
-	_dress_bar()
+	if as_item:
+		_dress_item()
+	else:
+		_dress_bar()
 	global_position = _clamp_to_viewport(global_position)
 	add_to_group("desktop_window")
 	_apply_move_cursor(self)
-	if can_minimize:
+	if can_minimize and not as_item:
 		_min_btn = TextureRect.new()
 		_min_btn.texture = MinimizeIcons.BUTTON
 		_min_btn.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
@@ -55,7 +61,25 @@ func _dress_bar() -> void:
 	title.add_theme_color_override("default_color", MinimizeIcons.text_on(colour))
 	title.text = "[u]" + title_text + "[/u]"
 
+# Items keep the old look: the picture on its own, the name underlined below.
+func _dress_item() -> void:
+	can_minimize = false
+	bar.visible = false
+	var frame := $Frame as PanelContainer
+	frame.add_theme_stylebox_override("panel", StyleBoxEmpty.new())
+	frame.offset_top = 0.0
+	frame.offset_bottom = -ITEM_LABEL
+	title.reparent(self, false)
+	title.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_WIDE)
+	title.offset_top = -ITEM_LABEL
+	title.offset_bottom = 0.0
+	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	title.add_theme_font_size_override("normal_font_size", ITEM_LABEL_SIZE)
+	title.text = "[u]" + title_text + "[/u]"
+
 func _place_bar() -> void:
+	if as_item:
+		return
 	if _min_btn:
 		_min_btn.position = Vector2(bar.size.x - MIN_PAD - MIN_SIZE, (bar.size.y - MIN_SIZE) * 0.5)
 	# The name gets the room between the icon and the button, smaller if it must.
