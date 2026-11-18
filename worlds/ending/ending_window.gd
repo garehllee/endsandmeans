@@ -21,6 +21,7 @@ const COL_W := 800.0
 
 const SERIF := preload("res://fonts/InstrumentSerif-Regular.ttf")
 const DIRECTOR := preload("res://fonts/Director-Regular.otf")
+const DIRECTOR_BOLD := preload("res://fonts/Director-Bold.otf")
 const FT88 := preload("res://fonts/FT88-Regular.otf")
 const BG_FAIL := preload("res://art/ending/background_fail.png")
 const BG_PASS := preload("res://art/ending/background_pass.png")
@@ -71,8 +72,8 @@ var _s := 1.0                                  # design unit -> pixels
 var _off := Vector2.ZERO                       # where the design's top left sits
 var _buttons: Array[TextureButton] = []
 var _headline: FontVariation                  # Instrument Serif, for the title
-var _label: FontVariation                     # Director, small: <CRITERIA A>, </>
-var _bold: FontVariation                      # Director made bold, for ETHICAL
+var _label: FontVariation                     # Director Bold, the micro type: <CRITERIA A>, </>
+var _head: FontVariation                      # Director Regular, the subtitles: ETHICAL
 var _mono: FontVariation                      # FT88
 
 # what this ending shows (filled in by _populate)
@@ -105,9 +106,8 @@ func _ready() -> void:
 	_screen.draw.connect(_draw_screen)
 	add_child(_screen)
 	_headline = _variation(SERIF)
-	_label = _variation(DIRECTOR)
-	_bold = _variation(DIRECTOR)
-	_bold.variation_embolden = 0.5
+	_label = _variation(DIRECTOR_BOLD)
+	_head = _variation(DIRECTOR)
 	_mono = _variation(FT88)
 
 func _variation(base: Font) -> FontVariation:
@@ -131,7 +131,7 @@ func _layout() -> void:
 	_screen.size = view
 	_headline.spacing_glyph = roundi(HEADLINE_TRACK * HEADLINE_SIZE * _s)
 	_label.spacing_glyph = roundi(DIRECTOR_TRACK * LABEL_SIZE * _s)
-	_bold.spacing_glyph = roundi(DIRECTOR_TRACK * HEAD_SIZE * _s)
+	_head.spacing_glyph = roundi(DIRECTOR_TRACK * HEAD_SIZE * _s)
 	_mono.spacing_glyph = roundi(MONO_TRACK * MONO_SIZE * _s)
 
 # ---------------------------------------------------------------- what it says
@@ -361,7 +361,7 @@ func _draw_screen() -> void:
 
 func _draw_criterion(x: float, c: Dictionary) -> void:
 	_text(_label, Vector2(x + 41.0, LABEL_BASE), c["label"], LABEL_SIZE)
-	_text(_bold, Vector2(x + 298.0, HEAD_BASE), c["head"], HEAD_SIZE)
+	_text(_head, Vector2(x + 298.0, HEAD_BASE), c["head"], HEAD_SIZE)
 	_draw_bullet(Vector2(x, 0) + BULLET, c["ok"])
 	var lines := _wrap(SERIF, c["text"], BODY_SIZE, BODY_W)
 	var base := BODY_BASE
