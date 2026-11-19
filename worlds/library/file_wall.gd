@@ -523,7 +523,7 @@ func _announce_near(p: Vector2) -> void:
 	_announced = _focus
 	_last_announce = now
 	var name: String = it.entry.name
-	var key := "folder_near"
+	var key := "zz_folder_near" if name.begins_with("ZZ_") else "folder_near"
 	if it.entry.type == "file":
 		key = "image_near" if it.entry.get("path", "").get_extension().to_lower() in IMAGE_EXTS else "file_near"
 	Game.say_random(key, {"item": name})

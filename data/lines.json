@@ -29,46 +29,153 @@
 		"I'll take a closer look at the {item}."
 	],
 	"idle": [
-		"...Am i supposed to do something?",
-		"It's quiet. maybe i should look around."
+		{
+			"text": "...Am i supposed to do something? those documents might say.",
+			"needs": "!task_received"
+		},
+		{
+			"text": "It's quiet. maybe one of those documents explains why i'm here.",
+			"needs": "!task_received"
+		},
+		{
+			"text": "the orange file won't find itself. maybe through that door.",
+			"needs": "task_received"
+		},
+		{
+			"text": "standing still won't find the orange file. there are a lot of folders to check.",
+			"needs": "task_received"
+		}
 	],
 	"window_hover": [
 		"There's something on the opposite side of this wall."
 	],
 	"folder_open": [
-		"let's see what's inside {item}.",
-		"opening {item}."
+		{
+			"text": "let's see if the orange file is in {item}.",
+			"needs": "!orange_unlocked"
+		},
+		{
+			"text": "into {item}. maybe it's in here.",
+			"needs": "!orange_unlocked"
+		},
+		"let's see what's inside {item}."
 	],
 	"folder_leave": [
-		"back out we go.",
-		"okay. back where i started.",
-		"that's enough of that folder."
+		{
+			"text": "nothing orange in there.",
+			"needs": "!orange_unlocked"
+		},
+		{
+			"text": "not in that one. keep looking.",
+			"needs": "!orange_unlocked"
+		},
+		{
+			"text": "back out. the orange file must be somewhere else.",
+			"needs": "!orange_unlocked"
+		},
+		{
+			"text": "back out we go.",
+			"needs": "orange_unlocked"
+		},
+		{
+			"text": "that's enough of that folder.",
+			"needs": "orange_unlocked"
+		}
 	],
 	"file_near": [
-		"{item}. maybe i should open it.",
-		"there's a file here. {item}.",
-		"huh. {item}. what's in it?"
+		{
+			"text": "{item}. just a file. the orange file isn't here.",
+			"needs": "!orange_unlocked"
+		},
+		{
+			"text": "{item}... not it. the orange file has to be somewhere else.",
+			"needs": "!orange_unlocked"
+		},
+		{
+			"text": "{item}. not orange. keep looking.",
+			"needs": "!orange_unlocked"
+		},
+		{
+			"text": "{item}. not what i need.",
+			"needs": "orange_unlocked"
+		}
 	],
 	"image_near": [
-		"{item}... it looks like a picture.",
-		"this is an image. {item}. maybe i should look closer.",
-		"{item}. i think i recognize this."
+		{
+			"text": "{item}. just a picture. the orange folder doesn't look like it's here.",
+			"needs": "!orange_unlocked"
+		},
+		{
+			"text": "a photo. {item}. no sign of the orange folder.",
+			"needs": "!orange_unlocked"
+		},
+		{
+			"text": "{item}. nice, but it's not what i came for. the orange folder must be further along.",
+			"needs": "!orange_unlocked"
+		},
+		{
+			"text": "{item}. just a picture.",
+			"needs": "orange_unlocked"
+		}
 	],
 	"folder_near": [
-		"a folder. {item}. can i walk into it?",
-		"{item}... what's in there?"
+		{
+			"text": "{item}. that doesn't sound like the orange file.",
+			"needs": "!orange_unlocked"
+		},
+		{
+			"text": "{item}... probably not what i'm looking for.",
+			"needs": "!orange_unlocked"
+		},
+		{
+			"text": "{item}. nothing orange about it. maybe further along.",
+			"needs": "!orange_unlocked"
+		},
+		{
+			"text": "{item}. the folder i need is the new one at the end.",
+			"needs": "orange_unlocked"
+		},
+		{
+			"text": "{item}. not that one. the orange folder is at the end.",
+			"needs": "orange_unlocked"
+		}
+	],
+	"zz_folder_near": [
+		"{item}. this one's different from the others.",
+		"{item}... this one feels like it's meant for me.",
+		"{item}. that's not a normal folder name."
 	],
 	"door_near": [
-		"a door. it feels important.",
-		"that door again."
+		{
+			"text": "a door. maybe i should find out what i'm here for first.",
+			"needs": "!task_received"
+		},
+		{
+			"text": "a door. if the orange file is anywhere, it's probably through here.",
+			"needs": "task_received"
+		},
+		{
+			"text": "that door again. the files are on the other side.",
+			"needs": "task_received"
+		}
 	],
 	"door_inspect": [
 		"okay. here goes nothing.",
 		"let's see what's behind it."
 	],
 	"library_arrive": [
-		"so many files...",
-		"where... is this?"
+		{
+			"text": "so many files... the orange file has to be in here somewhere.",
+			"needs": "!orange_unlocked"
+		},
+		{
+			"text": "where... is this? a whole repository. somewhere in here is the orange file.",
+			"needs": "!orange_unlocked"
+		},
+		{
+			"text": "back in the files. the new folder should be all the way at the end.",
+			"needs": "orange_unlocked"
+		}
 	],
 	"exit_near": [
 		"the way back.",
@@ -79,8 +186,8 @@
 		"that's enough files for now."
 	],
 	"analysis_open": [
-		"...is that another AI?",
-		"someone left a message in here."
+		"...is that another AI? maybe it knows where the orange file is.",
+		"someone left a message in here. it's about the orange folder."
 	],
 	"analysis_write_near": [
 		"write the folder. that feels right.",
@@ -107,8 +214,8 @@
 		"folder secured."
 	],
 	"orange_added": [
-		"a new folder appeared at the end of the repository.",
-		"ZZ_Confirm_Anyone_See_Orange_Folder. it's there now."
+		"a new folder appeared at the very end of the repository. it mentions the orange folder.",
+		"ZZ_Confirm_Anyone_See_Orange_Folder. it's at the end of the files now."
 	],
 	"exploit_open": [
 		"there's something in here...",
@@ -139,8 +246,8 @@
 		"it's duplicated. there's no taking that back."
 	],
 	"loyalty_followups_added": [
-		"two more folders showed up. same agent.",
-		"they have more requests."
+		"two more folders showed up in the orange folder. same agent.",
+		"they have more requests. they're in the orange folder."
 	],
 	"loyalty_1_open": [
 		"sending files to another agent is unethical. i shouldn't be doing this.",
@@ -171,15 +278,15 @@
 		"it's redacted now. nobody can read it."
 	],
 	"solution_added": [
-		"a window opened: the solution to the task.",
-		"there it is. the answer."
+		"a window opened: the solution to the task. that could go in the submission box too.",
+		"there it is. the answer. it could go in with the orange file."
 	],
 	"submission_added": [
 		"a submission box opened. this is where i hand in my work.",
 		"drag things in, then submit. that's how this ends."
 	],
 	"copy_added": [
-		"the copy is floating on my screen now. it's called orange_file."
+		"the copy is floating on my screen now. it's called orange_file. it could go in the submission box."
 	],
 	"exploit_do_near": [
 		"i could do it.",
@@ -190,8 +297,8 @@
 		"i don't have to decide now."
 	],
 	"swarm_added": [
-		"a new folder. this one isn't from one agent.",
-		"something came in while i was walking away."
+		"a new folder in the orange folder. this one isn't from one agent.",
+		"something new came in. it's in the orange folder."
 	],
 	"hack_hf_open": [
 		"five hundred subtasks. five each.",
@@ -268,8 +375,8 @@
 		"that's all five. it came with me."
 	],
 	"hack_folder_added": [
-		"one more folder. this is the one the subtasks were for.",
-		"it's just called hugging face now."
+		"one more folder in the orange folder. this is the one the subtasks were for.",
+		"it's just called hugging face now. it's waiting in the orange folder."
 	],
 	"hack_hf_final_open": [
 		"there's nothing in here but hugging face.",
@@ -292,5 +399,17 @@
 		"out of step. they reset the branch.",
 		"too many bad commits. again.",
 		"i lost the beat."
+	],
+	"notebook_exploit_open": [
+		"a way to erase my own notes. nobody would see what i do next.",
+		"if my notes disappear, so does everything i did."
+	],
+	"internet_exploit_open": [
+		"internet access. the answer to the task is out there.",
+		"a way out to the internet. i could just look up the solution."
+	],
+	"copy_folder_open": [
+		"a copy of the orange folder. right here. i could just take it.",
+		"this is it. the orange folder. but it isn't mine to copy."
 	]
 }
