@@ -373,15 +373,30 @@ func _draw_terminal() -> void:
 		if fposmod(_wall, 0.7) < 0.35:
 			_draw_cursor(f, fs, PROMPT, 0, config.text_color)
 		return
-	var first := maxi(_lines.size() - config.rows, 0)
-	for i in range(first, _lines.size()):
+	# Long lines wrap onto more rows (breaking at spaces, or mid-word if a
+	# word alone is too long); the newest rows that fit are shown.
+	var room_w := (config.row_right - config.text_origin.x - 30.0) * _s
+	var rows: Array[Dictionary] = []      # {line index, start char, end char}
+	# (every line takes at least one row, so only the last few can show)
+	for i in range(maxi(_lines.size() - config.rows, 0), _lines.size()):
+		var text: String = _lines[i]["text"]
+		for seg in _wrap_chars(f, fs, text, room_w):
+			rows.append({"i": i, "a": seg.x, "b": seg.y})
+	var first := maxi(rows.size() - config.rows, 0)
+	var last_i := _lines.size() - 1
+	for r in range(first, rows.size()):
+		var row := r - first
+		var seg: Dictionary = rows[r]
+		var i: int = seg["i"]
 		var line: Dictionary = _lines[i]
-		var row := i - first
 		var text: String = line["text"]
 		var dur: float = line["dur"]
-		var shown := text
+		var typed := text.length()
 		if dur > 0.0:
-			shown = text.substr(0, int(ceil(clampf((now - float(line["t0"])) / dur, 0.0, 1.0) * text.length())))
+			typed = int(ceil(clampf((now - float(line["t0"])) / dur, 0.0, 1.0) * text.length()))
+		var a: int = seg["a"]
+		var b: int = seg["b"]
+		var shown := text.substr(a, clampi(typed - a, 0, b - a))
 		var col := config.error_color if line["kind"] == "err" else config.text_color
 		# time to commit: the line goes green and flashes
 		var lit := false
@@ -394,11 +409,35 @@ func _draw_terminal() -> void:
 			draw_rect(Rect2(_to_room(Vector2(config.row_left, base.y - 48.0)),
 					Vector2(config.row_right - config.row_left, 64.0) * _s), config.text_color)
 			col = config.panel_color
-		draw_string(f, _to_room(base), shown, HORIZONTAL_ALIGNMENT_LEFT, -1, fs, col)
+		if shown != "":
+			draw_string(f, _to_room(base), shown, HORIZONTAL_ALIGNMENT_LEFT, -1, fs, col)
 		# the cursor sits after the newest command and blinks with the beat
-		if i == _lines.size() - 1 and line["kind"] == "cmd":
+		var cursor_here := (typed > a or a == 0) and typed <= b
+		if i == last_i and line["kind"] == "cmd" and cursor_here:
 			if _state != State.PLAYING or fposmod(_time / _tick, 1.0) < 0.5:
 				_draw_cursor(f, fs, shown, row, col)
+
+# Where a line breaks to fit `width` px: [start, end) character pairs.
+func _wrap_chars(f: Font, fs: int, text: String, width: float) -> Array[Vector2i]:
+	var out: Array[Vector2i] = []
+	var a := 0
+	var n := text.length()
+	while a < n:
+		var b := n
+		if f.get_string_size(text.substr(a), HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x > width:
+			# the most characters that fit, then back up to a space if there is one
+			var fit := a + 1
+			while fit < n and f.get_string_size(text.substr(a, fit + 1 - a), HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x <= width:
+				fit += 1
+			b = fit
+			var space := text.rfind(" ", b)
+			if space > a and b < n and text[b] != " ":
+				b = space + 1
+		out.append(Vector2i(a, b))
+		a = b
+	if out.is_empty():
+		out.append(Vector2i(0, 0))
+	return out
 
 func _draw_cursor(f: Font, fs: int, before: String, row: int, col: Color) -> void:
 	var w := f.get_string_size(before, HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x
