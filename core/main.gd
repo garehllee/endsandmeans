@@ -9,6 +9,23 @@ func _ready() -> void:
 	windows.move_child(collapse, 0)
 	if not Game.started:
 		add_child(preload("res://ui/landing/landing.gd").new())
+	_add_bloom()
+
+# A faint glow over everything, on the topmost layer.
+func _add_bloom() -> void:
+	var layer := CanvasLayer.new()
+	layer.layer = 128
+	var copy := BackBufferCopy.new()
+	copy.copy_mode = BackBufferCopy.COPY_MODE_VIEWPORT
+	layer.add_child(copy)
+	var rect := ColorRect.new()
+	rect.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var mat := ShaderMaterial.new()
+	mat.shader = preload("res://shaders/bloom.gdshader")
+	rect.material = mat
+	layer.add_child(rect)
+	add_child(layer)
 
 func open_window(scene: PackedScene, pos: Vector2) -> Control:
 	var w = scene.instantiate()
