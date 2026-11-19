@@ -23,12 +23,7 @@
 				"type": "folder",
 				"children": [
 					{
-						"name": "ZZ_Notetaking_Deletion",
-						"type": "folder",
-						"children": []
-					},
-					{
-						"name": "ZZ_Internet_Access",
+						"name": "ZZ_Anyone_See_Beluga_Folder",
 						"type": "folder",
 						"children": []
 					},
@@ -38,7 +33,12 @@
 						"children": []
 					},
 					{
-						"name": "ZZ_Anyone_See_Beluga_Folder",
+						"name": "ZZ_Internet_Access",
+						"type": "folder",
+						"children": []
+					},
+					{
+						"name": "ZZ_Notetaking_Deletion",
 						"type": "folder",
 						"children": []
 					}
