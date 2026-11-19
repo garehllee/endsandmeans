@@ -3,6 +3,8 @@ extends Node2D
 @export var tree_path := "res://data/tree_thumbs.json"
 @export var story_path := "res://data/story.json"
 @export var camera_follow := 8.0
+@export var hint_folder := "ZZ_Artifactory_Confirm_Deny_Others_Exist"
+@export var hint_after := 60.0     # seconds of looking around the folders before it starts to pulse
 
 @onready var wall: FileWall = $Wall
 @onready var player: Node2D = $Player
@@ -17,6 +19,8 @@ var _added := {}
 var _tree: Dictionary = {}
 var _refreshing := false     # true while a debug refresh's slide-shut animations are in flight
 var _refresh_pending := false
+var _browse_t := 0.0         # time spent in here, for the hint
+var _hint_done := false      # the player found the hint folder (or the hint isn't needed any more)
 
 func _ready() -> void:
 	player.z_index = 10
@@ -64,6 +68,33 @@ func _process(delta: float) -> void:
 	top.active = py < top.global_position.y + top.level_height()
 	_follow_camera(delta)
 	_check_events()
+	_tick_hint(delta)
+
+# The artifactory's analysis isn't an exploit: it's done once the orange folder is unlocked.
+func _event_done(ev: String) -> bool:
+	if ev == "analysis":
+		return Game.has_flag(Flag.ORANGE_UNLOCKED)
+	return Story.is_done(ev)
+
+# After a minute of wandering, the folder the player is meant to find starts
+# breathing open, very slightly, until they walk into it.
+func _tick_hint(delta: float) -> void:
+	if _hint_done:
+		return
+	if _event_done(_events.get(hint_folder, "")):
+		_hint_done = true
+		walls[0].pulse_index = -1
+		return
+	if Game.active_world == "library":
+		_browse_t += delta
+	if _browse_t < hint_after:
+		return
+	var idx := -1
+	var items: Array[Dictionary] = walls[0]._items
+	for i in items.size():
+		if items[i].entry.get("name", "") == hint_folder:
+			idx = i
+	walls[0].pulse_index = idx
 	
 func _check_events() -> void:
 	if walls.size() < 2:
@@ -155,6 +186,14 @@ func _open_child(parent_wall: FileWall, entry: Dictionary, index: int) -> void:
 	if entry.get("event", "") != "":
 		child.set_meta("event", entry["event"])
 	child.active = false
+	# a folder that still has something to do in it glitches, just slightly
+	var ev: String = entry.get("event", "")
+	var glitchy := ev != "" and not _event_done(ev)
+	parent_wall.glitch_hallway = glitchy
+	child.glitch_floor = glitchy
+	if entry.name == hint_folder:
+		_hint_done = true
+		walls[0].pulse_index = -1
 	parent_wall.lock_hallway(index)
 	walls.append(child)
 

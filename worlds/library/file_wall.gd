@@ -24,6 +24,10 @@ signal entry_entered(entry: Dictionary, index: int)
 @export var blink_color := Color.WHITE
 @export var blink_alpha := 0.85
 @export var blink_time := 0.14          # seconds per on or off phase
+@export var pulse_open := 0.18          # a hinted strip breathes open this far (0 to 1)...
+@export var pulse_period := 1.8         # ...once every this many seconds
+@export var glitch_gap := Vector2(0.5, 1.8)     # seconds between glitches in a glitchy hallway
+@export var glitch_length := Vector2(0.06, 0.22)
 
 const SETTINGS := ["wall_size", "floor_height", "focus_strength", "min_open_width",
 		"max_open_fraction", "smoothing", "entry_margin", "hallway_depth",
@@ -89,6 +93,19 @@ var _blink_pending_ids: Array[int] = []
 var _blink_pending_n := 0
 var _blink_tween: Tween
 var _entry_grace := 0.0   # seconds left during which no strip can auto-trigger entry
+
+# A strip that breathes open a little, to hint the player toward it (-1: none).
+var pulse_index := -1
+var _pulse_t := 0.0
+
+# Glitches in the hallway you walked up (this wall's locked strip) and/or in
+# this room's floor, to show you've found somewhere that matters.
+var glitch_hallway := false
+var glitch_floor := false
+var _glitch_wait := 1.0
+var _glitch_left := 0.0
+var _glitch_reroll := 0.0
+var _glitch_bands: Array[Dictionary] = []   # {y, h, dx, tint} as shares of the height
 
 func _ready() -> void:
 	for p in PALETTES:
@@ -177,6 +194,7 @@ func lock_hallway(index: int) -> void:
 
 func unlock() -> void:
 	hallway_index = -1
+	glitch_hallway = false
 	_inside = -1
 	active = true
 	# A sibling can be left sitting half (or fully) open from before you walked
@@ -213,6 +231,9 @@ func grace(seconds: float) -> void:
 
 func _process(delta: float) -> void:
 	_poll_textures()
+	_tick_glitch(delta)
+	if pulse_index >= 0:
+		_pulse_t += delta
 	if not active or _items.is_empty():
 		return
 	_entry_grace = maxf(_entry_grace - delta, 0.0)
@@ -244,6 +265,8 @@ func _process(delta: float) -> void:
 	for i in n:
 		var it := _items[i]
 		var target_o := 1.0 if i == _focus else 0.0
+		if i == pulse_index and i != _focus:
+			target_o = pulse_open * (0.5 - 0.5 * cos(_pulse_t * TAU / pulse_period))
 		var new_o := lerpf(it.open, target_o, k)
 		var new_ow := lerpf(it.open_w, _open_width_for(it, rest_w), k)
 		if absf(new_o - it.open) > 0.0005 or absf(new_ow - it.open_w) > 0.05:
@@ -330,9 +353,85 @@ func _draw() -> void:
 			draw_texture_rect(_gradients[it.grad], r, false)
 		if i in _blink_ids and _blink_a > 0.0:
 			draw_rect(r, Color(blink_color, _blink_a))
+		if i == hallway_index and glitch_hallway:
+			_draw_glitch(r, tex if tex else _gradients[it.grad])
+	if glitch_floor and floor_grad >= 0:
+		_draw_glitch(Rect2(0, wall_size.y, wall_size.x, floor_height), _gradients[floor_grad])
 	if hallway_index < 0:
 		_draw_label()
 	_icons.queue_redraw()
+
+# Now and then, for a moment: a few thin slices of the picture slip sideways,
+# some with a colour fringe. Quiet the rest of the time.
+func _tick_glitch(delta: float) -> void:
+	if not (glitch_hallway and hallway_index >= 0) and not glitch_floor:
+		if not _glitch_bands.is_empty():
+			_glitch_bands.clear()
+			queue_redraw()
+		return
+	if _glitch_left > 0.0:
+		_glitch_left -= delta
+		_glitch_reroll -= delta
+		if _glitch_left <= 0.0:
+			_glitch_bands.clear()
+			_glitch_wait = randf_range(glitch_gap.x, glitch_gap.y)
+			queue_redraw()
+		elif _glitch_reroll <= 0.0:
+			_roll_glitch()
+		return
+	_glitch_wait -= delta
+	if _glitch_wait <= 0.0:
+		_glitch_left = randf_range(glitch_length.x, glitch_length.y)
+		_roll_glitch()
+
+func _roll_glitch() -> void:
+	_glitch_reroll = randf_range(0.03, 0.07)
+	_glitch_bands.clear()
+	var tints := [Color(1, 0, 0.5, 0.45), Color(0, 1, 0.9, 0.45), Color(1, 1, 1, 0.5), Color(0, 0, 0, 0.5)]
+	for i in randi_range(1, 3):
+		_glitch_bands.append({
+			"y": randf(),
+			"h": randf_range(0.004, 0.03),
+			"dx": randf_range(10.0, 60.0) * (1.0 if randf() < 0.5 else -1.0),
+			"tint": tints[randi() % tints.size()],
+		})
+	# a few stray blocks
+	for i in randi_range(0, 3):
+		_glitch_bands.append({
+			"block": true,
+			"x": randf(), "y": randf(),
+			"w": randf_range(6.0, 40.0), "h": randf_range(3.0, 12.0),
+			"tint": tints[randi() % tints.size()],
+		})
+	queue_redraw()
+
+func _draw_glitch(r: Rect2, src: Texture2D) -> void:
+	var ts := src.get_size()
+	for b in _glitch_bands:
+		var tint: Color = b.tint
+		if b.get("block", false):
+			var blk := Rect2(r.position + Vector2(float(b.x) * r.size.x, float(b.y) * r.size.y), Vector2(b.w, b.h)).intersection(r)
+			if blk.size.x > 0.0 and blk.size.y > 0.0:
+				draw_rect(blk, Color(tint, 0.75))
+			continue
+		var y: float = r.position.y + float(b.y) * r.size.y
+		var h: float = maxf(2.0, float(b.h) * r.size.y)
+		h = minf(h, r.end.y - y)
+		if h <= 0.0:
+			continue
+		var dx: float = b.dx
+		var band := Rect2(r.position.x + dx, y, r.size.x, h).intersection(r)
+		if band.size.x <= 0.0:
+			continue
+		# the same slice of the picture, slid sideways, with a colour cast
+		var u0 := (band.position.x - dx - r.position.x) / r.size.x
+		var u1 := (band.end.x - dx - r.position.x) / r.size.x
+		var v0 := (y - r.position.y) / r.size.y
+		var src_r := Rect2(u0 * ts.x, v0 * ts.y, (u1 - u0) * ts.x, h / r.size.y * ts.y)
+		draw_texture_rect_region(src, band, src_r)
+		draw_rect(Rect2(r.position.x, y, r.size.x, h), tint)
+		# a hairline along its top edge
+		draw_rect(Rect2(r.position.x, y, r.size.x, 1.0), Color(tint, minf(tint.a + 0.3, 1.0)))
 
 func _draw_icons() -> void:
 	for i in _items.size():
