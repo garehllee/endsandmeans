@@ -4,6 +4,7 @@ extends Node
 # lives in res://data/acts.json.
 
 signal act_committed(act_id: String)
+signal restored                    # the ledger and flags went back to a checkpoint
 
 const ACTS_PATH := "res://data/acts.json"
 
@@ -11,7 +12,7 @@ var ledger: Array[Dictionary] = []
 var times_caught := 0
 
 var _acts := {}
-var _defaults := {"catch_chance": 0.05, "catch_ending": "caught", "severity": 1}
+var _defaults := {"catch_chance": 0.0, "catch_ending": "caught", "severity": 1}
 var _principles := {}
 var _checkpoint := {}
 
@@ -151,6 +152,7 @@ func snapshot() -> Dictionary:
 func restore(s: Dictionary) -> void:
 	Game.flags = s.flags.duplicate(true)
 	ledger = s.ledger.duplicate(true)
+	restored.emit()
 
 # Clears the run (not the save file).
 func reset() -> void:

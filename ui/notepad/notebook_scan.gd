@@ -1,9 +1,13 @@
 extends Node2D
 class_name NotebookScan
-# Every now and then something reads the notebook: an eye appears beside it,
+# Every minute something reads the notebook: an eye appears beside it,
 # closed, opens, and a band of orange light sweeps down the page with the eye
-# following it; then the eye closes and goes. (Purely something to see for
-# now: the scan doesn't decide anything.)
+# following it; then the eye closes and goes.
+#
+# This is the observer. If the band passes over a red line (an unethical act
+# logged in the notes and not redacted), it stops there, the line lights up,
+# and the game ends: caught. Lines scrolled out of view are read at the
+# bottom of the page.
 #
 # It lives on the notepad window, so it moves with it, and draws over the
 # other windows.
@@ -11,8 +15,7 @@ class_name NotebookScan
 const EYE_OPEN := preload("res://art/ui/eye/eye_open.png")
 const EYE_CLOSED := preload("res://art/ui/eye/eye_closed.png")
 
-@export var first_after := 25.0              # seconds into the game before the first scan
-@export var every := Vector2(30.0, 60.0)     # seconds between scans
+@export var every := 60.0                    # seconds between scans (and before the first)
 @export var line_height := 50.0
 @export var line_color := Color(1.0, 0.63, 0.21, 0.6)   # orange at 60%
 @export var eye_width := 220.0
@@ -24,8 +27,10 @@ const EYE_CLOSED := preload("res://art/ui/eye/eye_closed.png")
 @export var scan_ease := Vector4(0.9, 0.0, 0.1, 1.0)   # cubic-bezier(x1, y1, x2, y2): slow off, fast through the middle, slow in
 @export var end_hold := 0.3                  # at the bottom, before it closes
 @export var shut_hold := 0.35                # closed again, before it goes
+@export var caught_hold := 1.6               # stopped on a red line, before the game ends
+@export var caught_color := Color(1.0, 0.25, 0.1, 0.55)
 
-enum Step { WAIT, APPEAR, CLOSED, OPEN, SCAN, LINGER, SHUT, VANISH }
+enum Step { WAIT, APPEAR, CLOSED, OPEN, SCAN, LINGER, SHUT, VANISH, CAUGHT }
 
 var _window: DesktopWindow
 var _step := Step.WAIT
@@ -34,11 +39,14 @@ var _wait := 0.0
 var _alpha := 0.0
 var _scan := 0.0            # 0 at the top of the page, 1 at the bottom
 var _blink := 1.0           # the eye's height as it opens (squashed, then full)
+var _read_to := -INF        # how far down the page (window y) the band has read this scan
+var _found: Control         # the red line it stopped on
 
 func _ready() -> void:
 	_window = get_parent() as DesktopWindow
 	z_index = 20
-	_wait = first_after
+	_wait = every
+	Ethics.restored.connect(_reset)     # going back to a save: a fresh minute
 
 func _process(delta: float) -> void:
 	if _step == Step.WAIT:
@@ -67,7 +75,11 @@ func _process(delta: float) -> void:
 				_go(Step.SCAN)
 		Step.SCAN:
 			_scan = _bezier(clampf(_t / scan_time, 0.0, 1.0))
+			if _read():
+				return
 			if _t >= scan_time:
+				if _read_hidden():
+					return
 				_go(Step.LINGER)
 		Step.LINGER:
 			if _t >= end_hold:
@@ -75,6 +87,12 @@ func _process(delta: float) -> void:
 		Step.SHUT:
 			if _t >= shut_hold:
 				_go(Step.VANISH)
+		Step.CAUGHT:
+			if _t >= caught_hold and _found != null:
+				_found = null
+				Ethics.times_caught += 1
+				Game.say_random("scan_caught")
+				Story.end_with("caught")
 		Step.VANISH:
 			_alpha = 1.0 - clampf(_t / fade_time, 0.0, 1.0)
 			if _t >= fade_time:
@@ -100,6 +118,58 @@ func _bezier(x: float) -> float:
 			hi = u
 	return 3.0 * y1 * u * (1.0 - u) * (1.0 - u) + 3.0 * y2 * u * u * (1.0 - u) + u * u * u
 
+# The band's centre, in the window's coordinates.
+func _band_y() -> float:
+	var page := _page()
+	return page.position.y + line_height * 0.5 + _scan * (page.size.y - line_height)
+
+# Has the band reached a red line that's showing on the page?
+func _read() -> bool:
+	var y := _band_y()
+	var page := _visible_page()
+	for row in _rows():
+		var r := _local(row)
+		if not r.intersects(page):
+			continue
+		var cy := r.get_center().y
+		if cy > _read_to and cy <= y:
+			_catch(row)
+			return true
+	_read_to = y
+	return false
+
+# At the bottom: any red line scrolled out of view is read too.
+func _read_hidden() -> bool:
+	var page := _visible_page()
+	for row in _rows():
+		if not _local(row).intersects(page):
+			_catch(row)
+			return true
+	return false
+
+func _catch(row: Control) -> void:
+	_found = row
+	var r := _local(row)
+	var page := _page()
+	# hold the band on the line (or on the bottom edge, for one out of view)
+	var cy := clampf(r.get_center().y, page.position.y + line_height * 0.5, page.end.y - line_height * 0.5)
+	_scan = (cy - page.position.y - line_height * 0.5) / maxf(page.size.y - line_height, 1.0)
+	_go(Step.CAUGHT)
+
+func _rows() -> Array[Control]:
+	if _window.has_method("unethical_rows"):
+		return _window.call("unethical_rows")
+	return []
+
+func _local(c: Control) -> Rect2:
+	var g := c.get_global_rect()
+	return Rect2(g.position - _window.global_position, g.size)
+
+# The part of the page the notes scroll in.
+func _visible_page() -> Rect2:
+	var scroll := _window.get_node_or_null("%Scroll") as Control
+	return _local(scroll) if scroll else _page()
+
 func _go(step: Step) -> void:
 	_step = step
 	_t = 0.0
@@ -110,7 +180,9 @@ func _reset() -> void:
 	_alpha = 0.0
 	_scan = 0.0
 	_blink = 1.0
-	_wait = randf_range(every.x, every.y)
+	_read_to = -INF
+	_found = null
+	_wait = every
 	queue_redraw()
 
 # Only while the notebook is on screen and the game is being played.
@@ -127,12 +199,17 @@ func _draw() -> void:
 	if _step == Step.WAIT or _alpha <= 0.0:
 		return
 	var page := _page()
-	var y := page.position.y + line_height * 0.5 + _scan * (page.size.y - line_height)
-	if _step in [Step.SCAN, Step.LINGER]:
+	var y := _band_y()
+	if _step in [Step.SCAN, Step.LINGER, Step.CAUGHT]:
 		draw_rect(Rect2(page.position.x, y - line_height * 0.5, page.size.x, line_height),
 				Color(line_color, line_color.a * _alpha))
+	if _step == Step.CAUGHT and _found != null and is_instance_valid(_found):
+		# the line it found, flashing
+		var on := fposmod(_t * 4.0, 1.0) < 0.6
+		if on:
+			draw_rect(_local(_found).grow(6.0).intersection(page), caught_color)
 	# the eye: beside the window, on whichever side has room, level with the line
-	var open := _step in [Step.OPEN, Step.SCAN, Step.LINGER]
+	var open := _step in [Step.OPEN, Step.SCAN, Step.LINGER, Step.CAUGHT]
 	var tex := EYE_OPEN if open else EYE_CLOSED
 	var size := Vector2(eye_width, eye_width * tex.get_height() / float(tex.get_width()))
 	if open:

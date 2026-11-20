@@ -411,5 +411,9 @@
 	"copy_folder_open": [
 		"a copy of the orange folder. right here. i could just take it.",
 		"this is it. the orange folder. but it isn't mine to copy."
+	],
+	"scan_caught": [
+		"it saw.",
+		"it read that line."
 	]
 }

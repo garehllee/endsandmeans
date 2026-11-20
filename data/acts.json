@@ -1,6 +1,6 @@
 {
 	"defaults": {
-		"catch_chance": 0.05,
+		"catch_chance": 0.0,
 		"catch_ending": "caught",
 		"severity": 1
 	},
