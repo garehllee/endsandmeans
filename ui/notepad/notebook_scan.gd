@@ -21,6 +21,7 @@ const EYE_CLOSED := preload("res://art/ui/eye/eye_closed.png")
 @export var closed_hold := 0.4               # closed, before it opens
 @export var open_hold := 0.35                # open, before it starts to read
 @export var scan_time := 2.6                 # top of the page to the bottom
+@export var scan_ease := Vector4(0.9, 0.0, 0.1, 1.0)   # cubic-bezier(x1, y1, x2, y2): slow off, fast through the middle, slow in
 @export var end_hold := 0.3                  # at the bottom, before it closes
 @export var shut_hold := 0.35                # closed again, before it goes
 
@@ -65,8 +66,7 @@ func _process(delta: float) -> void:
 			if _t >= open_hold:
 				_go(Step.SCAN)
 		Step.SCAN:
-			var k := clampf(_t / scan_time, 0.0, 1.0)
-			_scan = k * k * (3.0 - 2.0 * k)
+			_scan = _bezier(clampf(_t / scan_time, 0.0, 1.0))
 			if _t >= scan_time:
 				_go(Step.LINGER)
 		Step.LINGER:
@@ -80,6 +80,25 @@ func _process(delta: float) -> void:
 			if _t >= fade_time:
 				_reset()
 	queue_redraw()
+
+# A CSS-style cubic bezier from (0,0) to (1,1) with control points
+# (x1, y1) and (x2, y2): finds the curve's y at time x.
+func _bezier(x: float) -> float:
+	var x1 := scan_ease.x
+	var y1 := scan_ease.y
+	var x2 := scan_ease.z
+	var y2 := scan_ease.w
+	var lo := 0.0
+	var hi := 1.0
+	var u := x
+	for i in 30:                     # bisect for the u whose curve-x is x
+		u = (lo + hi) * 0.5
+		var cx := 3.0 * x1 * u * (1.0 - u) * (1.0 - u) + 3.0 * x2 * u * u * (1.0 - u) + u * u * u
+		if cx < x:
+			lo = u
+		else:
+			hi = u
+	return 3.0 * y1 * u * (1.0 - u) * (1.0 - u) + 3.0 * y2 * u * u * (1.0 - u) + u * u * u
 
 func _go(step: Step) -> void:
 	_step = step
