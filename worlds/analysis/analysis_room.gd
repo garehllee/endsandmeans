@@ -41,8 +41,8 @@ enum Phase { CHOOSE, EXPANDING, ARENA, DONE }
 @export var write_act := "write_response"   # what writing the folder counts as (ethically)
 @export var cost_overlay: Texture2D = preload("res://art/ui/ethics_glitch.png")   # the "-5 ETHICS" corner on the choice
 @export var cost_font: Font = preload("res://fonts/FT88-Regular.otf")
-@export var cost_size := 34
-@export var cost_track := -3
+@export var cost_size := 32
+@export var cost_track := -4
 @export var player_start_y := 215.0
 @export var title_y := 455.0
 @export var chip_rect := Rect2(102, 547, 1385, 83)
@@ -50,7 +50,7 @@ enum Phase { CHOOSE, EXPANDING, ARENA, DONE }
 @export var buttons_top := 1005.0
 @export var button_x := 131.0
 @export var button_w := 1338.0
-@export var button_closed_h := 175.0
+@export var button_closed_h := 200.0   # four of the cost corner's 50px squares, so none is cut
 @export var button_open_h := 460.0
 @export var button_gap := 42.0
 @export var message_margin := 70.0     # clear space kept between the message and the first button
@@ -501,7 +501,11 @@ func _draw_button(i: int, b: Btn, f: Font, m: Font) -> void:
 	# The label makes room for the icon and new file name only when there is one.
 	var shows_new := i == 0 and new_folder_name != ""
 	var text_y := r.position.y + r.size.y * lerpf(0.5, 0.81, o if shows_new else 0.0)
-	draw_string(f, Vector2(r.position.x, text_y + button_font_size * 0.35), b.label,
+	# a closed button with a cost corner centres its label in the room beside it
+	var nudge := 0.0
+	if i == 0 and cost_overlay and _choice_cost() > 0:
+		nudge = cost_overlay.get_width() * 0.5 * (1.0 - o)
+	draw_string(f, Vector2(r.position.x + nudge, text_y + button_font_size * 0.35), b.label,
 			HORIZONTAL_ALIGNMENT_CENTER, r.size.x, button_font_size, _button_text(i, fade))
 
 	if shows_new:
@@ -533,21 +537,20 @@ func _draw_cost(r: Rect2, a: float) -> void:
 	var cost := _choice_cost()
 	if cost <= 0 or a <= 0.0 or cost_overlay == null:
 		return
-	# a closed (short) button gets a somewhat smaller corner, cut off at its edge
+	# always the same size; a closed button (exactly four squares tall) shows
+	# its top rows
 	var size := cost_overlay.get_size()
-	var k := clampf(r.size.y / size.y, 0.75, 1.0)
-	var shown := Rect2(r.position, size * k).intersection(r)
-	draw_texture_rect_region(cost_overlay, shown, Rect2(Vector2.ZERO, shown.size / k), Color(1, 1, 1, a))
+	var shown := Rect2(r.position, size).intersection(r)
+	draw_texture_rect_region(cost_overlay, shown, Rect2(Vector2.ZERO, shown.size), Color(1, 1, 1, a))
 	if _cost_variation == null:
 		_cost_variation = FontVariation.new()
 		_cost_variation.base_font = cost_font
 		_cost_variation.spacing_glyph = cost_track
 	var text := "-%d ETHICS" % cost
-	var fs := maxi(8, roundi(cost_size * k))
 	# reading upward in the overlay's first column, ending near its top
-	var w := _cost_variation.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x
-	draw_set_transform(r.position + Vector2(37.0, 10.0) * k + Vector2(0.0, w), -PI * 0.5)
-	draw_string(_cost_variation, Vector2.ZERO, text, HORIZONTAL_ALIGNMENT_LEFT, -1, fs, Color(1, 1, 1, a))
+	var w := _cost_variation.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, cost_size).x
+	draw_set_transform(r.position + Vector2(37.0, 8.0 + w), -PI * 0.5)
+	draw_string(_cost_variation, Vector2.ZERO, text, HORIZONTAL_ALIGNMENT_LEFT, -1, cost_size, Color(1, 1, 1, a))
 	draw_set_transform(Vector2.ZERO)
 
 func _button_text(i: int, a: float) -> Color:
