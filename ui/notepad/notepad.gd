@@ -17,6 +17,7 @@ func _ready() -> void:
 	super()
 	Game.line_logged.connect(add_line)
 	Game.clear_unethical_requested.connect(_redact_unethical)
+	add_child(NotebookScan.new())   # every now and then, something reads the notebook
 
 func add_line(timestamp: String, text: String, kind: String) -> void:
 	var row = line_scene.instantiate()
