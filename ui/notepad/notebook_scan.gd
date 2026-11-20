@@ -13,7 +13,7 @@ const EYE_CLOSED := preload("res://art/ui/eye/eye_closed.png")
 
 @export var first_after := 25.0              # seconds into the game before the first scan
 @export var every := Vector2(30.0, 60.0)     # seconds between scans
-@export var line_height := 20.0
+@export var line_height := 50.0
 @export var line_color := Color(1.0, 0.63, 0.21, 0.6)   # orange at 60%
 @export var eye_width := 220.0
 @export var eye_gap := 24.0                  # between the window's edge and the eye
