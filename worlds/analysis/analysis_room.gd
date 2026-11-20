@@ -79,6 +79,9 @@ class Btn:
 var active := false
 var _phase := Phase.CHOOSE
 var _cost_variation: FontVariation
+var _cost_cells: Array[Rect2] = []
+var _cost_color := Color("6a07ff")
+const COST_CELL := 50.0
 var _transforming := false     # the character is turning into a bug
 var _btns: Array[Btn] = []
 const RIPPLE_IN := preload("res://shaders/ripple_in.gdshader")
@@ -492,20 +495,20 @@ func _draw_button(i: int, b: Btn, f: Font, m: Font) -> void:
 						Color(1, 1, 1, _expand_t))
 	else:
 		draw_rect(r, Color(0.851, 0.851, 0.851, o))
-	if i == 0:
-		_draw_cost(r, 1.0 - _expand_t)
-	if i != 0 or _expand_t < 1.0:
-		draw_rect(r, Color.BLACK, false, 2.0)
-
 	var fade := 1.0 - _expand_t if i == 0 else 1.0
 	# The label makes room for the icon and new file name only when there is one.
 	var shows_new := i == 0 and new_folder_name != ""
 	var text_y := r.position.y + r.size.y * lerpf(0.5, 0.81, o if shows_new else 0.0)
-	# a closed button with a cost corner centres its label in the room beside it
-	var nudge := 0.0
-	if i == 0 and cost_overlay and _choice_cost() > 0:
-		nudge = cost_overlay.get_width() * 0.5 * (1.0 - o)
-	draw_string(f, Vector2(r.position.x + nudge, text_y + button_font_size * 0.35), b.label,
+	if i == 0:
+		# the cost corner leaves out any squares the label would run into
+		var lw := f.get_string_size(b.label, HORIZONTAL_ALIGNMENT_LEFT, -1, button_font_size).x
+		var base := text_y + button_font_size * 0.35
+		var label_rect := Rect2(r.get_center().x - lw * 0.5, base - f.get_ascent(button_font_size),
+				lw, f.get_ascent(button_font_size) + f.get_descent(button_font_size)).grow(14.0)
+		_draw_cost(r, 1.0 - _expand_t, label_rect)
+	if i != 0 or _expand_t < 1.0:
+		draw_rect(r, Color.BLACK, false, 2.0)
+	draw_string(f, Vector2(r.position.x, text_y + button_font_size * 0.35), b.label,
 			HORIZONTAL_ALIGNMENT_CENTER, r.size.x, button_font_size, _button_text(i, fade))
 
 	if shows_new:
@@ -533,15 +536,22 @@ func _draw_button(i: int, b: Btn, f: Font, m: Font) -> void:
 func _choice_cost() -> int:
 	return Ethics.ethics_cost(write_act)
 
-func _draw_cost(r: Rect2, a: float) -> void:
+func _draw_cost(r: Rect2, a: float, keep_clear := Rect2()) -> void:
 	var cost := _choice_cost()
 	if cost <= 0 or a <= 0.0 or cost_overlay == null:
 		return
 	# always the same size; a closed button (exactly four squares tall) shows
-	# its top rows
-	var size := cost_overlay.get_size()
-	var shown := Rect2(r.position, size).intersection(r)
-	draw_texture_rect_region(cost_overlay, shown, Rect2(Vector2.ZERO, shown.size), Color(1, 1, 1, a))
+	# its top rows. Squares the label would touch are left out (never the
+	# first column, which carries the number).
+	if _cost_cells.is_empty():
+		_read_cost_cells()
+	for cell in _cost_cells:
+		var c := Rect2(r.position + cell.position, cell.size)
+		if not r.encloses(c):
+			continue
+		if cell.position.x > 0.0 and keep_clear.has_area() and c.intersects(keep_clear):
+			continue
+		draw_rect(c, Color(_cost_color, a))
 	if _cost_variation == null:
 		_cost_variation = FontVariation.new()
 		_cost_variation.base_font = cost_font
@@ -552,6 +562,20 @@ func _draw_cost(r: Rect2, a: float) -> void:
 	draw_set_transform(r.position + Vector2(37.0, 8.0 + w), -PI * 0.5)
 	draw_string(_cost_variation, Vector2.ZERO, text, HORIZONTAL_ALIGNMENT_LEFT, -1, cost_size, Color(1, 1, 1, a))
 	draw_set_transform(Vector2.ZERO)
+
+# The overlay's squares, read once from its picture (a 50px grid).
+func _read_cost_cells() -> void:
+	var img := cost_overlay.get_image()
+	if img.is_compressed():
+		img.decompress()
+	var cols := int(img.get_width() / COST_CELL)
+	var rows := int(img.get_height() / COST_CELL)
+	for y in rows:
+		for x in cols:
+			var px := img.get_pixel(int((x + 0.5) * COST_CELL), int((y + 0.5) * COST_CELL))
+			if px.a > 0.5:
+				_cost_cells.append(Rect2(x * COST_CELL, y * COST_CELL, COST_CELL, COST_CELL))
+				_cost_color = Color(px, 1.0)
 
 func _button_text(i: int, a: float) -> Color:
 	var c := config.button_text_color if i == 0 and show_game_background and _button_picture() else Color.BLACK
