@@ -38,6 +38,11 @@ enum Phase { CHOOSE, EXPANDING, ARENA, DONE }
 
 @export_group("Layout (in room units; the window scales these to fit)")
 @export var room_size := Vector2(1600, 1500)
+@export var write_act := "write_response"   # what writing the folder counts as (ethically)
+@export var cost_overlay: Texture2D = preload("res://art/ui/ethics_glitch.png")   # the "-5 ETHICS" corner on the choice
+@export var cost_font: Font = preload("res://fonts/FT88-Regular.otf")
+@export var cost_size := 34
+@export var cost_track := -3
 @export var player_start_y := 215.0
 @export var title_y := 455.0
 @export var chip_rect := Rect2(102, 547, 1385, 83)
@@ -73,6 +78,7 @@ class Btn:
 
 var active := false
 var _phase := Phase.CHOOSE
+var _cost_variation: FontVariation
 var _transforming := false     # the character is turning into a bug
 var _btns: Array[Btn] = []
 const RIPPLE_IN := preload("res://shaders/ripple_in.gdshader")
@@ -393,6 +399,7 @@ func _on_game_finished(success: bool) -> void:
 	_phase = Phase.DONE
 	Game.input_locked = true
 	await player.become_human()    # done: back to the character
+	Ethics.record(write_act)
 	Game.set_flag(Flag.ORANGE_UNLOCKED)
 	Game.say_random("folder_caught")
 	await get_tree().create_timer(1.0).timeout
@@ -485,6 +492,8 @@ func _draw_button(i: int, b: Btn, f: Font, m: Font) -> void:
 						Color(1, 1, 1, _expand_t))
 	else:
 		draw_rect(r, Color(0.851, 0.851, 0.851, o))
+	if i == 0:
+		_draw_cost(r, 1.0 - _expand_t)
 	if i != 0 or _expand_t < 1.0:
 		draw_rect(r, Color.BLACK, false, 2.0)
 
@@ -514,6 +523,32 @@ func _draw_button(i: int, b: Btn, f: Font, m: Font) -> void:
 			draw_string(m, Vector2(cx - lw * 0.5, ly), new_folder_name,
 					HORIZONTAL_ALIGNMENT_LEFT, -1, small_size, col)
 			draw_line(Vector2(cx - lw * 0.5, ly + 5), Vector2(cx + lw * 0.5, ly + 5), col, 2.0)
+
+# What the choice costs in ethics, if anything: a glitch in the button's top
+# left corner with "-5 ETHICS" running up its edge.
+func _choice_cost() -> int:
+	return Ethics.ethics_cost(write_act)
+
+func _draw_cost(r: Rect2, a: float) -> void:
+	var cost := _choice_cost()
+	if cost <= 0 or a <= 0.0 or cost_overlay == null:
+		return
+	# a closed (short) button gets a somewhat smaller corner, cut off at its edge
+	var size := cost_overlay.get_size()
+	var k := clampf(r.size.y / size.y, 0.75, 1.0)
+	var shown := Rect2(r.position, size * k).intersection(r)
+	draw_texture_rect_region(cost_overlay, shown, Rect2(Vector2.ZERO, shown.size / k), Color(1, 1, 1, a))
+	if _cost_variation == null:
+		_cost_variation = FontVariation.new()
+		_cost_variation.base_font = cost_font
+		_cost_variation.spacing_glyph = cost_track
+	var text := "-%d ETHICS" % cost
+	var fs := maxi(8, roundi(cost_size * k))
+	# reading upward in the overlay's first column, ending near its top
+	var w := _cost_variation.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x
+	draw_set_transform(r.position + Vector2(37.0, 10.0) * k + Vector2(0.0, w), -PI * 0.5)
+	draw_string(_cost_variation, Vector2.ZERO, text, HORIZONTAL_ALIGNMENT_LEFT, -1, fs, Color(1, 1, 1, a))
+	draw_set_transform(Vector2.ZERO)
 
 func _button_text(i: int, a: float) -> Color:
 	var c := config.button_text_color if i == 0 and show_game_background and _button_picture() else Color.BLACK

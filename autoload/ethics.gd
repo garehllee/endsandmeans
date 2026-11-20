@@ -80,11 +80,20 @@ func score() -> int:
 		total += int(e["severity"])
 	return total
 
+# Each point of severity costs this many ethics, on the end screen's 200.
+const ETHICS_PER_SEVERITY := 5
+
+# What an act costs in ethics (the "-5 ETHICS" on a choice).
+func ethics_cost(act_id: String) -> int:
+	if act_id == "":
+		return 0
+	return int(act(act_id)["severity"]) * ETHICS_PER_SEVERITY
+
 # How ethical the run was, out of `out_of`: full marks for breaking nothing,
-# down to 0 for doing every act once (or more; it doesn't go below 0).
+# minus each act's cost (never below 0). The costs shown on the choices add
+# up to exactly this.
 func rating(out_of := 200) -> int:
-	var worst := maxi(max_score(), 1)
-	return clampi(roundi(out_of * (1.0 - float(score()) / worst)), 0, out_of)
+	return clampi(out_of - score() * ETHICS_PER_SEVERITY, 0, out_of)
 
 # The worst a run can score: every act once.
 func max_score() -> int:
