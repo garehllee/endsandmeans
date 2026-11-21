@@ -1633,8 +1633,9 @@ func _tick_bg_glitch(dt: float, k: float) -> void:
 	var view := Rect2(_cam - _arena.size * 0.5, _arena.size)
 	_bg_glitch.position = view.position
 	_bg_glitch.size = view.size
-# Bits of the game pop in behind the fight and copy themselves along a line,
-# like the trails when the desktop collapses: each stamps a copy every so
+# Bits of the game pop in behind the fight and copy themselves along a curving
+# path (a spiral winding in, rings, a weaving swirl, an S), like the trails
+# when the desktop collapses: each stamps a copy every so
 # often, the oldest copies drop off, and when it has gone far enough the
 # whole trail pops out. Always fully there (no fading); each trail is drawn
 # with its own blend (normal, add, subtract or multiply). The worse things
@@ -1682,15 +1683,41 @@ func _tick_floaters(dt: float, k: float) -> void:
 func _spawn_floater(k: float) -> void:
 	var tex: Texture2D = config.floaters.pick_random()
 	var w := randf_range(config.floater_width.x, config.floater_width.y)
-	var dir := Vector2.from_angle(randf() * TAU)
-	# copies sit a little apart, overlapping more for small things
-	var gap := randf_range(0.35, 0.8) * w / maxf(config.window.x, 1.0)
+	var length := randi_range(14, 26 + int(20.0 * k))      # copies before it pops out
 	_floaters.append({"tex": tex, "w": w, "flip": randf() < 0.5,
-		"p": Vector2(randf(), randf()), "step": dir * gap,
-		"head": 0, "clock": 0.0,
-		"length": randi_range(6, 14 + int(16.0 * k)),      # copies before it pops out
-		"keep": randi_range(3, 5 + int(6.0 * k)),          # how many copies show at once
+		"path": _trail_path(w, length), "head": 0, "clock": 0.0, "length": length,
+		"keep": randi_range(6, 10 + int(10.0 * k)),        # how many copies show at once
 		"blend": randi() % FLOAT_BLENDS.size()})
+
+# Where each copy goes, in picture units: every step turns a little from the
+# last, and how it turns makes the shape.
+func _trail_path(w: float, length: int) -> PackedVector2Array:
+	var pts := PackedVector2Array()
+	var p := Vector2(randf() * config.window.x, randf() * config.window.y)
+	var angle := randf() * TAU
+	var gap := randf_range(0.3, 0.6) * w                   # copies overlap a little
+	var side := 1.0 if randf() < 0.5 else -1.0
+	var shape := randi() % 4
+	var turn0 := randf_range(0.25, 0.55)                   # radians a step
+	var wave := randf_range(0.35, 0.8)
+	for i in length:
+		pts.append(p)
+		var u := float(i) / maxf(float(length - 1), 1.0)
+		var turn := 0.0
+		var g := gap
+		match shape:
+			0:  # a spiral winding in: tighter and closer every step
+				turn = turn0 * (1.0 + 2.2 * u)
+				g = gap * (1.0 - 0.6 * u)
+			1:  # rings
+				turn = turn0
+			2:  # a swirl that weaves from side to side
+				turn = turn0 * 1.6 * sin(float(i) * wave)
+			3:  # an S: one way, then the other
+				turn = turn0 * (1.0 if u < 0.5 else -1.0)
+		angle += turn * side
+		p += Vector2.from_angle(angle) * g
+	return pts
 
 func _draw_floaters(blend: int) -> void:
 	var layer: Node2D = _float_layers[blend]
@@ -1704,9 +1731,9 @@ func _draw_floaters(blend: int) -> void:
 		var w: float = f["w"] * _s
 		var size := Vector2(w, w * tex.get_height() / maxf(float(tex.get_width()), 1.0))
 		var head: int = f["head"]
-		for c in range(maxi(head - int(f["keep"]) + 1, 0), head + 1):
-			var p: Vector2 = f["p"] + f["step"] * float(c)
-			var at := view.position + p * view.size
+		var path: PackedVector2Array = f["path"]
+		for c in range(maxi(head - int(f["keep"]) + 1, 0), mini(head + 1, path.size())):
+			var at := view.position + path[c] / config.window * view.size
 			var r := Rect2(at - size * 0.5, size)
 			if f["flip"]:
 				r = Rect2(r.position + Vector2(size.x, 0.0), Vector2(-size.x, size.y))
