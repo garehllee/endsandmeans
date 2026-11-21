@@ -143,6 +143,7 @@ class_name FinalConfig
 # Behind the fight, scenes from the rest of the game glitch in and out of the
 # server footage, more and wilder the lower Hugging Face's health.
 @export var glitch_scenes: Array[Texture2D] = []
-@export var glitch_rate := Vector2(0.4, 9.0)      # glitches a second, at full health and at none
-@export var glitch_alpha := Vector2(0.18, 0.85)   # how strongly they show, likewise
+@export var glitch_rate := Vector2(1.0, 16.0)     # glitches a second, at full health and at none
+@export var glitch_alpha := Vector2(0.3, 0.95)    # how strongly they show, likewise
 @export var glitch_life := Vector2(0.28, 0.08)    # how long each lasts, likewise (seconds)
+@export var bg_glitch := Vector2(0.2, 1.0)        # how broken the background itself is, likewise (0 to 1)

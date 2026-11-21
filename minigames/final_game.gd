@@ -28,6 +28,7 @@ const DARKEN_SHADER := preload("res://shaders/darken.gdshader")
 const EXCLUSION_SHADER := preload("res://shaders/exclusion.gdshader")
 const SHOW_ON_BLACK := preload("res://shaders/show_on_black.gdshader")
 const HOVER_SHADER := preload("res://shaders/hover_outline.gdshader")
+const GLITCH_SHADER := preload("res://shaders/glitch.gdshader")   # the same as the desktop's collapse
 const HOVER_WIDTH := 6.0       # the outline when Hugging Face or the door can be used, room units
 const DYING_TIME := 1.4        # Hugging Face strobing out after the bite
 const BITE_HOLD := 0.35        # the mouse hangs on after the last chomp
@@ -107,6 +108,9 @@ var _trail_wait := 0.0
 var _last_health := 6
 var _phase := 1
 var _scenes: Node2D                 # the rest of the game glitching through the background
+var _bg_glitch: ColorRect           # and the background itself breaking up under it
+var _bg_seed_t := 0.0
+var _bg_patch_t := 0.0
 var _glitches: Array[Dictionary] = []
 var _glitch_due := 0.0
 var _hits := 0             # hits in this phase
@@ -189,6 +193,16 @@ func prepare(cfg: MinigameConfig) -> void:
 	_server = _make_video(config.server_video, 0, null)
 	_server.loop = true
 	_scenes = _make_layer(0, _draw_scenes)     # over the footage, under everything else
+	# then the whole background breaks up: torn rows, shuffled blocks, pixel sorting
+	var bg_copy := BackBufferCopy.new()
+	bg_copy.copy_mode = BackBufferCopy.COPY_MODE_VIEWPORT
+	add_child(bg_copy)
+	_bg_glitch = ColorRect.new()
+	_bg_glitch.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_bg_glitch.material = ShaderMaterial.new()
+	(_bg_glitch.material as ShaderMaterial).shader = GLITCH_SHADER
+	_bg_glitch.visible = false
+	add_child(_bg_glitch)
 	_back = _make_layer(0, _draw_back)
 	_prop = _make_layer(0, _draw_prop)
 	var hover := ShaderMaterial.new()
@@ -1125,30 +1139,26 @@ func _tick_unlock() -> void:
 		_door_open = true
 		Audio.play("door_unlock")
 	if _stage_t >= KEY_FLY + KEY_TURN + 0.5:
+		_enter_from = _pos
+		_enter_scale = _player.scale if _player else Vector2.ONE
 		_go(Stage.ENTER)
 
-# The character walks in, the mouse after it, and both fade away in the
-# doorway. A pause, then the glitch.
+# The character walks into the doorway the way it goes through every other
+# door: facing up, straight in, shrinking a little and fading over the second
+# half (see Portal). The mouse trots after it. A pause, then the glitch.
+const ENTER_WALK := 0.7
+var _enter_from := Vector2.ZERO
+var _enter_scale := Vector2.ONE
+
 func _tick_enter(dt: float) -> void:
-	var goal := config.door_way
-	var step := config.walk_speed * dt
-	var arrived := false
-	if absf(_pos.x - goal.x) > 2.0:
-		_dir = "right" if goal.x > _pos.x else "left"
-		_pos.x = move_toward(_pos.x, goal.x, step)
-	elif absf(_pos.y - goal.y) > 2.0:
-		_dir = "up"
-		_pos.y = move_toward(_pos.y, goal.y, step)
-	else:
-		arrived = true
+	var k := clampf(_stage_t / ENTER_WALK, 0.0, 1.0)
+	_pos = _enter_from.lerp(config.door_way, k)
+	_dir = "up"
+	_player_alpha = 1.0 - clampf((k - 0.5) / 0.5, 0.0, 1.0)
 	if _player:
-		_player.set_motion(not arrived, _dir if not arrived else "up")
-	if not arrived:
-		return
-	var pet_in := _pet.distance_to(goal + Vector2(0.0, config.pet_foot * 0.5)) < 20.0 or _pet_tex == null
-	if pet_in or _player_alpha < 1.0:
-		_player_alpha = move_toward(_player_alpha, 0.0, dt / 0.8)
-	if _player_alpha <= 0.0:
+		_player.set_motion(k < 1.0, "up")
+		_player.scale = _enter_scale * lerpf(1.0, 0.7, k)
+	if k >= 1.0:
 		_pause_t += dt
 		if _pause_t >= ENTER_PAUSE:
 			_go(Stage.GLITCH)
@@ -1164,6 +1174,8 @@ func _tick_enter(dt: float) -> void:
 func _on_glitch_done() -> void:
 	_go(Stage.DONE)
 	running = false
+	if _player and is_instance_valid(_player):
+		_player.scale = _enter_scale
 	var layer := CanvasLayer.new()
 	layer.layer = 120
 	var black := ColorRect.new()
@@ -1512,10 +1524,13 @@ func _chaos() -> float:
 func _tick_scenes(dt: float) -> void:
 	var on := _built and _expand >= 0.999 and _stage in [Stage.BATTLE, Stage.BITE, Stage.DYING] \
 			and not config.glitch_scenes.is_empty()
+	if _bg_glitch:
+		_bg_glitch.visible = on
 	if not on:
 		_glitches.clear()
 		return
 	var k := _chaos()
+	_tick_bg_glitch(dt, k)
 	for g in _glitches:
 		g["t"] += dt
 	_glitches = _glitches.filter(func(g): return g["t"] < g["life"])
@@ -1589,3 +1604,21 @@ func _draw_scenes() -> void:
 				_scenes.draw_texture_rect_region(tex, Rect2(dst.position + off, dst.size), src, Color(0.1, 1, 1, a * 0.7))
 			else:
 				_scenes.draw_texture_rect_region(tex, dst, src, Color(1, 1, 1, a))
+
+# The collapse's glitch over the whole background: always a little, and
+# everything at once (pixel sorting, shredded rows, swapped colour) by the end.
+func _tick_bg_glitch(dt: float, k: float) -> void:
+	var mat := _bg_glitch.material as ShaderMaterial
+	var amount := lerpf(config.bg_glitch.x, config.bg_glitch.y, pow(k, 1.2)) * randf_range(0.85, 1.0)
+	mat.set_shader_parameter("amount", amount)
+	_bg_seed_t -= dt
+	if _bg_seed_t <= 0.0:
+		_bg_seed_t = randf_range(0.03, 0.09)
+		mat.set_shader_parameter("seed", randf() * 100.0)
+	_bg_patch_t -= dt
+	if _bg_patch_t <= 0.0:
+		_bg_patch_t = lerpf(0.5, 0.08, k) * randf_range(0.6, 1.4)    # where the damage is jumps around faster
+		mat.set_shader_parameter("patches", randf() * 100.0)
+	var view := Rect2(_cam - _arena.size * 0.5, _arena.size)
+	_bg_glitch.position = view.position
+	_bg_glitch.size = view.size
