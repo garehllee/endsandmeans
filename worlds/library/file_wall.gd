@@ -45,7 +45,7 @@ const IMAGE_EXTS := ["png", "jpg", "jpeg", "webp"]
 
 const LUMINOSITY_CODE := """
 shader_type canvas_item;
-uniform sampler2D screen_tex : hint_screen_texture, filter_linear_mipmap;
+uniform sampler2D screen_tex : hint_screen_texture, filter_nearest;
 
 float lum(vec3 c) { return dot(c, vec3(0.3, 0.59, 0.11)); }
 
@@ -71,6 +71,15 @@ void fragment() {
 var _icons: Node2D
 
 static var _tex_cache := {}   # path -> Texture2D, shared by every room
+# Only the most recent pictures are kept, so walking through lots of folders
+# doesn't pile them all up in memory (the strips on the wall hold their own).
+const TEX_CACHE_MAX := 32
+
+static func _cache_tex(path: String, tex: Texture2D) -> void:
+	_tex_cache.erase(path)
+	_tex_cache[path] = tex                # most recent last
+	while _tex_cache.size() > TEX_CACHE_MAX:
+		_tex_cache.erase(_tex_cache.keys()[0])
 
 var active := true
 var floor_grad := -1
@@ -477,6 +486,7 @@ func _request_texture(it: Dictionary) -> void:
 		return
 	if _tex_cache.has(path):
 		it.tex = _tex_cache[path]
+		_cache_tex(path, it.tex)          # used again: keep it longer
 	elif path.begins_with("res://"):
 		if ResourceLoader.exists(path):
 			ResourceLoader.load_threaded_request(path)
@@ -506,7 +516,7 @@ func _poll_textures() -> void:
 			else:
 				continue
 		if tex:
-			_tex_cache[path] = tex
+			_cache_tex(path, tex)
 			it.tex = tex
 		_pending.erase(it)
 		queue_redraw()

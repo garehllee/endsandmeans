@@ -1,7 +1,7 @@
 shader_type canvas_item;
 
 // Hint tells Godot to fetch the screen background behind this pixel
-uniform sampler2D screen_texture : hint_screen_texture, filter_linear_mipmap;
+uniform sampler2D screen_texture : hint_screen_texture, filter_nearest;
 
 void fragment() {
     // 1. Get the color of the sprite/object texture

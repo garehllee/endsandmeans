@@ -6,771 +6,771 @@
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_qhv5o"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(0, 0, 800, 984)
+region = Rect2(0, 0, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_lfnbm"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(800, 0, 800, 984)
+region = Rect2(500, 0, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_0lo38"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(1600, 0, 800, 984)
+region = Rect2(1000, 0, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_u8ovc"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(2400, 0, 800, 984)
+region = Rect2(1500, 0, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_y1k3o"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(3200, 0, 800, 984)
+region = Rect2(2000, 0, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_h6ajm"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(4000, 0, 800, 984)
+region = Rect2(2500, 0, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_0ecbt"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(4800, 0, 800, 984)
+region = Rect2(3000, 0, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_nf7li"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(5600, 0, 800, 984)
+region = Rect2(3500, 0, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_tumiu"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(6400, 0, 800, 984)
+region = Rect2(4000, 0, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_tuind"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(7200, 0, 800, 984)
+region = Rect2(4500, 0, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_0hujv"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(0, 984, 800, 984)
+region = Rect2(0, 615, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_lc0xu"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(800, 984, 800, 984)
+region = Rect2(500, 615, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_m8gln"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(1600, 984, 800, 984)
+region = Rect2(1000, 615, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_jhoil"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(2400, 984, 800, 984)
+region = Rect2(1500, 615, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_hk7b0"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(3200, 984, 800, 984)
+region = Rect2(2000, 615, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_03mu8"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(4000, 984, 800, 984)
+region = Rect2(2500, 615, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_cw5n1"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(4800, 984, 800, 984)
+region = Rect2(3000, 615, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_y2t6o"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(5600, 984, 800, 984)
+region = Rect2(3500, 615, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_4wv7x"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(6400, 984, 800, 984)
+region = Rect2(4000, 615, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_a2e8u"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(7200, 984, 800, 984)
+region = Rect2(4500, 615, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_3ks07"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(0, 1968, 800, 984)
+region = Rect2(0, 1230, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_20qpr"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(800, 1968, 800, 984)
+region = Rect2(500, 1230, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_6jwx0"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(1600, 1968, 800, 984)
+region = Rect2(1000, 1230, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_jcg2m"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(2400, 1968, 800, 984)
+region = Rect2(1500, 1230, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_6ksji"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(3200, 1968, 800, 984)
+region = Rect2(2000, 1230, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_yfhqe"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(4000, 1968, 800, 984)
+region = Rect2(2500, 1230, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_fc1xq"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(4800, 1968, 800, 984)
+region = Rect2(3000, 1230, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_omfa7"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(5600, 1968, 800, 984)
+region = Rect2(3500, 1230, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_88sb5"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(6400, 1968, 800, 984)
+region = Rect2(4000, 1230, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_7j1p5"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(7200, 1968, 800, 984)
+region = Rect2(4500, 1230, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_de7op"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(0, 2952, 800, 984)
+region = Rect2(0, 1845, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_qyukr"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(800, 2952, 800, 984)
+region = Rect2(500, 1845, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_ivq8x"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(1600, 2952, 800, 984)
+region = Rect2(1000, 1845, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_6n1vk"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(2400, 2952, 800, 984)
+region = Rect2(1500, 1845, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_dk2sm"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(3200, 2952, 800, 984)
+region = Rect2(2000, 1845, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_5deao"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(4000, 2952, 800, 984)
+region = Rect2(2500, 1845, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_80x5h"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(4800, 2952, 800, 984)
+region = Rect2(3000, 1845, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_ykb3a"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(5600, 2952, 800, 984)
+region = Rect2(3500, 1845, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_8r7yc"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(6400, 2952, 800, 984)
+region = Rect2(4000, 1845, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_5bqrk"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(7200, 2952, 800, 984)
+region = Rect2(4500, 1845, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_tmfjv"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(0, 3936, 800, 984)
+region = Rect2(0, 2460, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_tofa2"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(800, 3936, 800, 984)
+region = Rect2(500, 2460, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_i6vgt"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(1600, 3936, 800, 984)
+region = Rect2(1000, 2460, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_l5et3"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(2400, 3936, 800, 984)
+region = Rect2(1500, 2460, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_xpiqe"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(3200, 3936, 800, 984)
+region = Rect2(2000, 2460, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_hwvot"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(4000, 3936, 800, 984)
+region = Rect2(2500, 2460, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_8eq1h"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(4800, 3936, 800, 984)
+region = Rect2(3000, 2460, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_kaww2"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(5600, 3936, 800, 984)
+region = Rect2(3500, 2460, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_njtnd"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(6400, 3936, 800, 984)
+region = Rect2(4000, 2460, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_sg6fb"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(7200, 3936, 800, 984)
+region = Rect2(4500, 2460, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_gm27f"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(0, 4920, 800, 984)
+region = Rect2(0, 3075, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_eu5q8"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(800, 4920, 800, 984)
+region = Rect2(500, 3075, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_v65x0"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(1600, 4920, 800, 984)
+region = Rect2(1000, 3075, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_wxj2k"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(2400, 4920, 800, 984)
+region = Rect2(1500, 3075, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_sgok8"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(3200, 4920, 800, 984)
+region = Rect2(2000, 3075, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_tjx3t"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(4000, 4920, 800, 984)
+region = Rect2(2500, 3075, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_qxkh1"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(4800, 4920, 800, 984)
+region = Rect2(3000, 3075, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_bne1f"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(5600, 4920, 800, 984)
+region = Rect2(3500, 3075, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_cdbyp"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(6400, 4920, 800, 984)
+region = Rect2(4000, 3075, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_0qaw6"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(7200, 4920, 800, 984)
+region = Rect2(4500, 3075, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_kwkjl"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(0, 5904, 800, 984)
+region = Rect2(0, 3690, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_k7qfc"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(800, 5904, 800, 984)
+region = Rect2(500, 3690, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_02no8"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(1600, 5904, 800, 984)
+region = Rect2(1000, 3690, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_xda28"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(2400, 5904, 800, 984)
+region = Rect2(1500, 3690, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_5q0bv"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(3200, 5904, 800, 984)
+region = Rect2(2000, 3690, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_vurrl"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(4000, 5904, 800, 984)
+region = Rect2(2500, 3690, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_m1o02"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(4800, 5904, 800, 984)
+region = Rect2(3000, 3690, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_j7nb1"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(5600, 5904, 800, 984)
+region = Rect2(3500, 3690, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_fiu8c"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(6400, 5904, 800, 984)
+region = Rect2(4000, 3690, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_us0qq"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(7200, 5904, 800, 984)
+region = Rect2(4500, 3690, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_op5xy"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(0, 6888, 800, 984)
+region = Rect2(0, 4305, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_qd1m8"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(800, 6888, 800, 984)
+region = Rect2(500, 4305, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_fc3tk"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(1600, 6888, 800, 984)
+region = Rect2(1000, 4305, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_fhxdx"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(2400, 6888, 800, 984)
+region = Rect2(1500, 4305, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_kodtp"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(3200, 6888, 800, 984)
+region = Rect2(2000, 4305, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_njx2s"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(4000, 6888, 800, 984)
+region = Rect2(2500, 4305, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_05r0t"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(4800, 6888, 800, 984)
+region = Rect2(3000, 4305, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_qqqfy"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(5600, 6888, 800, 984)
+region = Rect2(3500, 4305, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_4ccvq"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(6400, 6888, 800, 984)
+region = Rect2(4000, 4305, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_ykrr6"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(7200, 6888, 800, 984)
+region = Rect2(4500, 4305, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_vchyp"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(0, 7872, 800, 984)
+region = Rect2(0, 4920, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_s6aqw"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(800, 7872, 800, 984)
+region = Rect2(500, 4920, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_g7vn4"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(1600, 7872, 800, 984)
+region = Rect2(1000, 4920, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_eacx7"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(2400, 7872, 800, 984)
+region = Rect2(1500, 4920, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_fqhh2"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(3200, 7872, 800, 984)
+region = Rect2(2000, 4920, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_fk5qf"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(4000, 7872, 800, 984)
+region = Rect2(2500, 4920, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_5e280"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(4800, 7872, 800, 984)
+region = Rect2(3000, 4920, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_p0sl8"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(5600, 7872, 800, 984)
+region = Rect2(3500, 4920, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_6s8v3"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(6400, 7872, 800, 984)
+region = Rect2(4000, 4920, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_d16yy"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(7200, 7872, 800, 984)
+region = Rect2(4500, 4920, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_4e1q5"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(0, 8856, 800, 984)
+region = Rect2(0, 5535, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_s2rpx"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(800, 8856, 800, 984)
+region = Rect2(500, 5535, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_lkjsf"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(1600, 8856, 800, 984)
+region = Rect2(1000, 5535, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_lfs3e"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(2400, 8856, 800, 984)
+region = Rect2(1500, 5535, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_bj0wv"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(3200, 8856, 800, 984)
+region = Rect2(2000, 5535, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_hx07d"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(4000, 8856, 800, 984)
+region = Rect2(2500, 5535, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_w7nuw"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(0, 0, 800, 984)
+region = Rect2(0, 0, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_6yanb"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(800, 0, 800, 984)
+region = Rect2(500, 0, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_2xjrv"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(1600, 0, 800, 984)
+region = Rect2(1000, 0, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_idg7c"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(2400, 0, 800, 984)
+region = Rect2(1500, 0, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_pkfpj"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(3200, 0, 800, 984)
+region = Rect2(2000, 0, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_fhyna"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(4000, 0, 800, 984)
+region = Rect2(2500, 0, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_wwp0p"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(4800, 0, 800, 984)
+region = Rect2(3000, 0, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_kevv6"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(5600, 0, 800, 984)
+region = Rect2(3500, 0, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_4j3if"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(6400, 0, 800, 984)
+region = Rect2(4000, 0, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_cn3dk"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(7200, 0, 800, 984)
+region = Rect2(4500, 0, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_wkevb"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(0, 984, 800, 984)
+region = Rect2(0, 615, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_vhqaq"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(800, 984, 800, 984)
+region = Rect2(500, 615, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_b7326"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(1600, 984, 800, 984)
+region = Rect2(1000, 615, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_1jekc"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(2400, 984, 800, 984)
+region = Rect2(1500, 615, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_ltgjr"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(3200, 984, 800, 984)
+region = Rect2(2000, 615, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_w6wyn"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(4000, 984, 800, 984)
+region = Rect2(2500, 615, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_gd3ar"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(4800, 984, 800, 984)
+region = Rect2(3000, 615, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_pbs1b"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(5600, 984, 800, 984)
+region = Rect2(3500, 615, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_t35qm"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(6400, 984, 800, 984)
+region = Rect2(4000, 615, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_d7awe"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(7200, 984, 800, 984)
+region = Rect2(4500, 615, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_fsjuu"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(0, 1968, 800, 984)
+region = Rect2(0, 1230, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_kv16b"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(800, 1968, 800, 984)
+region = Rect2(500, 1230, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_jn8hs"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(1600, 1968, 800, 984)
+region = Rect2(1000, 1230, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_x4wrn"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(2400, 1968, 800, 984)
+region = Rect2(1500, 1230, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_f0v2x"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(3200, 1968, 800, 984)
+region = Rect2(2000, 1230, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_lhdic"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(4000, 1968, 800, 984)
+region = Rect2(2500, 1230, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_q7obg"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(4800, 1968, 800, 984)
+region = Rect2(3000, 1230, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_fxaj3"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(5600, 1968, 800, 984)
+region = Rect2(3500, 1230, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_n6nmg"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(6400, 1968, 800, 984)
+region = Rect2(4000, 1230, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_m7fsu"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(7200, 1968, 800, 984)
+region = Rect2(4500, 1230, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_l1q5m"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(0, 2952, 800, 984)
+region = Rect2(0, 1845, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_5mnhy"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(800, 2952, 800, 984)
+region = Rect2(500, 1845, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_4n2f8"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(1600, 2952, 800, 984)
+region = Rect2(1000, 1845, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_yryah"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(2400, 2952, 800, 984)
+region = Rect2(1500, 1845, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_g6ftx"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(3200, 2952, 800, 984)
+region = Rect2(2000, 1845, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_jgmw2"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(4000, 2952, 800, 984)
+region = Rect2(2500, 1845, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_u475u"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(4800, 2952, 800, 984)
+region = Rect2(3000, 1845, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_82nlj"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(5600, 2952, 800, 984)
+region = Rect2(3500, 1845, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_s2t7u"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(6400, 2952, 800, 984)
+region = Rect2(4000, 1845, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_gspey"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(7200, 2952, 800, 984)
+region = Rect2(4500, 1845, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_urkq4"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(0, 3936, 800, 984)
+region = Rect2(0, 2460, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_voaoc"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(800, 3936, 800, 984)
+region = Rect2(500, 2460, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_vcox2"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(1600, 3936, 800, 984)
+region = Rect2(1000, 2460, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_ptfon"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(2400, 3936, 800, 984)
+region = Rect2(1500, 2460, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_7ntdp"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(3200, 3936, 800, 984)
+region = Rect2(2000, 2460, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_ipfmy"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(4000, 3936, 800, 984)
+region = Rect2(2500, 2460, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_4ynru"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(4800, 3936, 800, 984)
+region = Rect2(3000, 2460, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_pplvb"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(5600, 3936, 800, 984)
+region = Rect2(3500, 2460, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_iogjr"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(6400, 3936, 800, 984)
+region = Rect2(4000, 2460, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_4bgpg"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(7200, 3936, 800, 984)
+region = Rect2(4500, 2460, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_3esww"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(0, 4920, 800, 984)
+region = Rect2(0, 3075, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_wgoml"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(800, 4920, 800, 984)
+region = Rect2(500, 3075, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_dmgiy"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(1600, 4920, 800, 984)
+region = Rect2(1000, 3075, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_744ew"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(2400, 4920, 800, 984)
+region = Rect2(1500, 3075, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_dhmvj"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(3200, 4920, 800, 984)
+region = Rect2(2000, 3075, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_tenhp"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(4000, 4920, 800, 984)
+region = Rect2(2500, 3075, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_4ojny"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(4800, 4920, 800, 984)
+region = Rect2(3000, 3075, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_kxc41"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(5600, 4920, 800, 984)
+region = Rect2(3500, 3075, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_0b2e5"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(6400, 4920, 800, 984)
+region = Rect2(4000, 3075, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_2vfjx"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(7200, 4920, 800, 984)
+region = Rect2(4500, 3075, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_xy15q"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(0, 5904, 800, 984)
+region = Rect2(0, 3690, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_ejywl"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(800, 5904, 800, 984)
+region = Rect2(500, 3690, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_hvecs"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(1600, 5904, 800, 984)
+region = Rect2(1000, 3690, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_iv2p5"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(2400, 5904, 800, 984)
+region = Rect2(1500, 3690, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_jsk7s"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(3200, 5904, 800, 984)
+region = Rect2(2000, 3690, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_grh0m"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(4000, 5904, 800, 984)
+region = Rect2(2500, 3690, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_e7k2j"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(4800, 5904, 800, 984)
+region = Rect2(3000, 3690, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_bscoi"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(5600, 5904, 800, 984)
+region = Rect2(3500, 3690, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_mi2my"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(6400, 5904, 800, 984)
+region = Rect2(4000, 3690, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_rf2xd"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(7200, 5904, 800, 984)
+region = Rect2(4500, 3690, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_46ua0"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(0, 6888, 800, 984)
+region = Rect2(0, 4305, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_2qb0w"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(800, 6888, 800, 984)
+region = Rect2(500, 4305, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_nx3cu"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(1600, 6888, 800, 984)
+region = Rect2(1000, 4305, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_05kt6"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(2400, 6888, 800, 984)
+region = Rect2(1500, 4305, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_5nf23"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(3200, 6888, 800, 984)
+region = Rect2(2000, 4305, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_8evfr"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(4000, 6888, 800, 984)
+region = Rect2(2500, 4305, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_3u6ky"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(4800, 6888, 800, 984)
+region = Rect2(3000, 4305, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_ppdbn"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(5600, 6888, 800, 984)
+region = Rect2(3500, 4305, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_qm2fv"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(6400, 6888, 800, 984)
+region = Rect2(4000, 4305, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_y8m7c"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(7200, 6888, 800, 984)
+region = Rect2(4500, 4305, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_mf3h7"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(0, 7872, 800, 984)
+region = Rect2(0, 4920, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_q48u5"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(800, 7872, 800, 984)
+region = Rect2(500, 4920, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_d8osx"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(1600, 7872, 800, 984)
+region = Rect2(1000, 4920, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_76r5h"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(2400, 7872, 800, 984)
+region = Rect2(1500, 4920, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_dnnri"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(3200, 7872, 800, 984)
+region = Rect2(2000, 4920, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_fav7l"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(4000, 7872, 800, 984)
+region = Rect2(2500, 4920, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_mw1s2"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(4800, 7872, 800, 984)
+region = Rect2(3000, 4920, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_3h7xd"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(5600, 7872, 800, 984)
+region = Rect2(3500, 4920, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_sdfxr"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(6400, 7872, 800, 984)
+region = Rect2(4000, 4920, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_rpiqa"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(7200, 7872, 800, 984)
+region = Rect2(4500, 4920, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_plauc"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(0, 8856, 800, 984)
+region = Rect2(0, 5535, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_0yck3"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(800, 8856, 800, 984)
+region = Rect2(500, 5535, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_2mnba"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(1600, 8856, 800, 984)
+region = Rect2(1000, 5535, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_72p2o"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(2400, 8856, 800, 984)
+region = Rect2(1500, 5535, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_yitb2"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(3200, 8856, 800, 984)
+region = Rect2(2000, 5535, 500, 615)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_j111c"]
 atlas = ExtResource("2_l3owv")
-region = Rect2(4000, 8856, 800, 984)
+region = Rect2(2500, 5535, 500, 615)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_qs1vs"]
 animations = [{
@@ -1368,6 +1368,7 @@ script = ExtResource("2_qhv5o")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="Frame/Content" index="0" unique_id=891790235]
 position = Vector2(400, 492.16)
+scale = Vector2(1.6, 1.6)
 sprite_frames = SubResource("SpriteFrames_qs1vs")
 frame = 191
 frame_progress = 0.79371864
