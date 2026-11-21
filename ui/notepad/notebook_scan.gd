@@ -12,8 +12,8 @@ class_name NotebookScan
 # It lives on the notepad window, so it moves with it, and draws over the
 # other windows.
 
-const EYE_OPEN := preload("res://art/ui/eye/eye_open.png")
-const EYE_CLOSED := preload("res://art/ui/eye/eye_closed.png")
+const EYE_OPEN := preload("res://art/ui/eye/eye_open.webp")
+const EYE_CLOSED := preload("res://art/ui/eye/eye_closed.webp")
 
 @export var every := 60.0                    # seconds between scans (and before the first)
 @export var line_height := 50.0

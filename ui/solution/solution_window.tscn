@@ -2,7 +2,7 @@
 
 [ext_resource type="PackedScene" uid="uid://cchdt4mu2es45" path="res://core/desktop_window.tscn" id="1_dw"]
 [ext_resource type="Script" path="res://ui/solution/solution_window.gd" id="2_script"]
-[ext_resource type="Texture2D" path="res://art/ui/task_solution.png" id="3_pic"]
+[ext_resource type="Texture2D" path="res://art/ui/task_solution.webp" id="3_pic"]
 
 [node name="DesktopWindow" instance=ExtResource("1_dw")]
 custom_minimum_size = Vector2(1, 1)

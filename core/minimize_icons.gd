@@ -2,13 +2,13 @@ class_name MinimizeIcons
 # Which picture (and colour) a window turns into when it is minimized.
 # The .txt windows share one file icon, coloured like the window when it is open.
 
-const BUTTON := preload("res://art/ui/minimize/button.png")
-const TXT := preload("res://art/ui/minimize/txt.png")
-const EXE_SANDBOX := preload("res://art/ui/minimize/exe_sandbox.png")
-const EXE_SUBMISSION := preload("res://art/ui/minimize/exe_submission.png")
-const EXE_NOTEBOOK := preload("res://art/ui/minimize/exe_notebook.png")
-const COMPUTER := preload("res://art/ui/minimize/computer.png")
-const NOTEPAD := preload("res://art/ui/minimize/notepad.png")
+const BUTTON := preload("res://art/ui/minimize/button.webp")
+const TXT := preload("res://art/ui/minimize/txt.webp")
+const EXE_SANDBOX := preload("res://art/ui/minimize/exe_sandbox.webp")
+const EXE_SUBMISSION := preload("res://art/ui/minimize/exe_submission.webp")
+const EXE_NOTEBOOK := preload("res://art/ui/minimize/exe_notebook.webp")
+const COMPUTER := preload("res://art/ui/minimize/computer.webp")
+const NOTEPAD := preload("res://art/ui/minimize/notepad.webp")
 
 # The palette the bars are coloured from.
 const GRAY := Color("d9d9d9")

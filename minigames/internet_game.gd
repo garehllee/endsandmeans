@@ -294,10 +294,10 @@ func _show_frame(path: String) -> void:
 # ---------------------------------------------------------------- loading
 
 func _path(phase: String, i: int) -> String:
-	return "%s/%s_%03d.png" % [config.frames_dir, phase, i]
+	return "%s/%s_%03d.webp" % [config.frames_dir, phase, i]
 
 func _hover_path(i: int) -> String:
-	return "%s/hover_%03d.png" % [config.frames_dir, i]
+	return "%s/hover_%03d.webp" % [config.frames_dir, i]
 
 func _phase_paths(phase: String) -> Array:
 	var out := []

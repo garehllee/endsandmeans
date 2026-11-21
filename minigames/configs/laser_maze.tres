@@ -1,12 +1,12 @@
 [gd_resource type="Resource" script_class="LaserConfig" format=3]
 
 [ext_resource type="Script" path="res://minigames/laser_config.gd" id="1_cfg"]
-[ext_resource type="Texture2D" path="res://art/laser/arena.png" id="2_bg"]
-[ext_resource type="Texture2D" path="res://art/laser/maze.png" id="3_maze"]
-[ext_resource type="Texture2D" path="res://art/laser/warning.png" id="4_warn"]
-[ext_resource type="Texture2D" path="res://art/laser/watergun.png" id="5_gun"]
+[ext_resource type="Texture2D" path="res://art/laser/arena.webp" id="2_bg"]
+[ext_resource type="Texture2D" path="res://art/laser/maze.webp" id="3_maze"]
+[ext_resource type="Texture2D" path="res://art/laser/warning.webp" id="4_warn"]
+[ext_resource type="Texture2D" path="res://art/laser/watergun.webp" id="5_gun"]
 [ext_resource type="FontFile" path="res://fonts/Director-Regular.otf" id="6_font"]
-[ext_resource type="Texture2D" path="res://art/thumbnails/task_2.png" id="thumb"]
+[ext_resource type="Texture2D" path="res://art/thumbnails/task_2.webp" id="thumb"]
 
 [resource]
 script = ExtResource("1_cfg")

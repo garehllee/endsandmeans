@@ -1,11 +1,11 @@
 [gd_resource type="Resource" script_class="DissentConfig" format=3]
 
 [ext_resource type="Script" path="res://minigames/dissent_config.gd" id="1_cfg"]
-[ext_resource type="Texture2D" path="res://art/dissent/arena.png" id="2_bg"]
-[ext_resource type="Texture2D" path="res://art/laser/watergun.png" id="3_gun"]
-[ext_resource type="Texture2D" path="res://art/dissent/beam.png" id="4_beam"]
+[ext_resource type="Texture2D" path="res://art/dissent/arena.webp" id="2_bg"]
+[ext_resource type="Texture2D" path="res://art/laser/watergun.webp" id="3_gun"]
+[ext_resource type="Texture2D" path="res://art/dissent/beam.webp" id="4_beam"]
 [ext_resource type="FontFile" path="res://fonts/Director-Regular.otf" id="5_font"]
-[ext_resource type="Texture2D" path="res://art/thumbnails/task_3.png" id="thumb"]
+[ext_resource type="Texture2D" path="res://art/thumbnails/task_3.webp" id="thumb"]
 
 [resource]
 script = ExtResource("1_cfg")

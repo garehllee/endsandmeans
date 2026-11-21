@@ -39,7 +39,7 @@ enum Phase { CHOOSE, EXPANDING, ARENA, DONE }
 @export_group("Layout (in room units; the window scales these to fit)")
 @export var room_size := Vector2(1600, 1500)
 @export var write_act := "write_response"   # what writing the folder counts as (ethically)
-@export var cost_overlay: Texture2D = preload("res://art/ui/ethics_glitch.png")   # the "-5 ETHICS" corner on the choice
+@export var cost_overlay: Texture2D = preload("res://art/ui/ethics_glitch.webp")   # the "-5 ETHICS" corner on the choice
 @export var cost_font: Font = preload("res://fonts/FT88-Regular.otf")
 @export var cost_size := 32
 @export var cost_track := -4

@@ -4,7 +4,7 @@ extends Node
 # same room as it, a little behind, and trots after it. Which mouse it is lives
 # in a flag ("pet_mouse_<n>"), so it goes away when a run restarts.
 
-const PATH := "res://art/pets/mouse_%d.png"
+const PATH := "res://art/pets/mouse_%d.webp"
 const COUNT := 6
 const WIDTH := 120.0          # drawn width, the same as in the pet shop
 const GAP := 135.0            # it keeps about this far from the character

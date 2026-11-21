@@ -6,8 +6,8 @@ extends CanvasLayer
 # restarting a run doesn't bring it back.
 
 const BG := Color("e7e7e7")
-const LOGO := preload("res://art/landing/logo.png")
-const ICON := preload("res://art/landing/sandbox_icon.png")
+const LOGO := preload("res://art/landing/logo.webp")
+const ICON := preload("res://art/landing/sandbox_icon.webp")
 const LOGO_HEIGHT := 0.86      # of the screen's height
 const ICON_SIZE := 560.0       # drawn width of the icon picture, pixels
 const DISC := 128.0 / 317.0    # the disc's radius as a share of the picture (the rest is glow)

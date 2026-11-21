@@ -7,7 +7,7 @@ const TREE_IN := "res://data/generated/tree_nested.json"    # or tree.json, whic
 const TREE_OUT := "res://data/tree_thumbs.json"
 const MAX_H := 900
 const MAX_W := 1600          # stops very wide panoramas from getting huge
-const JPG_QUALITY := 0.85
+const JPG_QUALITY := 0.9          # also the WebP quality
 
 var made := 0
 var skipped := 0
@@ -39,7 +39,7 @@ func _walk(folder: Dictionary) -> void:
 		else:
 			var src: String = c.get("path", "")
 			if src.begins_with(SOURCE_DIR):
-				var dst := THUMB_DIR + src.trim_prefix(SOURCE_DIR)
+				var dst := (THUMB_DIR + src.trim_prefix(SOURCE_DIR)).get_basename() + ".webp"
 				if _make_thumb(src, dst):
 					c["path"] = dst
 

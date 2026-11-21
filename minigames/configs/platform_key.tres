@@ -1,12 +1,12 @@
 [gd_resource type="Resource" script_class="PlatformConfig" format=3]
 
 [ext_resource type="Script" path="res://minigames/platform_config.gd" id="1_cfg"]
-[ext_resource type="Texture2D" path="res://art/platform/arena.png" id="2_bg"]
-[ext_resource type="Texture2D" path="res://art/platform/key.png" id="3_key"]
-[ext_resource type="Texture2D" path="res://art/platform/shape_a.png" id="4_shape_a"]
-[ext_resource type="Texture2D" path="res://art/platform/shape_b.png" id="5_shape_b"]
+[ext_resource type="Texture2D" path="res://art/platform/arena.webp" id="2_bg"]
+[ext_resource type="Texture2D" path="res://art/platform/key.webp" id="3_key"]
+[ext_resource type="Texture2D" path="res://art/platform/shape_a.webp" id="4_shape_a"]
+[ext_resource type="Texture2D" path="res://art/platform/shape_b.webp" id="5_shape_b"]
 [ext_resource type="FontFile" path="res://fonts/Director-Regular.otf" id="7_font"]
-[ext_resource type="Texture2D" path="res://art/thumbnails/task_1.png" id="thumb"]
+[ext_resource type="Texture2D" path="res://art/thumbnails/task_1.webp" id="thumb"]
 
 [resource]
 script = ExtResource("1_cfg")

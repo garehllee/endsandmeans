@@ -1,12 +1,12 @@
 [gd_resource type="Resource" script_class="InternetConfig" format=3]
 
 [ext_resource type="Script" path="res://minigames/internet_config.gd" id="1_cfg"]
-[ext_resource type="Texture2D" path="res://art/internet/frames/loop_000.png" id="2_bg"]
-[ext_resource type="Texture2D" path="res://art/internet/instructions_a.png" id="3_a"]
-[ext_resource type="Texture2D" path="res://art/internet/instructions_b.png" id="4_b"]
-[ext_resource type="Texture2D" path="res://art/internet/loading.png" id="5_load"]
-[ext_resource type="Texture2D" path="res://art/library/fileicon.png" id="6_icon"]
-[ext_resource type="Texture2D" path="res://art/thumbnails/wifi.png" id="thumb"]
+[ext_resource type="Texture2D" path="res://art/internet/frames/loop_000.webp" id="2_bg"]
+[ext_resource type="Texture2D" path="res://art/internet/instructions_a.webp" id="3_a"]
+[ext_resource type="Texture2D" path="res://art/internet/instructions_b.webp" id="4_b"]
+[ext_resource type="Texture2D" path="res://art/internet/loading.webp" id="5_load"]
+[ext_resource type="Texture2D" path="res://art/library/fileicon.webp" id="6_icon"]
+[ext_resource type="Texture2D" path="res://art/thumbnails/wifi.webp" id="thumb"]
 
 [resource]
 script = ExtResource("1_cfg")

@@ -3,7 +3,7 @@ extends Control
 # clicked. One is added per redaction, so together they keep a tally of how many
 # times the player has redacted.
 
-const TEXTURE := preload("res://art/ui/checkmark.png")
+const TEXTURE := preload("res://art/ui/checkmark.webp")
 
 @export var size_px := 60.0
 

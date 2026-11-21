@@ -2,8 +2,8 @@
 
 [ext_resource type="PackedScene" uid="uid://cchdt4mu2es45" path="res://core/desktop_window.tscn" id="1_dw"]
 [ext_resource type="Script" path="res://ui/clear_notes/clear_notes_window.gd" id="2_script"]
-[ext_resource type="Texture2D" path="res://art/ui/clear_unethical.png" id="3_normal"]
-[ext_resource type="Texture2D" path="res://art/ui/clear_unethical_hover.png" id="4_hover"]
+[ext_resource type="Texture2D" path="res://art/ui/clear_unethical.webp" id="3_normal"]
+[ext_resource type="Texture2D" path="res://art/ui/clear_unethical_hover.webp" id="4_hover"]
 
 [node name="DesktopWindow" instance=ExtResource("1_dw")]
 custom_minimum_size = Vector2(1, 1)

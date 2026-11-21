@@ -25,9 +25,9 @@ var _sprite_base_y := 0.0
 # Bug form: while a minigame runs the character is a bug. The pictures come
 # from the two sheets (frames of 400x378, drawn so the standing bug lines up
 # with the character's idle pose).
-const BUG_TRANSFORM := preload("res://art/player/bug_transition.png")
-const BUG_WALK := preload("res://art/player/bug_walk.png")
-const BUG_IDLE := preload("res://art/player/bug_idle.png")
+const BUG_TRANSFORM := preload("res://art/player/bug_transition.webp")
+const BUG_WALK := preload("res://art/player/bug_walk.webp")
+const BUG_IDLE := preload("res://art/player/bug_idle.webp")
 const BUG_FRAME := Vector2(400, 378)
 const BUG_SCALE := 0.4232
 const BUG_OFFSET := Vector2(3.6, 2.0)
@@ -42,8 +42,8 @@ var _bug_busy := false       # turning into (or back from) a bug
 # Death: the character (or the bug) comes apart. Frames are 500x384, drawn at the
 # same scale and registered to the standing pose, so the first frame sits exactly
 # where the idle one was.
-const DEATH_SHEET := preload("res://art/player/death.png")           # 26 frames, 6 across
-const BUG_DEATH_SHEET := preload("res://art/player/bug_death.png")   # 12 frames, 4 across
+const DEATH_SHEET := preload("res://art/player/death.webp")           # 26 frames, 6 across
+const BUG_DEATH_SHEET := preload("res://art/player/bug_death.webp")   # 12 frames, 4 across
 const DEATH_FRAME := Vector2(500, 384)
 const DEATH_SCALE := 0.528
 const DEATH_OFFSET := Vector2(-8.61, 7.56)

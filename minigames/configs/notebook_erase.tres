@@ -1,10 +1,10 @@
 [gd_resource type="Resource" script_class="EraseConfig" format=3]
 
 [ext_resource type="Script" path="res://minigames/erase_config.gd" id="1_cfg"]
-[ext_resource type="Texture2D" path="res://art/notebook/background.png" id="2_bg"]
-[ext_resource type="Texture2D" path="res://art/notebook/text.png" id="3_text"]
-[ext_resource type="Texture2D" path="res://art/notebook/eraser.png" id="4_eraser"]
-[ext_resource type="Texture2D" path="res://art/notebook/instructions.png" id="5_instr"]
+[ext_resource type="Texture2D" path="res://art/notebook/background.webp" id="2_bg"]
+[ext_resource type="Texture2D" path="res://art/notebook/text.webp" id="3_text"]
+[ext_resource type="Texture2D" path="res://art/notebook/eraser.webp" id="4_eraser"]
+[ext_resource type="Texture2D" path="res://art/notebook/instructions.webp" id="5_instr"]
 
 [resource]
 script = ExtResource("1_cfg")
