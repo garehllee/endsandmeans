@@ -106,6 +106,9 @@ var _trail_health := 6.0   # the white cells left behind when it's hit, which dr
 var _trail_wait := 0.0
 var _last_health := 6
 var _phase := 1
+var _scenes: Node2D                 # the rest of the game glitching through the background
+var _glitches: Array[Dictionary] = []
+var _glitch_due := 0.0
 var _hits := 0             # hits in this phase
 var _hf_flash := 0.0       # white blinks after a hit
 var _phase_flash := 0.0    # the longer blinking going into phase two
@@ -185,6 +188,7 @@ func prepare(cfg: MinigameConfig) -> void:
 
 	_server = _make_video(config.server_video, 0, null)
 	_server.loop = true
+	_scenes = _make_layer(0, _draw_scenes)     # over the footage, under everything else
 	_back = _make_layer(0, _draw_back)
 	_prop = _make_layer(0, _draw_prop)
 	var hover := ShaderMaterial.new()
@@ -370,7 +374,7 @@ func _place() -> void:
 
 func _redraw() -> void:
 	queue_redraw()
-	for n in [_back, _prop, _dim, _front, _hud, _blue, _over]:
+	for n in [_scenes, _back, _prop, _dim, _front, _hud, _blue, _over]:
 		if n:
 			(n as Node2D).queue_redraw()
 
@@ -451,6 +455,7 @@ func _process(delta: float) -> void:
 	_hf_flash = maxf(_hf_flash - dt, 0.0)
 	_phase_flash = maxf(_phase_flash - dt, 0.0)
 	_tick_bar(dt)
+	_tick_scenes(dt)
 	if running:
 		match _stage:
 			Stage.ROOM:
@@ -864,7 +869,7 @@ func _tick_beat() -> void:
 
 # ---------------------------------------------------------------- the lasers
 func _spawn_volley() -> void:
-	Audio.play("hf_lasers")
+	Audio.play("laser_warning")           # the same alert as the laser maze
 	var v := _view()
 	var me := _pos - v.position             # where the character is on screen
 	var hf := _hf - v.position
@@ -931,12 +936,17 @@ func _laser_out(l: Laser) -> float:
 
 func _tick_lasers(dt: float) -> void:
 	var gone: Array[Laser] = []
+	var fired := false
 	for l in _lasers:
+		if l.t < _warn_time() and l.t + dt >= _warn_time():
+			fired = true                      # the warning's over: it shoots
 		l.t += dt
 		if l.t > _warn_time() + _fire_time() + 0.35:
 			gone.append(l)
 	for l in gone:
 		_lasers.erase(l)
+	if fired:
+		Audio.play("hf_lasers")               # once a volley, as the beams go live
 	if _dead > 0.0:
 		return
 	var me := _pos - _view().position
@@ -1487,3 +1497,95 @@ func _draw_over() -> void:
 		_over.draw_rect(r, Color(0, 0, 0, _black))
 	if _white > 0.0:
 		_over.draw_rect(r, Color(1, 1, 1, _white))
+
+# ---------------------------------------------------------------- the background breaking up
+# Scenes from the rest of the game glitch in and out over the server footage:
+# bands torn sideways, blocks out of place, now and then a whole scene in
+# shredded strips, some split into red and cyan. Rare and faint at full
+# health; constant and wild as it runs out, and wildest while it goes down.
+func _chaos() -> float:
+	if _stage == Stage.DYING:
+		return 1.0
+	var k := clampf(1.0 - _shown_health / maxf(float(config.health), 1.0), 0.0, 1.0)
+	return k
+
+func _tick_scenes(dt: float) -> void:
+	var on := _built and _expand >= 0.999 and _stage in [Stage.BATTLE, Stage.BITE, Stage.DYING] \
+			and not config.glitch_scenes.is_empty()
+	if not on:
+		_glitches.clear()
+		return
+	var k := _chaos()
+	for g in _glitches:
+		g["t"] += dt
+	_glitches = _glitches.filter(func(g): return g["t"] < g["life"])
+	var rate := lerpf(config.glitch_rate.x, config.glitch_rate.y, pow(k, 1.3))
+	_glitch_due = minf(_glitch_due - dt, 1.6 / maxf(rate, 0.01))   # a hit speeds it up at once
+	while _glitch_due <= 0.0:
+		_glitch_due += randf_range(0.4, 1.6) / maxf(rate, 0.01)
+		_spawn_glitch(k)
+
+func _spawn_glitch(k: float) -> void:
+	var tex: Texture2D = config.glitch_scenes.pick_random()
+	var g := {"tex": tex, "t": 0.0, "split": randf() < k * 0.7,
+		"life": lerpf(config.glitch_life.x, config.glitch_life.y, k) * randf_range(0.6, 1.4),
+		"a": lerpf(config.glitch_alpha.x, config.glitch_alpha.y, k) * randf_range(0.7, 1.0)}
+	var roll := randf()
+	if roll < k * 0.3:
+		# a whole scene, shredded into strips that slide apart
+		g["kind"] = "full"
+		var n := randi_range(4, 6 + int(10.0 * k))
+		var cuts: Array[float] = [0.0, 1.0]
+		for i in n - 1:
+			cuts.append(randf())
+		cuts.sort()
+		var strips := []
+		for i in cuts.size() - 1:
+			strips.append([cuts[i], cuts[i + 1], randf_range(-1.0, 1.0) * (0.01 + 0.2 * k)])
+		g["strips"] = strips
+	elif roll < 0.65:
+		# a band across the whole width, torn sideways
+		g["kind"] = "band"
+		var h := randf_range(0.02, 0.1 + 0.25 * k)
+		var y := randf_range(0.0, 1.0 - h)
+		g["strips"] = [[y, y + h, randf_range(-1.0, 1.0) * (0.02 + 0.15 * k)]]
+	else:
+		# a block of a scene somewhere it doesn't belong
+		g["kind"] = "block"
+		var size := Vector2(randf_range(0.08, 0.25 + 0.35 * k), randf_range(0.05, 0.15 + 0.3 * k))
+		g["src"] = Rect2(Vector2(randf() * (1.0 - size.x), randf() * (1.0 - size.y)), size)
+		g["dst"] = Rect2(Vector2(randf() * (1.0 - size.x), randf() * (1.0 - size.y)), size)
+	_glitches.append(g)
+
+func _draw_scenes() -> void:
+	if _glitches.is_empty():
+		return
+	var view := Rect2(_cam - _arena.size * 0.5, _arena.size)
+	var k := _chaos()
+	for g in _glitches:
+		# it flickers more the worse things get
+		if randf() < k * 0.35:
+			continue
+		var tex: Texture2D = g["tex"]
+		var ts := tex.get_size()
+		var a: float = g["a"]
+		var parts := []                   # [destination share, source share]
+		if g["kind"] == "block":
+			parts.append([g["dst"], g["src"]])
+		else:
+			for st in g["strips"]:
+				var y0: float = st[0]
+				var y1: float = st[1]
+				var dx: float = st[2]
+				parts.append([Rect2(dx, y0, 1.0, y1 - y0), Rect2(0.0, y0, 1.0, y1 - y0)])
+		for p in parts:
+			var d: Rect2 = p[0]
+			var s: Rect2 = p[1]
+			var dst := Rect2(view.position + d.position * view.size, d.size * view.size)
+			var src := Rect2(s.position * ts, s.size * ts)
+			if g["split"]:
+				var off := Vector2(view.size.x * 0.006 * (1.0 + 3.0 * k), 0.0)
+				_scenes.draw_texture_rect_region(tex, Rect2(dst.position - off, dst.size), src, Color(1, 0.1, 0.2, a * 0.7))
+				_scenes.draw_texture_rect_region(tex, Rect2(dst.position + off, dst.size), src, Color(0.1, 1, 1, a * 0.7))
+			else:
+				_scenes.draw_texture_rect_region(tex, dst, src, Color(1, 1, 1, a))

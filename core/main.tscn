@@ -57,7 +57,6 @@ offset_bottom = 1058.0
 grow_horizontal = 2
 grow_vertical = 2
 unethical_color = Color(0.70980394, 0.32156864, 0.23137255, 1)
-redact_color = Color(0, 0.16862746, 1, 1)
 
 [node name="file system" parent="Windows" unique_id=680617126 instance=ExtResource("4_jyhfs")]
 layout_mode = 0

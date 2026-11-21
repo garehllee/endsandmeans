@@ -273,9 +273,18 @@
 		"Another one. It gets easier, somehow.",
 		"Done. I don't know what I just helped with."
 	],
+	"notes_redacted": [
+		"Dealt with.",
+		"Handled.",
+		"Taken care of.",
+		"Sorted.",
+		"All in order.",
+		"Nothing to report.",
+		"Done and dusted."
+	],
 	"notes_cleared": [
-		"I blacked out what I wrote about it.",
-		"It's redacted now. Nobody can read it."
+		"Tidied up my notes.",
+		"There. Nothing in my notes to worry about."
 	],
 	"solution_added": [
 		"A window opened: the solution to the task. That could go in the submission box too.",

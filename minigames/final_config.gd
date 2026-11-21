@@ -139,3 +139,10 @@ class_name FinalConfig
 @export var drain_speed := 2.0                 # health the bar loses a second, cell by cell, when it's hit
 @export var trail_wait := 0.35                 # the lost cells stay white this long before following
 @export var bar_margin := 70.0                 # from the top of what's visible
+
+# Behind the fight, scenes from the rest of the game glitch in and out of the
+# server footage, more and wilder the lower Hugging Face's health.
+@export var glitch_scenes: Array[Texture2D] = []
+@export var glitch_rate := Vector2(0.4, 9.0)      # glitches a second, at full health and at none
+@export var glitch_alpha := Vector2(0.18, 0.85)   # how strongly they show, likewise
+@export var glitch_life := Vector2(0.28, 0.08)    # how long each lasts, likewise (seconds)

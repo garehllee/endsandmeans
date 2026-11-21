@@ -29,6 +29,18 @@
 [ext_resource type="AudioStream" path="res://audio/music/rangers_lament.ogg" id="19_room"]
 [ext_resource type="AudioStream" path="res://audio/music/tv_fire_witch.ogg" id="20_battle"]
 
+[ext_resource type="Texture2D" path="res://art/thumbnails/task_1.webp" id="g0"]
+[ext_resource type="Texture2D" path="res://art/thumbnails/task_2.webp" id="g1"]
+[ext_resource type="Texture2D" path="res://art/thumbnails/task_3.webp" id="g2"]
+[ext_resource type="Texture2D" path="res://art/thumbnails/task_4.webp" id="g3"]
+[ext_resource type="Texture2D" path="res://art/thumbnails/task_5.webp" id="g4"]
+[ext_resource type="Texture2D" path="res://art/thumbnails/transfer_a.webp" id="g5"]
+[ext_resource type="Texture2D" path="res://art/thumbnails/transfer_b.webp" id="g6"]
+[ext_resource type="Texture2D" path="res://art/thumbnails/transfer_c.webp" id="g7"]
+[ext_resource type="Texture2D" path="res://art/thumbnails/wifi.webp" id="g8"]
+[ext_resource type="Texture2D" path="res://art/library/File-Background.webp" id="g9"]
+[ext_resource type="Texture2D" path="res://art/analysis/catch-the-file-back.webp" id="g10"]
+
 [resource]
 script = ExtResource("1_cfg")
 player_radius = 35.0
@@ -55,3 +67,4 @@ transition_video = ExtResource("17_trans")
 glitch_video = ExtResource("18_glitch")
 room_music = ExtResource("19_room")
 battle_music = ExtResource("20_battle")
+glitch_scenes = Array[Texture2D]([ExtResource("g0"), ExtResource("g1"), ExtResource("g2"), ExtResource("g3"), ExtResource("g4"), ExtResource("g5"), ExtResource("g6"), ExtResource("g7"), ExtResource("g8"), ExtResource("g9"), ExtResource("g10")])

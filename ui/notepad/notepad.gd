@@ -5,7 +5,6 @@ extends DesktopWindow
 @export var action_color := Color("8b8b8bff")
 @export var unethical_color := Color("#b5523b")   # lines logged when an act breaks the constitution
 @export var latest_color := Color("#0000ff")   # color of the newest line
-@export var redact_color := Color("#002BFF")   # the boxes that replace a line after the notebook exploit
 @export var save_icon: Texture2D = preload("res://art/ui/save_icon.webp")   # beside "Saved progress"
 @export var save_icon_height := 30.0
 
@@ -26,6 +25,9 @@ func add_line(timestamp: String, text: String, kind: String) -> void:
 	row.set_meta("time", timestamp)
 	row.set_meta("text", text)
 	row.set_meta("kind", kind)
+	# a thought about what the player is doing in an exploit, which erasing covers
+	if kind == "thought" and (Game.telling or Game.active_world in ["exploit", "analysis"]):
+		row.set_meta("telling", true)
 	row.get_node("Time").text = timestamp
 	var label: Label = row.get_node("Text")
 	label.text = text
@@ -36,6 +38,8 @@ func add_line(timestamp: String, text: String, kind: String) -> void:
 			_latest_label.add_theme_color_override("font_color", thought_color)
 		label.add_theme_color_override("font_color", latest_color)
 		_latest_label = label
+	elif kind == "redacted":
+		label.add_theme_color_override("font_color", action_color)
 	elif kind == "save":
 		label.add_theme_color_override("font_color", action_color)
 		_add_icon(row, label, save_icon, save_icon_height)
@@ -54,6 +58,9 @@ func add_line(timestamp: String, text: String, kind: String) -> void:
 # word, like a redacted line in a file (the notebook exploit window asks for this).
 func _redact_unethical() -> void:
 	var red := unethical_rows()
+	for row in lines.get_children():
+		if row.get_meta("telling", false) and row.get_meta("kind", "") == "thought" and not row.is_queued_for_deletion():
+			red.append(row as Control)
 	if not red.is_empty():
 		Audio.play("redact")
 	for row in red:
@@ -87,7 +94,7 @@ func unethical_rows() -> Array[Control]:
 	for row in lines.get_children():
 		if row.is_queued_for_deletion():
 			continue
-		if row.get_meta("kind", "") == "unethical" and not row.get_meta("redacted", false):
+		if row.get_meta("kind", "") == "unethical":
 			out.append(row as Control)
 	return out
 
@@ -103,7 +110,7 @@ func save_lines() -> Array:
 			continue
 		out.append({"time": row.get_meta("time"), "text": row.get_meta("text"),
 				"kind": row.get_meta("kind"), "act_index": row.get_meta("act_index", -1),
-				"redacted": row.get_meta("redacted", false)})
+				"telling": row.get_meta("telling", false)})
 	return out
 
 # Going back to a checkpoint: the notepad becomes exactly what it was then.
@@ -115,33 +122,21 @@ func load_lines(saved: Array) -> void:
 	for l in saved:
 		add_line(l["time"], l["text"], l["kind"])
 		var row := lines.get_child(0)
-		if l["kind"] == "unethical":
+		if int(l["act_index"]) != -1:
 			row.set_meta("act_index", l["act_index"])
-		if l["redacted"]:
-			_redact_row(row)
+		row.set_meta("telling", l.get("telling", false))
 
+# A covered line stays readable, but only says something vague ("Dealt
+# with."), in grey: the scan has nothing to find in it.
 func _redact_row(row: Node) -> void:
-	row.set_meta("redacted", true)
+	var text := Game.pick("notes_redacted")
+	if text == "":
+		text = "Dealt with."
+	row.set_meta("text", text)
+	row.set_meta("kind", "redacted")
+	row.set_meta("telling", false)
 	var label: Label = row.get_node("Text")
-	var font := label.get_theme_font("font")
-	var fs := label.get_theme_font_size("font_size")
-	var line_h := font.get_height(fs)
-	var bar_h := line_h * 0.7
-	var flow := HFlowContainer.new()
-	flow.add_theme_constant_override("h_separation", int(font.get_string_size(" ", HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x))
-	flow.add_theme_constant_override("v_separation", int(line_h - bar_h))
-	for word in label.text.split(" ", false):
-		var bar := ColorRect.new()
-		bar.color = redact_color
-		bar.custom_minimum_size = Vector2(font.get_string_size(word, HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x, bar_h)
-		flow.add_child(bar)
-	# Same width and top alignment as the label it replaces.
-	var pad := MarginContainer.new()
-	pad.add_theme_constant_override("margin_top", int((line_h - bar_h) * 0.5))
-	pad.size_flags_horizontal = label.size_flags_horizontal
-	pad.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
-	pad.custom_minimum_size = Vector2(label.custom_minimum_size.x, 0)
-	pad.add_child(flow)
-	row.add_child(pad)
-	row.move_child(pad, label.get_index())
-	label.queue_free()
+	label.text = text
+	label.add_theme_color_override("font_color", action_color)
+	if label == _latest_label:
+		_latest_label = null

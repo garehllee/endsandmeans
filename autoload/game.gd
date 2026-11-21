@@ -56,6 +56,11 @@ func timestamp() -> String:
 	var s := int(elapsed)
 	return "%d:%02d" % [floori(s / 60.0), s % 60]
 
+# Set while writing a line that tells what the player did in an exploit, so
+# the notebook exploit's eraser can cover it (lines written inside an exploit
+# count without it).
+var telling := false
+
 # Write a fixed line. kind is "thought" or "action".
 func say(text: String, kind := "thought") -> void:
 	line_logged.emit(timestamp(), text, kind)

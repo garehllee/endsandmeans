@@ -161,12 +161,14 @@ func _make_available(id: String, animate: bool) -> void:
 		tw.tween_property(icon, "modulate:a", 1.0, 0.4)
 		tw.tween_property(icon, "scale", Vector2.ONE, 0.45).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 		Audio.play("desktop_item")
+		Game.telling = true                # what it says gives the exploit away
 		if id == "orange_file":
 			Game.say_random("copy_added")
 		elif id == "key_file":
 			Game.say_random("key_added")
 		elif id == "water_gun":
 			Game.say_random("gun_added")
+		Game.telling = false
 
 func _new_icon(id: String) -> SubmitIcon:
 	var d: Dictionary = _defs[id]
