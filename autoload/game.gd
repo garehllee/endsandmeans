@@ -31,6 +31,18 @@ const IDLE_SECONDS := 15.0
 var _last_pick := {}
 var _world_stack: Array[String] = []
 
+func _ready() -> void:
+	_add_wasd()
+
+# W A S D move too, everywhere the arrow keys do (the rooms and every
+# minigame read the ui_ arrow actions). By physical key, so it's the same
+# place on any keyboard layout.
+func _add_wasd() -> void:
+	for pair in [["ui_up", KEY_W], ["ui_left", KEY_A], ["ui_down", KEY_S], ["ui_right", KEY_D]]:
+		var e := InputEventKey.new()
+		e.physical_keycode = pair[1]
+		InputMap.action_add_event(pair[0], e)
+
 func _process(delta: float) -> void:
 	elapsed += delta
 	if intro_done and not is_moving and not idle_logged \
