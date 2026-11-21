@@ -79,7 +79,8 @@
 		"files": [
 			"res://audio/sfx/measuring_tape_contract_dramatic_2.ogg"
 		],
-		"volume_db": -6
+		"volume_db": -6,
+		"start": 0.41
 	},
 	"choose_do": {
 		"row": 22,

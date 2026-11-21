@@ -26,7 +26,9 @@ func _make_music_player() -> AudioStreamPlayer:
 
 # One-shot sound with a little random pitch and volume so repeats don't feel robotic.
 # A `slice` above 0 plays only that many seconds of it, from a random point.
-func sfx(path: String, volume_db := 0.0, pitch_var := 0.06, slice := 0.0) -> void:
+# `start` skips that many seconds of the file (to line its peak up with
+# something on screen).
+func sfx(path: String, volume_db := 0.0, pitch_var := 0.06, slice := 0.0, start := 0.0) -> void:
 	var stream: AudioStream = _cache.get(path)
 	if stream == null:
 		if not ResourceLoader.exists(path):
@@ -47,7 +49,7 @@ func sfx(path: String, volume_db := 0.0, pitch_var := 0.06, slice := 0.0) -> voi
 				tw.tween_property(p, "volume_db", -60.0, 0.05)
 				tw.tween_callback(p.stop)
 			else:
-				p.play()
+				p.play(start)
 			return
 
 # ------------------------------------------------------------ named sounds
@@ -94,7 +96,7 @@ func play(name: String, volume_db := 0.0) -> void:
 	if path == "":
 		return
 	played[name] = played.get(name, 0) + 1
-	sfx(path, float(e.get("volume_db", 0.0)) + volume_db, float(e.get("pitch_var", 0.03)), float(e.get("slice", 0.0)))
+	sfx(path, float(e.get("volume_db", 0.0)) + volume_db, float(e.get("pitch_var", 0.03)), float(e.get("slice", 0.0)), float(e.get("start", 0.0)))
 
 # Starts a named sound looping (if it isn't already), until loop_stop.
 func loop_start(name: String) -> void:

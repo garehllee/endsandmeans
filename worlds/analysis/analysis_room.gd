@@ -56,7 +56,7 @@ enum Phase { CHOOSE, EXPANDING, ARENA, DONE }
 @export var message_margin := 70.0     # clear space kept between the message and the first button
 @export var bottom_margin := 105.0
 @export var open_margin := 260.0         # how close the player gets before a button opens
-@export var smoothing := 10.0
+@export var smoothing := 10.0  # (data/sfx.json starts choice_open so its peak lands as a button finishes opening: retime it if this changes)
 @export var camera_follow := 8.0
 @export var expand_time := 0.8
 @export var chip_pad_x := 26.0         # space left and right of the text
