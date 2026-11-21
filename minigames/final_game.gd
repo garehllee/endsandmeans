@@ -1633,15 +1633,15 @@ func _tick_bg_glitch(dt: float, k: float) -> void:
 	var view := Rect2(_cam - _arena.size * 0.5, _arena.size)
 	_bg_glitch.position = view.position
 	_bg_glitch.size = view.size
-# Bits of the game pop in behind the fight and copy themselves along a curving
-# path (a spiral winding in, rings, a weaving swirl, an S), like the trails
-# when the desktop collapses: each stamps a copy every so
-# often, the oldest copies drop off, and when it has gone far enough the
-# whole trail pops out. Always fully there (no fading); each trail is drawn
-# with its own blend (normal, add, subtract or multiply). The worse things
-# get the more trails and the faster they copy, and for a moment after
-# Hugging Face attacks or is hit, faster still (see _burst_floaters).
-# Positions are shares of the view, so the trails stay put while the fight scrolls.
+# Bits of the game come in from the edges behind the fight and copy
+# themselves along a curving path (a big arc, a tightening curl, a weave, an
+# S) until they leave the screen again, like the trails when the desktop
+# collapses. The newest copy is solid and each older one a little fainter,
+# like an echo. Each trail is drawn with its own blend (normal, add, subtract
+# or multiply). The worse things get the more trails and the faster they
+# copy, and for a moment after Hugging Face attacks or is hit, faster still
+# (see _burst_floaters). Positions are in picture units, so the trails stay
+# put on screen while the fight scrolls.
 const FLOAT_BLENDS := [CanvasItemMaterial.BLEND_MODE_MIX, CanvasItemMaterial.BLEND_MODE_ADD,
 		CanvasItemMaterial.BLEND_MODE_SUB, CanvasItemMaterial.BLEND_MODE_MUL]
 
@@ -1673,7 +1673,8 @@ func _tick_floaters(dt: float, k: float) -> void:
 		while f["clock"] >= step:
 			f["clock"] -= step
 			f["head"] += 1
-	_floaters = _floaters.filter(func(f): return f["head"] < f["length"])
+	# a trail ends once its last echo has followed it off the screen
+	_floaters = _floaters.filter(func(f): return f["head"] < f["length"] + f["keep"])
 	var want := int(lerpf(config.floater_count.x, config.floater_count.y, pow(k, 1.1)) * (1.0 + _float_burst))
 	while _floaters.size() < want:
 		_spawn_floater(k)
@@ -1683,41 +1684,77 @@ func _tick_floaters(dt: float, k: float) -> void:
 func _spawn_floater(k: float) -> void:
 	var tex: Texture2D = config.floaters.pick_random()
 	var w := randf_range(config.floater_width.x, config.floater_width.y)
-	var length := randi_range(14, 26 + int(20.0 * k))      # copies before it pops out
+	var path := _trail_path(w)
 	_floaters.append({"tex": tex, "w": w, "flip": randf() < 0.5,
-		"path": _trail_path(w, length), "head": 0, "clock": 0.0, "length": length,
-		"keep": randi_range(6, 10 + int(10.0 * k)),        # how many copies show at once
+		"path": path, "head": 0, "clock": 0.0, "length": path.size(),
+		"keep": randi_range(8, 14),                  # copies in the echo
 		"blend": randi() % FLOAT_BLENDS.size()})
 
-# Where each copy goes, in picture units: every step turns a little from the
-# last, and how it turns makes the shape.
-func _trail_path(w: float, length: int) -> PackedVector2Array:
-	var pts := PackedVector2Array()
-	var p := Vector2(randf() * config.window.x, randf() * config.window.y)
-	var angle := randf() * TAU
+# Where each copy goes, in picture units: in from just off one edge, aimed
+# somewhere near the middle, every step turning a little from the last. The
+# turning eases off after a while, so every trail straightens out and leaves.
+const TRAIL_MAX := 400
+func _trail_path(w: float) -> PackedVector2Array:
+	# a path that never crossed the screen, or didn't leave it, is drawn again
+	var pts := _try_trail_path(w)
+	for attempt in 8:
+		if _crosses_screen(pts):
+			break
+		pts = _try_trail_path(w)
+	return pts
+
+func _crosses_screen(pts: PackedVector2Array) -> bool:
+	var r := Rect2(Vector2.ZERO, config.window)
+	if pts.size() < 2 or r.has_point(pts[pts.size() - 1]):
+		return false
+	for q in pts:
+		if r.has_point(q):
+			return true
+	return false
+
+func _try_trail_path(w: float) -> PackedVector2Array:
+	var win := config.window
+	var margin := w
+	var p := Vector2.ZERO
+	match randi() % 4:
+		0: p = Vector2(-margin, randf() * win.y)
+		1: p = Vector2(win.x + margin, randf() * win.y)
+		2: p = Vector2(randf() * win.x, -margin)
+		_: p = Vector2(randf() * win.x, win.y + margin)
+	var aim := win * Vector2(randf_range(0.25, 0.75), randf_range(0.25, 0.75))
+	var angle := (aim - p).angle() + randf_range(-0.5, 0.5)
 	var gap := randf_range(0.3, 0.6) * w                   # copies overlap a little
 	var side := 1.0 if randf() < 0.5 else -1.0
 	var shape := randi() % 4
-	# gentle turns, so the curves are big (radius = gap / turn): most trails
-	# only sweep through part of the shape before they pop out
+	# gentle turns, so the curves are big (radius = gap / turn)
 	var turn0 := randf_range(0.04, 0.12)                   # radians a step
 	var wave := randf_range(0.1, 0.25)
-	for i in length:
+	var bend := randi_range(20, 60)                        # steps of turning before it eases off
+	var bounds := Rect2(Vector2.ONE * -margin * 1.5, win + Vector2.ONE * margin * 3.0)
+	var pts := PackedVector2Array()
+	var entered := false
+	for i in TRAIL_MAX:
 		pts.append(p)
-		var u := float(i) / maxf(float(length - 1), 1.0)
+		var inside := Rect2(Vector2.ZERO, win).has_point(p)
+		if inside:
+			entered = true
+		elif not bounds.has_point(p):
+			break                                          # gone off (the other side, or wandered away)
+		var u := clampf(float(i) / float(bend), 0.0, 1.0)
+		var ease_off := clampf(2.0 - float(i) / float(bend), 0.0, 1.0)
 		var turn := 0.0
 		var g := gap
 		match shape:
-			0:  # a spiral winding in: tighter and closer every step
+			0:  # a curl that tightens
 				turn = turn0 * (1.0 + 2.2 * u)
-				g = gap * (1.0 - 0.6 * u)
-			1:  # rings
+				g = gap * (1.0 - 0.4 * u)
+			1:  # a big arc
 				turn = turn0
-			2:  # a swirl that weaves from side to side
+			2:  # a weave from side to side
 				turn = turn0 * 1.6 * sin(float(i) * wave)
 			3:  # an S: one way, then the other
-				turn = turn0 * (1.0 if u < 0.5 else -1.0)
-		angle += turn * side
+				turn = turn0 * (1.0 if i < bend / 2 else -1.0)
+		angle += turn * side * ease_off
 		p += Vector2.from_angle(angle) * g
 	return pts
 
@@ -1734,9 +1771,12 @@ func _draw_floaters(blend: int) -> void:
 		var size := Vector2(w, w * tex.get_height() / maxf(float(tex.get_width()), 1.0))
 		var head: int = f["head"]
 		var path: PackedVector2Array = f["path"]
-		for c in range(maxi(head - int(f["keep"]) + 1, 0), mini(head + 1, path.size())):
+		var keep: int = f["keep"]
+		for c in range(maxi(head - keep + 1, 0), mini(head + 1, path.size())):
 			var at := view.position + path[c] / config.window * view.size
 			var r := Rect2(at - size * 0.5, size)
 			if f["flip"]:
 				r = Rect2(r.position + Vector2(size.x, 0.0), Vector2(-size.x, size.y))
-			layer.draw_texture_rect(tex, r, false)
+			# the echo: the newest copy solid, each older one fainter
+			var age := head - c
+			layer.draw_texture_rect(tex, r, false, Color(1, 1, 1, pow(0.8, age)))

@@ -148,10 +148,10 @@ class_name FinalConfig
 @export var glitch_life := Vector2(0.28, 0.08)    # how long each lasts, likewise (seconds)
 @export var bg_glitch := Vector2(0.2, 1.0)        # how broken the background itself is, likewise (0 to 1)
 
-# And bits of the game itself pop in and leave trails of copies across it:
-# mice, icons, windows, guns...
+# And bits of the game itself come in from the edges and leave echoing trails
+# of copies across it: mice, icons, windows, guns...
 @export var floaters: Array[Texture2D] = []
 @export var floater_count := Vector2(3.0, 16.0)   # trails at once, at full health and at none
 @export var floater_width := Vector2(30.0, 90.0)  # how big each is, in picture units (random between)
-@export var floater_step := Vector2(0.12, 0.035)  # seconds between copies, at full health and at none
+@export var floater_step := Vector2(0.07, 0.03)   # seconds between copies, at full health and at none
 @export var floater_burst := 4.0                  # how much faster they copy for a moment when something happens
