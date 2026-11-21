@@ -67,9 +67,14 @@ func _add_icon(row: Node, label: Label, tex: Texture2D, height: float) -> void:
 	icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	icon.custom_minimum_size = Vector2(height * tex.get_width() / tex.get_height(), height)
-	icon.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
-	row.add_child(icon)
-	row.move_child(icon, label.get_index())
+	# centred on the first line of text
+	var holder := CenterContainer.new()
+	holder.custom_minimum_size = Vector2(icon.custom_minimum_size.x,
+			label.get_theme_font("font").get_height(label.get_theme_font_size("font_size")))
+	holder.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
+	holder.add_child(icon)
+	row.add_child(holder)
+	row.move_child(holder, label.get_index())
 	label.custom_minimum_size.x = maxf(0.0, label.custom_minimum_size.x - icon.custom_minimum_size.x - 8.0)
 	(row as BoxContainer).add_theme_constant_override("separation", 8)
 
