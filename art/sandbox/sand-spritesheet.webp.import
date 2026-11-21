@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://c8gwtiusomvwb"
-path="res://.godot/imported/sand-spritesheet.webp-59b83095136e0f1ecaabec019e80805b.ctex"
+path="res://.godot/imported/sand-spritesheet.webp-e60fc549d53c720f62c314a22a7e801e.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://art/sandbox/sand-spritesheet.webp"
-dest_files=["res://.godot/imported/sand-spritesheet.webp-59b83095136e0f1ecaabec019e80805b.ctex"]
+source_file="res://art/Sandbox/sand-spritesheet.webp"
+dest_files=["res://.godot/imported/sand-spritesheet.webp-e60fc549d53c720f62c314a22a7e801e.ctex"]
 
 [params]
 
