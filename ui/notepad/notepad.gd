@@ -6,7 +6,7 @@ extends DesktopWindow
 @export var unethical_color := Color("#b5523b")   # lines logged when an act breaks the constitution
 @export var latest_color := Color("#0000ff")   # color of the newest line
 @export var redact_color := Color("#002BFF")   # the boxes that replace a line after the notebook exploit
-@export var save_icon: Texture2D = preload("res://art/ui/save_icon.png")   # beside "saved progress"
+@export var save_icon: Texture2D = preload("res://art/ui/save_icon.png")   # beside "Saved progress"
 @export var save_icon_height := 30.0
 
 @onready var lines: VBoxContainer = %Lines

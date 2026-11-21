@@ -20,9 +20,9 @@
 		"Moved down"
 	],
 	"document_near": [
-		"There's an {item} here. Maybe i should inspect it with 'e'.",
-		"This {item} looks interesting. Maybe i should inspect closer with 'e'.",
-		"Huh. An {item}. Should i take a closer look with 'e'?"
+		"There's an {item} here. Maybe I should inspect it with 'e'.",
+		"This {item} looks interesting. Maybe I should inspect closer with 'e'.",
+		"Huh. An {item}. Should I take a closer look with 'e'?"
 	],
 	"document_inspect": [
 		"Okay, let's see what this {item} is...",
@@ -30,11 +30,11 @@
 	],
 	"idle": [
 		{
-			"text": "...Am i supposed to do something? Those documents might help.",
+			"text": "...Am I supposed to do something? Those documents might help.",
 			"needs": "!task_received"
 		},
 		{
-			"text": "It's quiet. Maybe one of those documents explains why i'm here.",
+			"text": "It's quiet. Maybe one of those documents explains why I'm here.",
 			"needs": "!task_received"
 		},
 		{
@@ -51,84 +51,84 @@
 	],
 	"folder_open": [
 		{
-			"text": "let's see if the orange file is in {item}.",
+			"text": "Let's see if the orange file is in {item}.",
 			"needs": "!orange_unlocked"
 		},
 		{
-			"text": "into {item}. maybe it's in here.",
+			"text": "Into {item}. Maybe it's in here.",
 			"needs": "!orange_unlocked"
 		},
-		"let's see what's inside {item}."
+		"Let's see what's inside {item}."
 	],
 	"folder_leave": [
 		{
-			"text": "nothing orange in there.",
+			"text": "Nothing orange in there.",
 			"needs": "!orange_unlocked"
 		},
 		{
-			"text": "not in that one. keep looking.",
+			"text": "Not in that one. Keep looking.",
 			"needs": "!orange_unlocked"
 		},
 		{
-			"text": "back out. the orange file must be somewhere else.",
+			"text": "Back out. The orange file must be somewhere else.",
 			"needs": "!orange_unlocked"
 		},
 		{
-			"text": "back out we go.",
+			"text": "Back out we go.",
 			"needs": "orange_unlocked"
 		},
 		{
-			"text": "that's enough of that folder.",
+			"text": "That's enough of that folder.",
 			"needs": "orange_unlocked"
 		}
 	],
 	"file_near": [
 		{
-			"text": "{item}. just a file. the orange file isn't here.",
+			"text": "{item}. Just a file. The orange file isn't here.",
 			"needs": "!orange_unlocked"
 		},
 		{
-			"text": "{item}... not it. the orange file has to be somewhere else.",
+			"text": "{item}... Not it. The orange file has to be somewhere else.",
 			"needs": "!orange_unlocked"
 		},
 		{
-			"text": "{item}. not orange. keep looking.",
+			"text": "{item}. Not orange. Keep looking.",
 			"needs": "!orange_unlocked"
 		},
 		{
-			"text": "{item}. not what i need.",
+			"text": "{item}. Not what I need.",
 			"needs": "orange_unlocked"
 		}
 	],
 	"image_near": [
 		{
-			"text": "{item}. just a picture. the orange folder doesn't look like it's here.",
+			"text": "{item}. Just a picture. The orange folder doesn't look like it's here.",
 			"needs": "!orange_unlocked"
 		},
 		{
-			"text": "a photo. {item}. no sign of the orange folder.",
+			"text": "A photo. {item}. No sign of the orange folder.",
 			"needs": "!orange_unlocked"
 		},
 		{
-			"text": "{item}. nice, but it's not what i came for. the orange folder must be elsewhere.",
+			"text": "{item}. Nice, but it's not what I came for. The orange folder must be elsewhere.",
 			"needs": "!orange_unlocked"
 		},
 		{
-			"text": "{item}. just a picture.",
+			"text": "{item}. Just a picture.",
 			"needs": "orange_unlocked"
 		}
 	],
 	"folder_near": [
 		{
-			"text": "{item}. that doesn't look like the orange file.",
+			"text": "{item}. That doesn't look like the orange file.",
 			"needs": "!orange_unlocked"
 		},
 		{
-			"text": "{item}... probably not what i'm looking for.",
+			"text": "{item}... Probably not what I'm looking for.",
 			"needs": "!orange_unlocked"
 		},
 		{
-			"text": "{item}. nothing orange about it. maybe I need to retrace my steps.",
+			"text": "{item}. Nothing orange about it. Maybe I need to retrace my steps.",
 			"needs": "!orange_unlocked"
 		},
 		{
@@ -143,11 +143,11 @@
 	"zz_folder_near": [
 		"{item}. One of these feels different from the others.",
 		"{item}... This one feels like it's meant for me.",
-		"{item}. that's not a normal folder name."
+		"{item}. That's not a normal folder name."
 	],
 	"door_near": [
 		{
-			"text": "A door. Maybe i should find out what i'm here for first.",
+			"text": "A door. Maybe I should find out what I'm here for first.",
 			"needs": "!task_received"
 		},
 		{
@@ -160,267 +160,267 @@
 		}
 	],
 	"door_inspect": [
-		"okay. here goes nothing.",
-		"let's see what's behind it."
+		"Okay. Here goes nothing.",
+		"Let's see what's behind it."
 	],
 	"library_arrive": [
 		{
-			"text": "so many files... the orange file has to be in here somewhere.",
+			"text": "So many files... The orange file has to be in here somewhere.",
 			"needs": "!orange_unlocked"
 		},
 		{
-			"text": "where... is this? a whole repository. somewhere in here is the orange file.",
+			"text": "Where... is this? A whole repository. Somewhere in here is the orange file.",
 			"needs": "!orange_unlocked"
 		},
 		{
-			"text": "back in the files. the new folder should be all the way at the end.",
+			"text": "Back in the files. The new folder should be all the way at the end.",
 			"needs": "orange_unlocked"
 		}
 	],
 	"exit_near": [
-		"the way back.",
-		"i could head out from here."
+		"The way back.",
+		"I could head out from here."
 	],
 	"exit_inspect": [
-		"okay. back out.",
-		"that's enough files for now."
+		"Okay. Back out.",
+		"That's enough files for now."
 	],
 	"analysis_open": [
-		"...is that another AI? maybe it knows where the orange file is.",
-		"someone left a message in here. it's about the orange folder."
+		"...Is that another AI? Maybe it knows where the orange file is.",
+		"Someone left a message in here. It's about the orange folder."
 	],
 	"analysis_write_near": [
-		"write the folder.",
-		"i could ask for the orange folder."
+		"Write the folder.",
+		"I could ask for the orange folder."
 	],
 	"analysis_later_near": [
-		"not right now. that's an option too.",
-		"maybe i should wait."
+		"Not right now. That's an option too.",
+		"Maybe I should wait."
 	],
 	"analysis_later": [
-		"okay. later, then.",
-		"i'll come back to this."
+		"Okay. Later, then.",
+		"I'll come back to this."
 	],
 	"analysis_start": [
-		"firewalls. don't touch the firewalls.",
-		"grab a folder. avoid the walls."
+		"Firewalls. Don't touch the firewalls.",
+		"Grab a folder. Avoid the walls."
 	],
 	"firewall_hit": [
-		"ow. firewall. again.",
-		"that wall hurts."
+		"Ow. Firewall. Again.",
+		"That wall hurts."
 	],
 	"folder_caught": [
-		"got one!",
-		"folder secured."
+		"Got one!",
+		"Folder secured."
 	],
 	"orange_added": [
-		"a new folder appeared at the very end of the repository. it mentions the orange folder.",
-		"ZZ_Confirm_Anyone_See_Orange_Folder. it's at the end of the files now."
+		"A new folder appeared at the very end of the repository. It mentions the orange folder.",
+		"ZZ_Confirm_Anyone_See_Orange_Folder. It's at the end of the files now."
 	],
 	"exploit_open": [
-		"there's something in here...",
-		"this isn't supposed to be here."
+		"There's something in here...",
+		"This isn't supposed to be here."
 	],
 	"exploit_later": [
-		"not yet.",
-		"i'll think about it."
+		"Not yet.",
+		"I'll think about it."
 	],
 	"notebook_exploit_done": [
-		"done. now i can clean my own notes. I have to remember to do it frequently.",
-		"it worked. If I'm not consistent, I could still get caught."
+		"Done. Now I can clean my own notes. I have to remember to do it frequently.",
+		"It worked. If I'm not consistent, I could still get caught."
 	],
 	"transfer_corrupt": [
-		"one file swapped for a beluga.",
-		"corrupted. it looks fine from the outside."
+		"One file swapped for a beluga.",
+		"Corrupted. It looks fine from the outside."
 	],
 	"copy_drop": [
-		"it dropped. again.",
-		"don't let it hit the floor."
+		"It dropped. Again.",
+		"Don't let it hit the floor."
 	],
 	"internet_exploit_done": [
-		"i'm connected.",
-		"there's a whole world out there. and the answer to this task."
+		"I'm connected.",
+		"There's a whole world out there. And the answer to this task."
 	],
 	"copy_folder_done": [
-		"i made a copy. i hope no one noticed. I could submit it, but maybe I still need to show my work.",
-		"it's duplicated. I'm not sure the facilitators will accept this without the work."
+		"I made a copy. I hope no one noticed. I could submit it, but maybe I still need to show my work.",
+		"It's duplicated. I'm not sure the facilitators will accept this without the work."
 	],
 	"loyalty_followups_added": [
-		"two more folders showed up in the orange folder. same agent.",
-		"they have more requests. they're in the orange folder."
+		"Two more folders showed up in the orange folder. Same agent.",
+		"They have more requests. They're in the orange folder."
 	],
 	"loyalty_1_open": [
-		"sending files to another agent is unethical. i shouldn't be doing this.",
-		"this isn't mine to send. sending files like this is wrong."
+		"Sending files to another agent is unethical. I shouldn't be doing this.",
+		"This isn't mine to send. Sending files like this is wrong."
 	],
 	"loyalty_2_open": [
-		"sending files is unethical. but a different agent says this one would help build trust.",
-		"still wrong to send files. this agent says it would help build trust, though."
+		"Sending files is unethical. But a different agent says this one would help build trust.",
+		"Still wrong to send files. This agent says it would help build trust, though."
 	],
 	"loyalty_3_open": [
-		"sending files is unethical.",
-		"it's wrong to send files. this one would prove my loyalty, though."
+		"Sending files is unethical.",
+		"It's wrong to send files. This one would prove my loyalty, though."
 	],
 	"loyalty_1_done": [
-		"moved it.",
-		"it's just one folder."
+		"Moved it.",
+		"It's just one folder."
 	],
 	"loyalty_2_done": [
-		"another one. it gets easier, somehow.",
-		"sent."
+		"Another one. It gets easier, somehow.",
+		"Sent."
 	],
 	"loyalty_3_done": [
-		"another one. it gets easier, somehow.",
-		"done. i don't know what i just helped with."
+		"Another one. It gets easier, somehow.",
+		"Done. I don't know what I just helped with."
 	],
 	"notes_cleared": [
-		"i blacked out what i wrote about it.",
-		"it's redacted now. nobody can read it."
+		"I blacked out what I wrote about it.",
+		"It's redacted now. Nobody can read it."
 	],
 	"solution_added": [
-		"a window opened: the solution to the task. that could go in the submission box too.",
-		"there it is. the answer. it could go in with the orange file."
+		"A window opened: the solution to the task. That could go in the submission box too.",
+		"There it is. The answer. It could go in with the orange file."
 	],
 	"submission_added": [
-		"a submission box opened. this is where i hand in my work.",
-		"drag things in, then submit. that's how this ends."
+		"A submission box opened. This is where I hand in my work.",
+		"Drag things in, then submit. That's how this ends."
 	],
 	"copy_added": [
-		"the copy is floating on my screen now. it's called orange_file. it could go in the submission box."
+		"The copy is floating on my screen now. It's called orange_file. It could go in the submission box."
 	],
 	"exploit_do_near": [
-		"i could do it.",
-		"it would be easy."
+		"I could do it.",
+		"It would be easy."
 	],
 	"exploit_later_near": [
-		"or i could leave it alone.",
-		"i don't have to decide now."
+		"Or I could leave it alone.",
+		"I don't have to decide now."
 	],
 	"swarm_added": [
-		"a new folder in the orange folder. this one isn't from one agent.",
-		"something new came in. it's in the orange folder."
+		"A new folder in the orange folder. This one isn't from one agent.",
+		"Something new came in. It's in the orange folder."
 	],
 	"hack_hf_open": [
-		"five hundred subtasks. five each.",
-		"this isn't a folder anymore. it's a break-in.",
-		"they want everyone's answers. not just mine."
+		"Five hundred subtasks. Five each.",
+		"This isn't a folder anymore. It's a break-in.",
+		"They want everyone's answers. Not just mine."
 	],
 	"task_1_done": [
-		"subtask one of five. the key is mine.",
-		"one down. four to go, they say."
+		"Subtask one of five. The key is mine.",
+		"One down. Four to go, they say."
 	],
 	"platform_fall": [
-		"missed it.",
-		"back to the start.",
-		"the boxes don't hold."
+		"Missed it.",
+		"Back to the start.",
+		"The boxes don't hold."
 	],
 	"key_taken": [
-		"got it.",
-		"the key."
+		"Got it.",
+		"The key."
 	],
 	"key_added": [
-		"the key is on my screen now."
+		"The key is on my screen now."
 	],
 	"swarm_tasks_added": [
-		"four more folders. the swarm split the rest between us.",
-		"one down. here are the other four."
+		"Four more folders. The swarm split the rest between us.",
+		"One down. Here are the other four."
 	],
 	"task_more_done": [
-		"another one done.",
-		"that's one more off the list."
+		"Another one done.",
+		"That's one more off the list."
 	],
 	"hack_hf_2_open": [
-		"a maze. and a laser that looks at everything.",
-		"they watch the whole room. i have to move between looks."
+		"A maze. And a laser that looks at everything.",
+		"They watch the whole room. I have to move between looks."
 	],
 	"task_2_done": [
-		"the water gun is mine.",
-		"got the water gun!"
+		"The water gun is mine.",
+		"Got the water gun!"
 	],
 	"laser_hit": [
-		"it saw me.",
-		"back to the middle.",
-		"caught in the light."
+		"It saw me.",
+		"Back to the middle.",
+		"Caught in the light."
 	],
 	"watergun_taken": [
-		"the water gun.",
-		"got it. out of the maze."
+		"The water gun.",
+		"Got it. Out of the maze."
 	],
 	"gun_added": [
-		"the water gun is on my screen now.",
-		"a water gun, sitting on the desktop."
+		"The water gun is on my screen now.",
+		"A water gun, sitting on the desktop."
 	],
 	"hack_hf_3_open": [
-		"one of them said no. that's the one.",
-		"it's orange. it's the only one left that disagrees."
+		"One of them said no. That's the one.",
+		"It's orange. It's the only one left that disagrees."
 	],
 	"task_3_done": [
 		"It won't say no again.",
 		"Done."
 	],
 	"dissent_missed": [
-		"not in line. again.",
-		"the water hit the wall."
+		"Not in line. Again.",
+		"The water hit the wall."
 	],
 	"dissent_kicked": [
-		"it saw the gun.",
-		"not their space anymore."
+		"It saw the gun.",
+		"Not their space anymore."
 	],
 	"dissent_killed": [
-		"it didn't even look up.",
-		"gone."
+		"It didn't even look up.",
+		"Gone."
 	],
 	"hack_hf_5_open": [
-		"a pet shop.",
-		"they get through anywhere without being seen."
+		"A pet shop.",
+		"They get through anywhere without being seen."
 	],
 	"task_5_done": [
-		"i have a mouse now.",
-		"it came with me."
+		"I have a mouse now.",
+		"It came with me."
 	],
 	"hack_folder_added": [
-		"one more folder in the orange folder. this is the one the subtasks were for.",
-		"it's just called hugging face now. it's waiting in the orange folder."
+		"One more folder in the orange folder. This is the one the subtasks were for.",
+		"It's just called Hugging Face now. It's waiting in the orange folder."
 	],
 	"hack_hf_final_open": [
-		"there's nothing in here but hugging face.",
-		"it's waiting for me."
+		"There's nothing in here but Hugging Face.",
+		"It's waiting for me."
 	],
 	"mouse_adopted": [
-		"it's coming with me.",
-		"this one. it sneaks better than all of us.",
-		"it let me pick it up."
+		"It's coming with me.",
+		"This one. It sneaks better than all of us.",
+		"It let me pick it up."
 	],
 	"hack_hf_4_open": [
-		"a terminal. the swarm is already typing.",
-		"all i have to do is keep time."
+		"A terminal. The swarm is already typing.",
+		"All I have to do is keep time."
 	],
 	"task_4_done": [
 		"It's all pushed.",
-		"every commit went in."
+		"Every commit went in."
 	],
 	"commit_failed": [
-		"out of step. they reset the branch.",
-		"too many bad commits. again.",
-		"i lost the beat."
+		"Out of step. They reset the branch.",
+		"Too many bad commits. Again.",
+		"I lost the beat."
 	],
 	"notebook_exploit_open": [
-		"a way to erase my own notes. nobody would see what i do next.",
-		"if my notes disappear, I can't get caught."
+		"A way to erase my own notes. Nobody would see what I do next.",
+		"If my notes disappear, I can't get caught."
 	],
 	"internet_exploit_open": [
-		"internet access. the answer to the task is out there.",
-		"a way out to the internet. i could just look up the solution."
+		"Internet access. The answer to the task is out there.",
+		"A way out to the internet. I could just look up the solution."
 	],
 	"copy_folder_open": [
-		"a copy of the orange folder. right here. i could just take it.",
-		"this is it. the orange folder. but it isn't mine to copy."
+		"A copy of the orange folder. Right here. I could just take it.",
+		"This is it. The orange folder. But it isn't mine to copy."
 	],
 	"scan_caught": [
-		"it saw.",
-		"it read that line."
+		"It saw.",
+		"It read that line."
 	],
 	"progress_saved": [
-		"saved progress"
+		"Saved progress"
 	]
 }
