@@ -81,7 +81,7 @@ class_name PlatformConfig
 
 @export_group("Background")
 @export var box_color := Color("ffd8d8")        # the glitched boxes, difference-blended
-@export var code_color := Color.WHITE
+@export var code_color := Color("454545")   # the drifting code snippets
 @export var code_layers := 46                   # how many snippets drift about
 @export var code_sizes := Vector2(13, 130)      # smallest and largest type
 @export var code_small_bias := 2.6              # higher means more of the snippets are tiny
