@@ -354,7 +354,7 @@ func _place() -> void:
 
 	# the server footage covers the window (it's cut to the window's shape already,
 	# so it shows nearly whole and close to its own size)
-	var vid := Vector2(1440, 1322)
+	var vid := Vector2(1440, 1440)
 	var cover := maxf(_arena.size.x / vid.x, _arena.size.y / vid.y)
 	_server.size = vid * cover
 	_server.position = _cam - _server.size * 0.5
