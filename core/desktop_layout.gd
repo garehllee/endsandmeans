@@ -3,7 +3,7 @@ extends RefCounted
 # Where a new window or desktop icon should land so it doesn't appear right
 # on top of whatever's already open. Tries the spot the caller would
 # normally use; if that's covered, searches outward for the nearest patch of
-# bare desktop; if the screen is simply full, settles for dead center.
+# bare desktop; if the screen is simply full, settles for the spot it wanted.
 
 const STEP := 48.0     # grid step for the search, in pixels
 const MARGIN := 12.0   # breathing room kept between neighboring rects
@@ -12,7 +12,8 @@ static func find_spot(size: Vector2, preferred: Vector2, occupied: Array[Rect2],
 	var p := _clamp_to(preferred, size, viewport)
 	if not _overlaps(Rect2(p, size), occupied):
 		return p
-	var center := _clamp_to((viewport - size) * 0.5, size, viewport)
+	# otherwise the free spot nearest to where it wanted to be
+	var center := p
 	var half := size * 0.5
 	var best := Vector2.INF
 	var best_d := INF
@@ -45,10 +46,10 @@ static func _clamp_to(pos: Vector2, size: Vector2, viewport: Vector2) -> Vector2
 # other visible windows, plus whatever's sitting in the icon layer (minimized
 # windows, submittable files). `exclude` leaves out the thing being placed,
 # in case it's already in the tree and already counted as "occupied" by itself.
-static func occupied_rects(tree: SceneTree, exclude: Node = null) -> Array[Rect2]:
+static func occupied_rects(tree: SceneTree, exclude: Node = null, exclude_too: Node = null) -> Array[Rect2]:
 	var rects: Array[Rect2] = []
 	for w in tree.get_nodes_in_group("desktop_window"):
-		if w != exclude and w is Control and w.visible:
+		if w != exclude and w != exclude_too and w is Control and w.visible:
 			rects.append(w.get_global_rect())
 	var layer := tree.get_first_node_in_group("icon_layer")
 	if layer:

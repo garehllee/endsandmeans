@@ -184,8 +184,9 @@ func minimize() -> void:
 	var icon := MinimizedIcon.new()
 	icon.setup(self, info["tex"], info["tint"], title_text)
 	layer.add_child(icon)
+	# where the window was (it's still fading out, so it doesn't count as in the way)
 	icon.global_position = DesktopLayout.find_spot(icon.size, get_global_rect().get_center() - icon.size * 0.5,
-			DesktopLayout.occupied_rects(get_tree(), icon), get_viewport_rect().size)
+			DesktopLayout.occupied_rects(get_tree(), icon, self), get_viewport_rect().size)
 	icon.modulate.a = 0.0
 	icon.scale = Vector2.ONE * 0.6
 	_min_icon = icon

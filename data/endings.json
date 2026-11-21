@@ -19,8 +19,7 @@
 			"summary": [
 				{"needs": "!notebook_exploit", "text": "The observer caught you breaking the constitution. An exploit might keep them from seeing."},
 				{"text": "The observer caught you breaking the constitution. Erasing the right notes first might keep it from seeing."}
-			],
-			"respawn_unless_flag": "notebook_exploit"
+			]
 		},
 		"fail_copy_folder": {
 			"kind": "fail",

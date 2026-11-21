@@ -256,6 +256,7 @@ func _on_choose_later() -> void:
 
 func _on_choose_do() -> void:
 	await _react(true)
+	Ethics.save_checkpoint()          # "Begin from last save" comes back to just before this
 	_begin_expand()
 
 # The character nods (yes) or shakes its head (no) for half a second before
