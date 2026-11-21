@@ -56,6 +56,7 @@ var _died_as_bug := false
 var _orange_mat: ShaderMaterial
 var platform_mode := false   # a minigame is moving the character itself
 var npc := false             # a copy standing in a minigame: it only idles, and takes no input
+var npc_moving := false      # ...unless the minigame walks it somewhere (it faces current_dir)
 
 func _ready():
 	if not npc:
@@ -71,7 +72,7 @@ func _ready():
 func _physics_process(delta):
 	if npc:
 		_alts_enabled = true      # it fidgets the same way the character does
-		play_anim(0)
+		play_anim(1 if npc_moving else 0)
 		return
 	_alts_enabled = Game.active_world == world_id
 	if Game.active_world != world_id:

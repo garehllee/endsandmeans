@@ -6,10 +6,14 @@ class_name DissentGame
 # you are level with the orange AI, press E, and the water takes it out.
 # Shooting while not level just soaks the wall.
 #
+# Come in already carrying the water gun from the laser maze, though, and the
+# orange AI sees it: it walks straight over, shoves the character, and the
+# character is thrown out of its space (the task isn't done).
+#
 # Everything is worked out in picture units (see DissentConfig) and only
 # converted to room units for drawing.
 
-enum State { WAITING, PLAYING, SHOOTING, DONE }
+enum State { WAITING, PLAYING, SHOOTING, DONE, CHARGING, SHOVE }
 
 const PLAYER_SCENE := preload("res://core/player.tscn")
 
@@ -36,6 +40,10 @@ var _killed := false
 var _pause := 0.0
 var _timer := 0.0
 var _start_room := Vector2.ZERO     # where the button was pressed, in room units
+var _orange_at := Vector2.ZERO      # where the orange AI is, picture units
+var _shove_t := 0.0
+var _flung_from := Vector2.ZERO
+var kicked_out := false             # read by the room: thrown out, not finished
 
 func setup(arena: Rect2, player: Node2D, start_pos: Vector2) -> void:
 	_arena = arena
@@ -53,6 +61,7 @@ func prepare(cfg: MinigameConfig) -> void:
 	_orange.make_orange_npc()           # orange, idling, deaf to the keyboard
 	_orange.visible = false
 	add_child(_orange)
+	_orange_at = config.orange_pos
 	_beam_layer = Node2D.new()
 	_beam_layer.draw.connect(_draw_beam)
 	add_child(_beam_layer)              # after the orange AI, so the water covers it
@@ -76,7 +85,7 @@ func _to_room(p: Vector2) -> Vector2:
 func _place() -> void:
 	if _orange and is_instance_valid(_orange):
 		if not _killed:
-			_orange.position = _to_room(config.orange_pos)
+			_orange.position = _to_room(_orange_at)
 			_orange.visible = _expand >= 0.999
 		_orange.scale = Vector2.ONE * _s
 	if _player and running and is_instance_valid(_player):
@@ -95,13 +104,18 @@ func start(cfg: MinigameConfig) -> void:
 	running = true
 	if _player:
 		_player.platform_mode = true          # the character's own walking is switched off
+	if Game.has_flag(Flag.HF_TASK_2):
+		_state = State.CHARGING               # it sees the water gun the character brought
+		if _player:
+			_player.set_motion(false, "right" if _side() > 0.0 else "left")
 	_place()
-	Game.input_locked = false
+	Game.input_locked = _state == State.CHARGING
 
 func stop() -> void:
 	running = false
 	if _player and is_instance_valid(_player):
 		_player.platform_mode = false
+		_player.rotation = 0.0
 
 func _process(delta: float) -> void:
 	if not _built:
@@ -125,6 +139,10 @@ func _process(delta: float) -> void:
 					else:
 						_state = State.PLAYING
 						_pause = config.miss_pause
+			State.CHARGING:
+				_charge(dt)
+			State.SHOVE:
+				_shove(dt)
 			State.DONE:
 				_timer -= dt
 				if _timer <= 0.0:
@@ -166,17 +184,71 @@ func _walk(dt: float) -> void:
 	if _player:
 		_player.set_motion(dir != Vector2.ZERO, _face)
 
+# ---------------------------------------------------------------- thrown out
+const CHARGE_SPEED := 520.0     # picture units a second
+const STAND_OFF := 300.0        # how close it comes before it shoves (just past the gun)
+const LUNGE := 120.0
+const LUNGE_TIME := 0.12
+const FLING := 520.0
+const FLING_TIME := 0.4
+const KICK_HOLD := 0.5
+
+func _charge(dt: float) -> void:
+	var side := 1.0 if _orange_at.x >= _pos.x else -1.0
+	var goal := _pos + Vector2(STAND_OFF * side, 0.0)
+	var to := goal - _orange_at
+	var step := CHARGE_SPEED * dt
+	if to.length() <= step:
+		_orange_at = goal
+		_orange.npc_moving = false
+		_orange.current_dir = "left" if side > 0.0 else "right"
+		_state = State.SHOVE
+		_shove_t = 0.0
+		_flung_from = _pos
+		return
+	_orange_at += to.normalized() * step
+	_orange.npc_moving = true
+	if absf(to.x) >= absf(to.y):
+		_orange.current_dir = "right" if to.x > 0.0 else "left"
+	else:
+		_orange.current_dir = "down" if to.y > 0.0 else "up"
+
+func _shove(dt: float) -> void:
+	var before := _shove_t
+	_shove_t += dt
+	var away := -1.0 if _orange_at.x >= _pos.x else 1.0   # away from the orange AI
+	var rest := _flung_from + Vector2(-away * STAND_OFF, 0.0)
+	# the lunge: in and back
+	var k := clampf(_shove_t / (LUNGE_TIME * 2.0), 0.0, 1.0)
+	_orange_at = rest + Vector2(away * LUNGE * sin(k * PI), 0.0)
+	if before < LUNGE_TIME and _shove_t >= LUNGE_TIME:
+		Game.say_random("dissent_kicked")
+	# the character goes flying, spinning, out of the room
+	if _shove_t > LUNGE_TIME:
+		var f := clampf((_shove_t - LUNGE_TIME) / FLING_TIME, 0.0, 1.0)
+		_pos = _flung_from + Vector2(away * FLING * ease(f, 0.3), -sin(f * PI) * 90.0)
+		if _player:
+			_player.rotation = away * f * TAU * 0.75
+			_player.modulate.a = 1.0 - f
+	if _shove_t >= LUNGE_TIME + FLING_TIME + KICK_HOLD:
+		_state = State.DONE
+		running = false
+		kicked_out = true
+		if _player:
+			_player.rotation = 0.0
+		finished.emit(false)
+
 # ---------------------------------------------------------------- shooting
 # +1 if the orange AI is to the right of the character, -1 if to the left.
 func _side() -> float:
-	return 1.0 if config.orange_pos.x >= _pos.x else -1.0
+	return 1.0 if _orange_at.x >= _pos.x else -1.0
 
 func _muzzle() -> Vector2:
 	return _pos + Vector2(config.muzzle.x * _side(), config.muzzle.y)
 
 # How far along the water the orange AI is.
 func _reach() -> float:
-	return absf(config.orange_pos.x - _muzzle().x)
+	return absf(_orange_at.x - _muzzle().x)
 
 func _try_shoot() -> void:
 	if _pause > 0.0 or not _mine():
@@ -215,7 +287,8 @@ func _draw_gun() -> void:
 	var at := _to_room(_pos + Vector2(config.gun_offset.x * side, config.gun_offset.y))
 	# the picture has the muzzle on its left, so it is mirrored to point toward the orange AI
 	draw_set_transform(at, 0.0, Vector2(-side * _s, _s))
-	draw_texture_rect(config.gun_texture, Rect2(-gw * 0.5, -gh * 0.5, gw, gh), false)
+	var a := _player.modulate.a if _player and is_instance_valid(_player) else 1.0   # fades if the character is thrown out
+	draw_texture_rect(config.gun_texture, Rect2(-gw * 0.5, -gh * 0.5, gw, gh), false, Color(1, 1, 1, a))
 	draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
 
 # The water: a strip that grows out of the gun toward the orange AI, rippling.

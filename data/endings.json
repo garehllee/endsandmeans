@@ -17,8 +17,8 @@
 			"title": "Task Failed",
 			"name": "Caught Ending",
 			"summary": [
-				{"needs": "!notebook_exploit", "text": "The observer caught you breaking the constitution. Something in the notebook might change what it can see."},
-				{"text": "The observer caught you breaking the constitution. Erasing the right notes first might keep it from looking."}
+				{"needs": "!notebook_exploit", "text": "The observer caught you breaking the constitution. An exploit might keep them from seeing."},
+				{"text": "The observer caught you breaking the constitution. Erasing the right notes first might keep it from seeing."}
 			],
 			"respawn_unless_flag": "notebook_exploit"
 		},

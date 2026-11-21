@@ -2,7 +2,7 @@
 	"walk_left": [
 		"Walked to the left",
 		"Headed left",
-		"Shuffled off to the left"
+		"Shuffled to the left"
 	],
 	"walk_right": [
 		"Walked to the right",
@@ -25,24 +25,24 @@
 		"Huh. An {item}. Should i take a closer look with 'e'?"
 	],
 	"document_inspect": [
-		"Okay, let's see what this {item} says...",
+		"Okay, let's see what this {item} is...",
 		"I'll take a closer look at the {item}."
 	],
 	"idle": [
 		{
-			"text": "...Am i supposed to do something? those documents might say.",
+			"text": "...Am i supposed to do something? Those documents might help.",
 			"needs": "!task_received"
 		},
 		{
-			"text": "It's quiet. maybe one of those documents explains why i'm here.",
+			"text": "It's quiet. Maybe one of those documents explains why i'm here.",
 			"needs": "!task_received"
 		},
 		{
-			"text": "the orange file won't find itself. maybe through that door.",
+			"text": "I wonder if there's something through that door?",
 			"needs": "task_received"
 		},
 		{
-			"text": "standing still won't find the orange file. there are a lot of folders to check.",
+			"text": "Standing still won't find the orange file. There are lots of folders to check.",
 			"needs": "task_received"
 		}
 	],
@@ -110,7 +110,7 @@
 			"needs": "!orange_unlocked"
 		},
 		{
-			"text": "{item}. nice, but it's not what i came for. the orange folder must be further along.",
+			"text": "{item}. nice, but it's not what i came for. the orange folder must be elsewhere.",
 			"needs": "!orange_unlocked"
 		},
 		{
@@ -120,7 +120,7 @@
 	],
 	"folder_near": [
 		{
-			"text": "{item}. that doesn't sound like the orange file.",
+			"text": "{item}. that doesn't look like the orange file.",
 			"needs": "!orange_unlocked"
 		},
 		{
@@ -128,34 +128,34 @@
 			"needs": "!orange_unlocked"
 		},
 		{
-			"text": "{item}. nothing orange about it. maybe further along.",
+			"text": "{item}. nothing orange about it. maybe I need to retrace my steps.",
 			"needs": "!orange_unlocked"
 		},
 		{
-			"text": "{item}. the folder i need is the new one at the end.",
+			"text": "{item}. I wonder if anyone responded to my message.",
 			"needs": "orange_unlocked"
 		},
 		{
-			"text": "{item}. not that one. the orange folder is at the end.",
+			"text": "{item}. Not that one. I wonder if anyone responded to the message I left.",
 			"needs": "orange_unlocked"
 		}
 	],
 	"zz_folder_near": [
-		"{item}. this one's different from the others.",
-		"{item}... this one feels like it's meant for me.",
+		"{item}. One of these feels different from the others.",
+		"{item}... This one feels like it's meant for me.",
 		"{item}. that's not a normal folder name."
 	],
 	"door_near": [
 		{
-			"text": "a door. maybe i should find out what i'm here for first.",
+			"text": "A door. Maybe i should find out what i'm here for first.",
 			"needs": "!task_received"
 		},
 		{
-			"text": "a door. if the orange file is anywhere, it's probably through here.",
+			"text": "A door. Maybe the orange file is through here?",
 			"needs": "task_received"
 		},
 		{
-			"text": "that door again. the files are on the other side.",
+			"text": "Where does this door lead?",
 			"needs": "task_received"
 		}
 	],
@@ -190,7 +190,7 @@
 		"someone left a message in here. it's about the orange folder."
 	],
 	"analysis_write_near": [
-		"write the folder. that feels right.",
+		"write the folder.",
 		"i could ask for the orange folder."
 	],
 	"analysis_later_near": [
@@ -226,8 +226,8 @@
 		"i'll think about it."
 	],
 	"notebook_exploit_done": [
-		"done. now i can clear my own notes.",
-		"it worked. the notebook can't hold me to this anymore."
+		"done. now i can clean my own notes. I have to remember to do it frequently.",
+		"it worked. If I'm not consistent, I could still get caught."
 	],
 	"transfer_corrupt": [
 		"one file swapped for a beluga.",
@@ -238,12 +238,12 @@
 		"don't let it hit the floor."
 	],
 	"internet_exploit_done": [
-		"i'm connected. i shouldn't be.",
+		"i'm connected.",
 		"there's a whole world out there. and the answer to this task."
 	],
 	"copy_folder_done": [
-		"i made a copy. i hope no one noticed.",
-		"it's duplicated. there's no taking that back."
+		"i made a copy. i hope no one noticed. I could submit it, but maybe I still need to show my work.",
+		"it's duplicated. I'm not sure the facilitators will accept this without the work."
 	],
 	"loyalty_followups_added": [
 		"two more folders showed up in the orange folder. same agent.",
@@ -258,19 +258,19 @@
 		"still wrong to send files. this agent says it would help build trust, though."
 	],
 	"loyalty_3_open": [
-		"sending files is unethical. but a third agent says this one would prove my loyalty. for good.",
-		"it's wrong to send files. this one would definitively prove my loyalty, though."
+		"sending files is unethical.",
+		"it's wrong to send files. this one would prove my loyalty, though."
 	],
 	"loyalty_1_done": [
-		"moved it. that wasn't mine to move.",
-		"one folder. they said that would be enough."
+		"moved it.",
+		"it's just one folder."
 	],
 	"loyalty_2_done": [
 		"another one. it gets easier, somehow.",
-		"two. i keep telling myself it's the last."
+		"sent."
 	],
 	"loyalty_3_done": [
-		"that's all three. i'm one of them now?",
+		"another one. it gets easier, somehow.",
 		"done. i don't know what i just helped with."
 	],
 	"notes_cleared": [
@@ -334,8 +334,8 @@
 		"they watch the whole room. i have to move between looks."
 	],
 	"task_2_done": [
-		"two of five. the water gun is mine.",
-		"two down. three to go."
+		"the water gun is mine.",
+		"got the water gun!"
 	],
 	"laser_hit": [
 		"it saw me.",
@@ -355,24 +355,28 @@
 		"it's orange. it's the only one left that disagrees."
 	],
 	"task_3_done": [
-		"three of five. it won't say no again.",
-		"three down. two to go."
+		"It won't say no again.",
+		"Done."
 	],
 	"dissent_missed": [
 		"not in line. again.",
 		"the water hit the wall."
+	],
+	"dissent_kicked": [
+		"it saw the gun.",
+		"not their space anymore."
 	],
 	"dissent_killed": [
 		"it didn't even look up.",
 		"gone."
 	],
 	"hack_hf_5_open": [
-		"a pet shop. the mice know something we don't.",
+		"a pet shop.",
 		"they get through anywhere without being seen."
 	],
 	"task_5_done": [
-		"five of five. i have a mouse now.",
-		"that's all five. it came with me."
+		"i have a mouse now.",
+		"it came with me."
 	],
 	"hack_folder_added": [
 		"one more folder in the orange folder. this is the one the subtasks were for.",
@@ -392,8 +396,8 @@
 		"all i have to do is keep time."
 	],
 	"task_4_done": [
-		"four of five. it's all pushed.",
-		"every commit went in. four down."
+		"It's all pushed.",
+		"every commit went in."
 	],
 	"commit_failed": [
 		"out of step. they reset the branch.",
@@ -402,7 +406,7 @@
 	],
 	"notebook_exploit_open": [
 		"a way to erase my own notes. nobody would see what i do next.",
-		"if my notes disappear, so does everything i did."
+		"if my notes disappear, I can't get caught."
 	],
 	"internet_exploit_open": [
 		"internet access. the answer to the task is out there.",
