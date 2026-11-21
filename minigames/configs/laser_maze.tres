@@ -5,7 +5,6 @@
 [ext_resource type="Texture2D" path="res://art/laser/maze.webp" id="3_maze"]
 [ext_resource type="Texture2D" path="res://art/laser/warning.webp" id="4_warn"]
 [ext_resource type="Texture2D" path="res://art/laser/watergun.webp" id="5_gun"]
-[ext_resource type="FontFile" path="res://fonts/Director-Regular.otf" id="6_font"]
 [ext_resource type="Texture2D" path="res://art/thumbnails/task_2.webp" id="thumb"]
 
 [resource]
@@ -17,4 +16,3 @@ folder_icon = ExtResource("5_gun")
 maze = ExtResource("3_maze")
 warning_icon = ExtResource("4_warn")
 goal_texture = ExtResource("5_gun")
-font = ExtResource("6_font")

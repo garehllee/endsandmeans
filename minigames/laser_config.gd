@@ -10,7 +10,6 @@ class_name LaserConfig
 @export var maze: Texture2D                    # the walls, drawn over the backdrop (arena_image)
 @export var warning_icon: Texture2D            # the "!" that blinks where a laser is about to come in
 @export var goal_texture: Texture2D            # the water gun
-@export var font: Font
 
 @export_group("Layout (picture units)")
 @export var window := Vector2(1600, 1512)

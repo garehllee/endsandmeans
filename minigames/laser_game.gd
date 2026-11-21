@@ -393,7 +393,6 @@ func _draw() -> void:
 	if _expand < 0.999:
 		return
 	_draw_beams()
-	_draw_hint()
 
 func _draw_beams() -> void:
 	if not _active:
@@ -453,13 +452,3 @@ func _beam_polygon(b: Dictionary, thin: float) -> PackedVector2Array:
 	for v in clipped[0]:
 		out.append(_to_room(v))
 	return out
-
-func _draw_hint() -> void:
-	if _volleys > 2 or _state != State.PLAYING:
-		return
-	var f: Font = config.font if config.font else ThemeDB.fallback_font
-	var text := "arrows to move. get to the water gun."
-	var fs := int(48 * _s)
-	var w := f.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x
-	draw_string(f, _to_room(Vector2(config.window.x * 0.5, 120.0)) - Vector2(w * 0.5, 0.0), text,
-			HORIZONTAL_ALIGNMENT_LEFT, -1, fs, Color(0, 0, 0, 0.8))

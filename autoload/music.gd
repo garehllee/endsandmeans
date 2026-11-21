@@ -21,8 +21,16 @@ var _ending := ""          # the ending on screen now ("" for none)
 var _own := ""             # a track a minigame plays itself (the rhythm game, the last folder)
 var _credits := {}         # file path -> {title, artist, ...}
 var _shown := ""
+var _heard := {}           # tracks that have played at least once
+var _rng := RandomNumberGenerator.new()
+
+# So the same few tracks don't wear thin: the first time a track plays it
+# starts from the top, but after that it sometimes picks up partway through.
+const RESUME_CHANCE := 0.5
+const RESUME_RANGE := Vector2(0.15, 0.75)   # where it may start, as a share of the track
 
 func _ready() -> void:
+	_rng.randomize()
 	var parsed = JSON.parse_string(FileAccess.get_file_as_string(MUSIC_PATH))
 	if parsed is Dictionary:
 		_map = parsed
@@ -75,7 +83,13 @@ func reset() -> void:
 	update()
 
 func update() -> void:
-	Audio.music(_track())
+	var path := _track()
+	var from := 0.0
+	if path != "" and path != Audio.music_path():
+		if _heard.has(path) and _rng.randf() < RESUME_CHANCE:
+			from = _rng.randf_range(RESUME_RANGE.x, RESUME_RANGE.y)
+		_heard[path] = true
+	Audio.music(path, 1.5, -6.0, from)
 	_announce()
 
 # What's playing now, as a file path ("" for nothing).

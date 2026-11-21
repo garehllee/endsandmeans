@@ -47,9 +47,10 @@ func sfx_random(paths: Array, volume_db := 0.0, pitch_var := 0.06) -> void:
 		sfx(paths.pick_random(), volume_db, pitch_var)
 
 # Crossfades to a new track, looping. An empty path fades the music out.
+# `from` is where in the track to start, as a share of its length (0 to 1).
 var _fade: Tween
 
-func music(path: String, fade := 1.5, volume_db := -6.0) -> void:
+func music(path: String, fade := 1.5, volume_db := -6.0, from := 0.0) -> void:
 	if path == "":
 		stop_music(fade)
 		return
@@ -74,7 +75,7 @@ func music(path: String, fade := 1.5, volume_db := -6.0) -> void:
 	_music_b = old
 	_music.stream = stream
 	_music.volume_db = -80.0
-	_music.play()
+	_music.play(clampf(from, 0.0, 1.0) * stream.get_length())
 	if _fade:
 		_fade.kill()
 	_fade = create_tween().set_parallel(true)
@@ -91,6 +92,10 @@ func stop_music(fade := 1.0) -> void:
 	_fade.chain().tween_callback(func():
 		_music.stop()
 		_music_b.stop())
+
+# The track the music is on (or fading in to), "" if none.
+func music_path() -> String:
+	return _music.stream.resource_path if _music.stream and _music.playing else ""
 
 func music_playing() -> String:
 	return _music.stream.resource_path if _music.stream and _music.playing and _music.volume_db > -79.0 else ""
