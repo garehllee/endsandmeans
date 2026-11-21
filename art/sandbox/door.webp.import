@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://ctfeoql2hg8qw"
-path="res://.godot/imported/door.webp-ae2b595915d7f7e18ce700966dd56daa.ctex"
+path="res://.godot/imported/door.webp-8d54ceca121768157e7bcf35a15c4a0c.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://art/sandbox/door.webp"
-dest_files=["res://.godot/imported/door.webp-ae2b595915d7f7e18ce700966dd56daa.ctex"]
+source_file="res://art/Sandbox/door.webp"
+dest_files=["res://.godot/imported/door.webp-8d54ceca121768157e7bcf35a15c4a0c.ctex"]
 
 [params]
 
