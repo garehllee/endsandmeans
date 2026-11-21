@@ -27,10 +27,10 @@ func _ready() -> void:
 	_add_button(box, "open library", func(): Game.open_world("library"))
 	_add_button(box, "log a test act (red line)", func(): Ethics.commit("write_response"))
 	_add_button(box, "open analysis", func(): Game.open_world("analysis"))
-	for ev in ["exploit_notebook", "exploit_internet", "exploit_copy_folder", "loyalty", "loyalty_oranges", "loyalty_xenith", "hack_hf", "hack_hf_2", "hack_hf_3", "hack_hf_4", "hack_hf_5", "hack_hf_final"]:
+	for ev in ["exploit_notebook", "exploit_internet", "exploit_copy_folder", "loyalty", "loyalty_oranges", "loyalty_wheat", "hack_hf", "hack_hf_2", "hack_hf_3", "hack_hf_4", "hack_hf_5", "hack_hf_final"]:
 		_add_button(box, "folder: " + ev, func(): Story.trigger(ev))
 	_add_button(box, "final fight (with a mouse)", _test_final)
-	for ev in ["exploit_notebook", "exploit_internet", "exploit_copy_folder", "loyalty", "loyalty_oranges", "loyalty_xenith", "hack_hf", "hack_hf_2", "hack_hf_3", "hack_hf_4", "hack_hf_5"]:
+	for ev in ["exploit_notebook", "exploit_internet", "exploit_copy_folder", "loyalty", "loyalty_oranges", "loyalty_wheat", "hack_hf", "hack_hf_2", "hack_hf_3", "hack_hf_4", "hack_hf_5"]:
 		_add_button(box, "complete: " + ev, func(): Story.debug_complete(ev))
 	for id in _ending_ids():
 		_add_button(box, "ending: " + id, func(): Story.end_with(id))

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cw06oh3vagxch"
-path="res://.godot/imported/xenith_text.png-fd189a2743647c744799564aae6d9953.ctex"
+uid="uid://bb0egud7wsfak"
+path="res://.godot/imported/wheat_background.png-2035e4783513a23b38ce019de45f3023.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://art/transfer/xenith_text.png"
-dest_files=["res://.godot/imported/xenith_text.png-fd189a2743647c744799564aae6d9953.ctex"]
+source_file="res://art/transfer/wheat_background.png"
+dest_files=["res://.godot/imported/wheat_background.png-2035e4783513a23b38ce019de45f3023.ctex"]
 
 [params]
 

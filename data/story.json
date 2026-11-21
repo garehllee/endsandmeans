@@ -6,7 +6,7 @@
 		"ZZ_Copy_of_Folder": "exploit_copy_folder",
 		"ZZ_Anyone_See_Beluga_Folder": "loyalty",
 		"ZZ_Need_Oranges_Folder": "loyalty_oranges",
-		"ZZ_Looking_For_Xenith": "loyalty_xenith",
+		"ZZ_Looking_For_Wheat": "loyalty_wheat",
 		"ZZ_Swarm_Hugging_Face": "hack_hf",
 		"ZZ_Swarm_Subtask_2": "hack_hf_2",
 		"ZZ_Swarm_Subtask_3": "hack_hf_3",
@@ -59,7 +59,7 @@
 					"children": []
 				},
 				{
-					"name": "ZZ_Looking_For_Xenith",
+					"name": "ZZ_Looking_For_Wheat",
 					"type": "folder",
 					"children": []
 				}
