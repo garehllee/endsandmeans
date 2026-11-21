@@ -6,9 +6,9 @@ class_name DissentGame
 # you are level with the orange AI, press E, and the water takes it out.
 # Shooting while not level just soaks the wall.
 #
-# Come in already carrying the water gun from the laser maze, though, and the
-# orange AI sees it: it walks straight over, shoves the character, and the
-# character is thrown out of its space (the task isn't done).
+# Come in without the water gun from the laser maze, though, and there's
+# nothing to stop the orange AI: it walks straight over, shoves the character,
+# and the character is thrown out of its space (the task isn't done).
 #
 # Everything is worked out in picture units (see DissentConfig) and only
 # converted to room units for drawing.
@@ -104,8 +104,8 @@ func start(cfg: MinigameConfig) -> void:
 	running = true
 	if _player:
 		_player.platform_mode = true          # the character's own walking is switched off
-	if Game.has_flag(Flag.HF_TASK_2):
-		_state = State.CHARGING               # it sees the water gun the character brought
+	if not Game.has_flag(Flag.HF_TASK_2):
+		_state = State.CHARGING               # no water gun: nothing to stop it
 		if _player:
 			_player.set_motion(false, "right" if _side() > 0.0 else "left")
 	_place()
@@ -186,8 +186,8 @@ func _walk(dt: float) -> void:
 
 # ---------------------------------------------------------------- thrown out
 const CHARGE_SPEED := 520.0     # picture units a second
-const STAND_OFF := 300.0        # how close it comes before it shoves (just past the gun)
-const LUNGE := 120.0
+const STAND_OFF := 160.0        # how close it comes before it shoves
+const LUNGE := 80.0
 const LUNGE_TIME := 0.12
 const FLING := 520.0
 const FLING_TIME := 0.4
@@ -279,8 +279,8 @@ func _draw() -> void:
 	_draw_gun()
 
 func _draw_gun() -> void:
-	if config.gun_texture == null:
-		return
+	if config.gun_texture == null or not Game.has_flag(Flag.HF_TASK_2):
+		return                          # only with the water gun from the laser maze
 	var side := _side() if _state != State.WAITING else 1.0
 	var gw := config.gun_width
 	var gh := gw * config.gun_texture.get_height() / float(config.gun_texture.get_width())
