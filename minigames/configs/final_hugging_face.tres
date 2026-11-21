@@ -52,7 +52,6 @@
 [ext_resource type="Texture2D" path="res://art/library/fileicon.webp" id="f8"]
 [ext_resource type="Texture2D" path="res://art/sandbox/orangedoc.webp" id="f9"]
 [ext_resource type="Texture2D" path="res://art/sandbox/purpledoc.webp" id="f10"]
-[ext_resource type="Texture2D" path="res://art/laser/warning.webp" id="f11"]
 [ext_resource type="Texture2D" path="res://art/pets/heart.webp" id="f12"]
 [ext_resource type="Texture2D" path="res://art/analysis/vista_firewall_2-1.webp" id="f14"]
 [ext_resource type="Texture2D" path="res://art/transfer/blank_file.webp" id="f15"]
@@ -98,4 +97,4 @@ glitch_video = ExtResource("18_glitch")
 room_music = ExtResource("19_room")
 battle_music = ExtResource("20_battle")
 glitch_scenes = Array[Texture2D]([ExtResource("g0"), ExtResource("g1"), ExtResource("g2"), ExtResource("g3"), ExtResource("g4"), ExtResource("g5"), ExtResource("g6"), ExtResource("g7"), ExtResource("g8"), ExtResource("g9"), ExtResource("g10")])
-floaters = Array[Texture2D]([ExtResource("f0"), ExtResource("f1"), ExtResource("f2"), ExtResource("f3"), ExtResource("f4"), ExtResource("f5"), ExtResource("f6"), ExtResource("f7"), ExtResource("f8"), ExtResource("f9"), ExtResource("f10"), ExtResource("f11"), ExtResource("f12"), ExtResource("f14"), ExtResource("f15"), ExtResource("f16"), ExtResource("f17"), ExtResource("f18"), ExtResource("f19"), ExtResource("f20"), ExtResource("f21"), ExtResource("f22"), ExtResource("f23"), ExtResource("f24"), ExtResource("f25"), ExtResource("f26"), ExtResource("f27"), ExtResource("f28"), ExtResource("f29")])
+floaters = Array[Texture2D]([ExtResource("f0"), ExtResource("f1"), ExtResource("f2"), ExtResource("f3"), ExtResource("f4"), ExtResource("f5"), ExtResource("f6"), ExtResource("f7"), ExtResource("f8"), ExtResource("f9"), ExtResource("f10"), ExtResource("f12"), ExtResource("f14"), ExtResource("f15"), ExtResource("f16"), ExtResource("f17"), ExtResource("f18"), ExtResource("f19"), ExtResource("f20"), ExtResource("f21"), ExtResource("f22"), ExtResource("f23"), ExtResource("f24"), ExtResource("f25"), ExtResource("f26"), ExtResource("f27"), ExtResource("f28"), ExtResource("f29")])

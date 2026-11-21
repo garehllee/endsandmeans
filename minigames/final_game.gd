@@ -110,8 +110,9 @@ var _phase := 1
 var _scenes: Node2D                 # the rest of the game glitching through the background
 var _bg_glitch: ColorRect           # and the background itself breaking up under it
 var _bg_seed_t := 0.0
-var _floats: Node2D                 # bits of the game drifting through it
+var _float_layers: Array[Node2D] = []   # bits of the game trailing through it, one layer per blend
 var _floaters: Array[Dictionary] = []
+var _float_burst := 0.0
 var _bg_patch_t := 0.0
 var _glitches: Array[Dictionary] = []
 var _glitch_due := 0.0
@@ -205,7 +206,7 @@ func prepare(cfg: MinigameConfig) -> void:
 	(_bg_glitch.material as ShaderMaterial).shader = GLITCH_SHADER
 	_bg_glitch.visible = false
 	add_child(_bg_glitch)
-	_floats = _make_layer(0, _draw_floaters)    # over the broken background, still under the fight
+	_make_float_layers()                         # over the broken background, still under the fight
 	_back = _make_layer(0, _draw_back)
 	_prop = _make_layer(0, _draw_prop)
 	var hover := ShaderMaterial.new()
@@ -391,7 +392,7 @@ func _place() -> void:
 
 func _redraw() -> void:
 	queue_redraw()
-	for n in [_scenes, _floats, _back, _prop, _dim, _front, _hud, _blue, _over]:
+	for n in [_scenes, _back, _prop, _dim, _front, _hud, _blue, _over]:
 		if n:
 			(n as Node2D).queue_redraw()
 
@@ -813,6 +814,7 @@ func _tick_shot(dt: float) -> void:
 			if _phase == 2 and (_shielded() or mouse_turn):
 				_shot_kind = "block"
 				Audio.play("umbrella_block")
+				_burst_floaters()
 				_shot_reach = maxf(_hf.x - 135.0 - _muzzle().x, 0.0)
 			else:
 				_shot_kind = "hit"
@@ -844,6 +846,7 @@ func _damage() -> void:
 	_hf_flash = 0.3
 	_hf.x += 60.0
 	Audio.play("hf_hit")
+	_burst_floaters()
 	if _phase == 1 and _hits >= config.phase_one_hits:
 		Audio.play("umbrella_open")
 		_phase = 2
@@ -887,6 +890,7 @@ func _tick_beat() -> void:
 # ---------------------------------------------------------------- the lasers
 func _spawn_volley() -> void:
 	Audio.play("laser_warning")           # the same alert as the laser maze
+	_burst_floaters()
 	var v := _view()
 	var me := _pos - v.position             # where the character is on screen
 	var hf := _hf - v.position
@@ -964,6 +968,7 @@ func _tick_lasers(dt: float) -> void:
 		_lasers.erase(l)
 	if fired:
 		Audio.play("hf_lasers")               # once a volley, as the beams go live
+		_burst_floaters()
 	if _dead > 0.0:
 		return
 	var me := _pos - _view().position
@@ -1072,6 +1077,7 @@ func _begin_dying() -> void:
 	if _stage == Stage.BITE:
 		Audio.play("mouse_bite")         # the chomp
 	Audio.play("hf_strobe")
+	_burst_floaters()
 	_go(Stage.DYING)
 	_server.paused = false
 	_battle_music.stream_paused = false
@@ -1627,70 +1633,81 @@ func _tick_bg_glitch(dt: float, k: float) -> void:
 	var view := Rect2(_cam - _arena.size * 0.5, _arena.size)
 	_bg_glitch.position = view.position
 	_bg_glitch.size = view.size
+# Bits of the game pop in behind the fight and copy themselves along a line,
+# like the trails when the desktop collapses: each stamps a copy every so
+# often, the oldest copies drop off, and when it has gone far enough the
+# whole trail pops out. Always fully there (no fading); each trail is drawn
+# with its own blend (normal, add, subtract or multiply). The worse things
+# get the more trails and the faster they copy, and for a moment after
+# Hugging Face attacks or is hit, faster still (see _burst_floaters).
+# Positions are shares of the view, so the trails stay put while the fight scrolls.
+const FLOAT_BLENDS := [CanvasItemMaterial.BLEND_MODE_MIX, CanvasItemMaterial.BLEND_MODE_ADD,
+		CanvasItemMaterial.BLEND_MODE_SUB, CanvasItemMaterial.BLEND_MODE_MUL]
 
-# Bits of the game float through the background, as if they're leaking into
-# the fight: mice, the water gun, files, window icons, the umbrella... They
-# drift and turn, and the worse things get the more of them there are and
-# the more broken they are: trails of copies, jumps, flicker, red and cyan.
-# Mice sometimes come in a row of copies. Positions are shares of the view,
-# so they stay put on screen while the fight scrolls.
+func _make_float_layers() -> void:
+	for b in FLOAT_BLENDS:
+		var layer := Node2D.new()
+		layer.z_index = 0
+		var mat := CanvasItemMaterial.new()
+		mat.blend_mode = b
+		layer.material = mat
+		layer.draw.connect(_draw_floaters.bind(_float_layers.size()))
+		add_child(layer)
+		_float_layers.append(layer)
+
+# Something happened (an attack, a hit): the trails race for a moment.
+func _burst_floaters() -> void:
+	_float_burst = 1.0
+	for i in 3:
+		_spawn_floater(_chaos())
+
 func _tick_floaters(dt: float, k: float) -> void:
 	if config.floaters.is_empty():
 		return
+	_float_burst = maxf(_float_burst - dt / 0.6, 0.0)
+	var speed := 1.0 + (config.floater_burst - 1.0) * _float_burst
+	var step := lerpf(config.floater_step.x, config.floater_step.y, k)
 	for f in _floaters:
-		f["t"] += dt
-		f["p"] += f["v"] * dt
-		f["rot"] += f["spin"] * dt
-		if randf() < k * 0.02 * dt * 60.0:
-			f["p"] += Vector2(randf_range(-0.04, 0.04), randf_range(-0.03, 0.03)) * (0.5 + k)   # a jump
-	_floaters = _floaters.filter(func(f): return f["t"] < f["life"])
-	var want := int(lerpf(config.floater_count.x, config.floater_count.y, pow(k, 1.1)))
+		f["clock"] += dt * speed
+		while f["clock"] >= step:
+			f["clock"] -= step
+			f["head"] += 1
+	_floaters = _floaters.filter(func(f): return f["head"] < f["length"])
+	var want := int(lerpf(config.floater_count.x, config.floater_count.y, pow(k, 1.1)) * (1.0 + _float_burst))
 	while _floaters.size() < want:
 		_spawn_floater(k)
+	for l in _float_layers:
+		l.queue_redraw()
 
 func _spawn_floater(k: float) -> void:
 	var tex: Texture2D = config.floaters.pick_random()
-	var mouse := tex.resource_path.contains("/pets/mouse_")
-	var copies := 1
-	if mouse and randf() < 0.35 + 0.4 * k:
-		copies = randi_range(3, 4 + int(5.0 * k))    # a row of the same mouse
-	elif randf() < k * 0.5:
-		copies = randi_range(2, 3 + int(4.0 * k))    # a trail of ghosts behind it
+	var w := randf_range(config.floater_width.x, config.floater_width.y)
 	var dir := Vector2.from_angle(randf() * TAU)
-	_floaters.append({"tex": tex, "t": 0.0, "life": randf_range(3.0, 8.0) * lerpf(1.0, 0.55, k),
-		"p": Vector2(randf(), randf()), "v": dir * randf_range(0.01, 0.04 + 0.08 * k),
-		"rot": randf_range(-0.4, 0.4), "spin": randf_range(-0.6, 0.6) * (0.3 + k),
-		"w": randf_range(config.floater_width.x, config.floater_width.y),
-		"copies": copies, "step": Vector2.from_angle(randf() * TAU) * randf_range(0.03, 0.07),
-		"split": randf() < k * 0.5, "flip": randf() < 0.5})
+	# copies sit a little apart, overlapping more for small things
+	var gap := randf_range(0.35, 0.8) * w / maxf(config.window.x, 1.0)
+	_floaters.append({"tex": tex, "w": w, "flip": randf() < 0.5,
+		"p": Vector2(randf(), randf()), "step": dir * gap,
+		"head": 0, "clock": 0.0,
+		"length": randi_range(6, 14 + int(16.0 * k)),      # copies before it pops out
+		"keep": randi_range(3, 5 + int(6.0 * k)),          # how many copies show at once
+		"blend": randi() % FLOAT_BLENDS.size()})
 
-func _draw_floaters() -> void:
+func _draw_floaters(blend: int) -> void:
+	var layer: Node2D = _float_layers[blend]
 	if _floaters.is_empty():
 		return
 	var view := Rect2(_cam - _arena.size * 0.5, _arena.size)
-	var k := _chaos()
 	for f in _floaters:
-		if randf() < k * 0.15:
-			continue                                     # flicker
-		var tex: Texture2D = f["tex"]
-		var t: float = f["t"]
-		var life: float = f["life"]
-		var a := minf(minf(t / 0.3, (life - t) / 0.5), 1.0) * lerpf(0.75, 1.0, k)
-		if a <= 0.0:
+		if f["blend"] != blend:
 			continue
+		var tex: Texture2D = f["tex"]
 		var w: float = f["w"] * _s
 		var size := Vector2(w, w * tex.get_height() / maxf(float(tex.get_width()), 1.0))
-		if f["flip"]:
-			size.x = -size.x
-		for c in f["copies"]:
+		var head: int = f["head"]
+		for c in range(maxi(head - int(f["keep"]) + 1, 0), head + 1):
 			var p: Vector2 = f["p"] + f["step"] * float(c)
 			var at := view.position + p * view.size
-			var ca: float = a * (1.0 if c == 0 else 0.75 - 0.5 * float(c) / float(f["copies"]))
-			_floats.draw_set_transform(at, f["rot"], Vector2.ONE)
-			var r := Rect2(-size * 0.5, size)
-			if f["split"]:
-				var off := Vector2(6.0 + 14.0 * k, 0.0) * _s
-				_floats.draw_texture_rect(tex, Rect2(r.position - off, r.size), false, Color(1, 0.15, 0.25, ca * 0.8))
-				_floats.draw_texture_rect(tex, Rect2(r.position + off, r.size), false, Color(0.15, 1, 1, ca * 0.8))
-			_floats.draw_texture_rect(tex, r, false, Color(1, 1, 1, ca))
-	_floats.draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
+			var r := Rect2(at - size * 0.5, size)
+			if f["flip"]:
+				r = Rect2(r.position + Vector2(size.x, 0.0), Vector2(-size.x, size.y))
+			layer.draw_texture_rect(tex, r, false)
