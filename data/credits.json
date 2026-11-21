@@ -1,0 +1,130 @@
+{
+	"music": [
+		{
+			"file": "res://audio/music/serge_quadrado-soft_background_loop.ogg",
+			"title": "Soft Background Loop",
+			"artist": "Serge Quadrado",
+			"used_for": "Title screen",
+			"license": "CC BY-NC 4.0",
+			"source": "https://freesound.org/people/SergeQuadrado/sounds/468212/"
+		},
+		{
+			"file": "res://audio/music/aldous_ichnite-the_trench_beckons.ogg",
+			"title": "The Trench Beckons",
+			"artist": "Aldous Ichnite",
+			"used_for": "Sandbox desktop",
+			"license": "Not confirmed (other Aldous Ichnite albums on Free Music Archive are CC BY-NC 4.0)",
+			"source": "https://freemusicarchive.org/music/aldous-ichnite/"
+		},
+		{
+			"file": "res://audio/music/brylie_christopher-the_companionship_of_isolation.ogg",
+			"title": "The Companionship of Isolation",
+			"artist": "Brylie Christopher",
+			"album": "Neither and Both",
+			"used_for": "Artifactory (file library)",
+			"license": "CC BY 4.0",
+			"source": "https://freemusicarchive.org/music/Brylie_Christopher_Oxley/neither-and-both",
+			"also_credited": "Brylie Christopher Oxley"
+		},
+		{
+			"file": "res://audio/music/axel_lundstrom-axel_video_game.ogg",
+			"title": "Axel Video Game",
+			"artist": "Axel Lundström",
+			"album": "Video game music...",
+			"used_for": "Folder message screens",
+			"license": "CC BY-NC 4.0",
+			"source": "https://freemusicarchive.org/music/axel-lundstrom/video-game-music/axel-video-game/"
+		},
+		{
+			"file": "res://audio/music/xennial-video_game_party_at_our_house.ogg",
+			"title": "Video Game Party at Our House",
+			"artist": "Xennial",
+			"used_for": "Catch the folder, Erase the notebook, Internet access, Copy the orange folder",
+			"license": "Pixabay Content License",
+			"source": "https://pixabay.com/music/video-games-video-game-party-at-our-house-retro-chiptune-atari-nintendo-8-bit-137340/",
+			"also_credited": "Melody Ayres-Griffiths"
+		},
+		{
+			"file": "res://audio/music/kirk_osamayo-video_game_home.ogg",
+			"title": "Video Game Home",
+			"artist": "Kirk Osamayo",
+			"album": "Season 4: Green",
+			"used_for": "Folder transfers",
+			"license": "CC BY 4.0",
+			"source": "https://freemusicarchive.org/music/kirk-osamayo/season-4-green-1"
+		},
+		{
+			"file": "res://audio/music/human_gazpacho-the_outer_planes.ogg",
+			"title": "The Outer Planes",
+			"artist": "human gazpacho",
+			"album": "Arcane Resonance",
+			"used_for": "Retrieve the key",
+			"license": "CC BY 4.0",
+			"source": "https://freemusicarchive.org/music/human-gazpacho/arcane-resonance"
+		},
+		{
+			"file": "res://audio/music/aldous_ichnite-descent_vector.ogg",
+			"title": "Descent Vector",
+			"artist": "Aldous Ichnite",
+			"album": "Submechanophobia",
+			"used_for": "Get to the water gun",
+			"license": "CC BY-NC 4.0",
+			"source": "https://freemusicarchive.org/music/aldous-ichnite/submechanophobia"
+		},
+		{
+			"file": "res://audio/music/filmy_ghost-crystal_heart.ogg",
+			"title": "Crystal Heart (Tribute to Celeste Video Game)",
+			"artist": "Filmy Ghost",
+			"album": "Crystal Twins",
+			"used_for": "Silence the dissenting AI",
+			"license": "CC BY-NC-ND 4.0",
+			"source": "https://freemusicarchive.org/music/Filmy_Ghost/crystal-twins/04-crystal-heart-tribute-to-celeste-video-gamemp3",
+			"also_credited": "Sábila Orbe"
+		},
+		{
+			"file": "res://audio/music/commit_loop.ogg",
+			"title": "Geometry Dash 2",
+			"artist": "Axel Lundström",
+			"album": "Video game music...",
+			"used_for": "Commit on the beat",
+			"license": "CC BY-NC 4.0",
+			"source": "https://freemusicarchive.org/music/axel-lundstrom/video-game-music/geometry-dash-2/"
+		},
+		{
+			"file": "res://audio/music/geoff_harvey-myths_of_the_forest.ogg",
+			"title": "Myths of the Forest",
+			"artist": "Geoff Harvey",
+			"used_for": "Virtual pet shop",
+			"license": "Purple Planet free license: visible credit with a link to purple-planet.com",
+			"source": "https://www.purple-planet.com",
+			"also_credited": "Purple Planet Music"
+		},
+		{
+			"file": "res://audio/music/rangers_lament.ogg",
+			"title": "Ranger's Lament",
+			"artist": "human gazpacho",
+			"album": "Arcane Resonance",
+			"used_for": "Hugging Face: white room",
+			"license": "CC BY 4.0",
+			"source": "https://freemusicarchive.org/music/human-gazpacho/arcane-resonance",
+			"also_credited": "cw lomneth"
+		},
+		{
+			"file": "res://audio/music/tv_fire_witch.ogg",
+			"title": "TV Fire Witch",
+			"artist": "Battle Lava",
+			"used_for": "Hugging Face battle",
+			"license": "CC BY-NC-SA 3.0",
+			"source": "http://freemusicarchive.org/music/Battle_Lava/~/TV_Fire_Witch_1076"
+		},
+		{
+			"file": "res://audio/music/good_old_neon-video_game_soundtrack.ogg",
+			"title": "Video Game Soundtrack",
+			"artist": "Good Old Neon",
+			"album": "This Is the News",
+			"used_for": "Endings",
+			"license": "Not confirmed (Good Old Neon's other albums on Free Music Archive are CC BY-NC 3.0)",
+			"source": "https://freemusicarchive.org/music/Good_Old_Neon/"
+		}
+	]
+}

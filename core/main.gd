@@ -7,6 +7,9 @@ func _ready() -> void:
 	var collapse := EndCollapse.new()
 	windows.add_child(collapse)
 	windows.move_child(collapse, 0)
+	var now_playing := NowPlaying.new()
+	add_child(now_playing)
+	move_child(now_playing, 0)                # on the desktop, under the windows
 	if not Game.started:
 		add_child(preload("res://ui/landing/landing.gd").new())
 	_add_bloom()

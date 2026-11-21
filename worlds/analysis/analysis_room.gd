@@ -385,16 +385,22 @@ func _start_arena() -> void:
 		_game.connect("round_started", func(): Game.say_random("analysis_start"))
 	_game.finished.connect(_on_game_finished)
 	_game.start(config)
+	Music.minigame_started(_music_key())
 
 # A room that extends this one overrides this to run a different minigame.
 func _create_game() -> Minigame:
 	return CatchGame.new()
+
+# Which minigame this is, for its music (see data/music.json).
+func _music_key() -> String:
+	return "catch"
 
 func _stop_game() -> void:
 	if _game:
 		_game.stop()
 		_game.queue_free()
 		_game = null
+		Music.minigame_stopped()
 
 func _on_game_finished(success: bool) -> void:
 	if not success:

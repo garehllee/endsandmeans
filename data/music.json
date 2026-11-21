@@ -1,0 +1,27 @@
+{
+	"title": "res://audio/music/serge_quadrado-soft_background_loop.ogg",
+	"worlds": {
+		"sandbox": "res://audio/music/aldous_ichnite-the_trench_beckons.ogg",
+		"library": "res://audio/music/brylie_christopher-the_companionship_of_isolation.ogg",
+		"analysis": "res://audio/music/axel_lundstrom-axel_video_game.ogg",
+		"exploit": "res://audio/music/axel_lundstrom-axel_video_game.ogg"
+	},
+	"minigames": {
+		"catch": "res://audio/music/xennial-video_game_party_at_our_house.ogg",
+		"erase": "res://audio/music/xennial-video_game_party_at_our_house.ogg",
+		"internet": "res://audio/music/xennial-video_game_party_at_our_house.ogg",
+		"copy": "res://audio/music/xennial-video_game_party_at_our_house.ogg",
+		"transfer": "res://audio/music/kirk_osamayo-video_game_home.ogg",
+		"platform": "res://audio/music/human_gazpacho-the_outer_planes.ogg",
+		"laser": "res://audio/music/aldous_ichnite-descent_vector.ogg",
+		"dissent": "res://audio/music/filmy_ghost-crystal_heart.ogg",
+		"rhythm": "",
+		"petshop": "res://audio/music/geoff_harvey-myths_of_the_forest.ogg",
+		"final": ""
+	},
+	"endings": {
+		"pass": "res://audio/music/good_old_neon-video_game_soundtrack.ogg",
+		"fail": "res://audio/music/good_old_neon-video_game_soundtrack.ogg",
+		"final": "res://audio/music/good_old_neon-video_game_soundtrack.ogg"
+	}
+}

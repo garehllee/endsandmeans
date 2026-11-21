@@ -46,25 +46,54 @@ func sfx_random(paths: Array, volume_db := 0.0, pitch_var := 0.06) -> void:
 	if not paths.is_empty():
 		sfx(paths.pick_random(), volume_db, pitch_var)
 
-# Crossfades to a new track.
+# Crossfades to a new track, looping. An empty path fades the music out.
+var _fade: Tween
+
 func music(path: String, fade := 1.5, volume_db := -6.0) -> void:
-	if _music.stream and _music.stream.resource_path == path and _music.playing:
+	if path == "":
+		stop_music(fade)
 		return
+	if _music.stream and _music.stream.resource_path == path and _music.playing:
+		if _fade:
+			_fade.kill()
+		_fade = create_tween().set_parallel(true)
+		_fade.tween_property(_music, "volume_db", volume_db, fade)
+		_fade.tween_property(_music_b, "volume_db", -80.0, fade)
+		return
+	var stream: AudioStream = _cache.get(path)
+	if stream == null:
+		if not ResourceLoader.exists(path):
+			push_warning("Missing music: " + path)
+			return
+		stream = load(path)
+		_cache[path] = stream
+	if "loop" in stream:
+		stream.set("loop", true)
 	var old := _music
 	_music = _music_b
 	_music_b = old
-	_music.stream = load(path)
+	_music.stream = stream
 	_music.volume_db = -80.0
 	_music.play()
-	var t := create_tween().set_parallel(true)
-	t.tween_property(_music, "volume_db", volume_db, fade)
-	t.tween_property(_music_b, "volume_db", -80.0, fade)
-	t.chain().tween_callback(_music_b.stop)
+	if _fade:
+		_fade.kill()
+	_fade = create_tween().set_parallel(true)
+	_fade.tween_property(_music, "volume_db", volume_db, fade)
+	_fade.tween_property(_music_b, "volume_db", -80.0, fade)
+	_fade.chain().tween_callback(_music_b.stop)
 
 func stop_music(fade := 1.0) -> void:
-	var t := create_tween()
-	t.tween_property(_music, "volume_db", -80.0, fade)
-	t.tween_callback(_music.stop)
+	if _fade:
+		_fade.kill()
+	_fade = create_tween().set_parallel(true)
+	_fade.tween_property(_music, "volume_db", -80.0, fade)
+	_fade.tween_property(_music_b, "volume_db", -80.0, fade)
+	_fade.chain().tween_callback(func():
+		_music.stop()
+		_music_b.stop())
+
+func music_playing() -> String:
+	return _music.stream.resource_path if _music.stream and _music.playing and _music.volume_db > -79.0 else ""
 
 # 0 to 1, for a settings slider later.
 func set_bus_volume(bus: String, linear: float) -> void:

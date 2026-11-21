@@ -138,6 +138,7 @@ func start(cfg: MinigameConfig) -> void:
 	set_expand(_arena, 1.0)
 	running = true
 	_pos = (_start_room - _layer.position) / maxf(_s, 0.0001)
+	Music.playing_own(config.music)
 	if _player:
 		_player.platform_mode = true          # the character's own walking is switched off
 	if config.walk_to_button:

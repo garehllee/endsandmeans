@@ -170,4 +170,5 @@ func restart() -> void:
 	elapsed = 0.0
 	last_move_time = 0.0
 	Ethics.reset()
+	Music.reset()
 	get_tree().reload_current_scene()

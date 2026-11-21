@@ -413,6 +413,7 @@ func start(cfg: MinigameConfig) -> void:
 	_face = 1.0
 	_dir = "right"
 	_room_music.play()
+	Music.playing_own(_room_music.stream)
 	_room_a = 0.0
 	create_tween().tween_property(self, "_room_a", 1.0, 1.0)
 	_go(Stage.ROOM)
@@ -539,6 +540,7 @@ func _begin_transition() -> void:
 	_room_music.stop()
 	_battle_music.volume_db = config.music_db
 	_battle_music.play()
+	Music.playing_own(_battle_music.stream)
 
 func _transition_time() -> float:
 	return _transition.stream_position if _transition.is_playing() else _stage_t
@@ -1090,6 +1092,7 @@ func _tick_flash() -> void:
 		_cam = _camera.position
 	_room_music.volume_db = config.music_db
 	_room_music.play()
+	Music.playing_own(_room_music.stream)
 	_go(Stage.DOOR_ROOM)
 	create_tween().tween_property(self, "_black", 0.0, 0.8)
 
