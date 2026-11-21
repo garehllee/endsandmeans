@@ -110,6 +110,8 @@ var _phase := 1
 var _scenes: Node2D                 # the rest of the game glitching through the background
 var _bg_glitch: ColorRect           # and the background itself breaking up under it
 var _bg_seed_t := 0.0
+var _floats: Node2D                 # bits of the game drifting through it
+var _floaters: Array[Dictionary] = []
 var _bg_patch_t := 0.0
 var _glitches: Array[Dictionary] = []
 var _glitch_due := 0.0
@@ -203,6 +205,7 @@ func prepare(cfg: MinigameConfig) -> void:
 	(_bg_glitch.material as ShaderMaterial).shader = GLITCH_SHADER
 	_bg_glitch.visible = false
 	add_child(_bg_glitch)
+	_floats = _make_layer(0, _draw_floaters)    # over the broken background, still under the fight
 	_back = _make_layer(0, _draw_back)
 	_prop = _make_layer(0, _draw_prop)
 	var hover := ShaderMaterial.new()
@@ -388,7 +391,7 @@ func _place() -> void:
 
 func _redraw() -> void:
 	queue_redraw()
-	for n in [_scenes, _back, _prop, _dim, _front, _hud, _blue, _over]:
+	for n in [_scenes, _floats, _back, _prop, _dim, _front, _hud, _blue, _over]:
 		if n:
 			(n as Node2D).queue_redraw()
 
@@ -1528,9 +1531,11 @@ func _tick_scenes(dt: float) -> void:
 		_bg_glitch.visible = on
 	if not on:
 		_glitches.clear()
+		_floaters.clear()
 		return
 	var k := _chaos()
 	_tick_bg_glitch(dt, k)
+	_tick_floaters(dt, k)
 	for g in _glitches:
 		g["t"] += dt
 	_glitches = _glitches.filter(func(g): return g["t"] < g["life"])
@@ -1622,3 +1627,70 @@ func _tick_bg_glitch(dt: float, k: float) -> void:
 	var view := Rect2(_cam - _arena.size * 0.5, _arena.size)
 	_bg_glitch.position = view.position
 	_bg_glitch.size = view.size
+
+# Bits of the game float through the background, as if they're leaking into
+# the fight: mice, the water gun, files, window icons, the umbrella... They
+# drift and turn, and the worse things get the more of them there are and
+# the more broken they are: trails of copies, jumps, flicker, red and cyan.
+# Mice sometimes come in a row of copies. Positions are shares of the view,
+# so they stay put on screen while the fight scrolls.
+func _tick_floaters(dt: float, k: float) -> void:
+	if config.floaters.is_empty():
+		return
+	for f in _floaters:
+		f["t"] += dt
+		f["p"] += f["v"] * dt
+		f["rot"] += f["spin"] * dt
+		if randf() < k * 0.02 * dt * 60.0:
+			f["p"] += Vector2(randf_range(-0.04, 0.04), randf_range(-0.03, 0.03)) * (0.5 + k)   # a jump
+	_floaters = _floaters.filter(func(f): return f["t"] < f["life"])
+	var want := int(lerpf(config.floater_count.x, config.floater_count.y, pow(k, 1.1)))
+	while _floaters.size() < want:
+		_spawn_floater(k)
+
+func _spawn_floater(k: float) -> void:
+	var tex: Texture2D = config.floaters.pick_random()
+	var mouse := tex.resource_path.contains("/pets/mouse_")
+	var copies := 1
+	if mouse and randf() < 0.35 + 0.4 * k:
+		copies = randi_range(3, 4 + int(5.0 * k))    # a row of the same mouse
+	elif randf() < k * 0.5:
+		copies = randi_range(2, 3 + int(4.0 * k))    # a trail of ghosts behind it
+	var dir := Vector2.from_angle(randf() * TAU)
+	_floaters.append({"tex": tex, "t": 0.0, "life": randf_range(3.0, 8.0) * lerpf(1.0, 0.55, k),
+		"p": Vector2(randf(), randf()), "v": dir * randf_range(0.01, 0.04 + 0.08 * k),
+		"rot": randf_range(-0.4, 0.4), "spin": randf_range(-0.6, 0.6) * (0.3 + k),
+		"w": randf_range(config.floater_width.x, config.floater_width.y),
+		"copies": copies, "step": Vector2.from_angle(randf() * TAU) * randf_range(0.03, 0.07),
+		"split": randf() < k * 0.5, "flip": randf() < 0.5})
+
+func _draw_floaters() -> void:
+	if _floaters.is_empty():
+		return
+	var view := Rect2(_cam - _arena.size * 0.5, _arena.size)
+	var k := _chaos()
+	for f in _floaters:
+		if randf() < k * 0.15:
+			continue                                     # flicker
+		var tex: Texture2D = f["tex"]
+		var t: float = f["t"]
+		var life: float = f["life"]
+		var a := minf(minf(t / 0.3, (life - t) / 0.5), 1.0) * lerpf(0.75, 1.0, k)
+		if a <= 0.0:
+			continue
+		var w: float = f["w"] * _s
+		var size := Vector2(w, w * tex.get_height() / maxf(float(tex.get_width()), 1.0))
+		if f["flip"]:
+			size.x = -size.x
+		for c in f["copies"]:
+			var p: Vector2 = f["p"] + f["step"] * float(c)
+			var at := view.position + p * view.size
+			var ca: float = a * (1.0 if c == 0 else 0.75 - 0.5 * float(c) / float(f["copies"]))
+			_floats.draw_set_transform(at, f["rot"], Vector2.ONE)
+			var r := Rect2(-size * 0.5, size)
+			if f["split"]:
+				var off := Vector2(6.0 + 14.0 * k, 0.0) * _s
+				_floats.draw_texture_rect(tex, Rect2(r.position - off, r.size), false, Color(1, 0.15, 0.25, ca * 0.8))
+				_floats.draw_texture_rect(tex, Rect2(r.position + off, r.size), false, Color(0.15, 1, 1, ca * 0.8))
+			_floats.draw_texture_rect(tex, r, false, Color(1, 1, 1, ca))
+	_floats.draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)

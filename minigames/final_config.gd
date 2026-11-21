@@ -147,3 +147,8 @@ class_name FinalConfig
 @export var glitch_alpha := Vector2(0.3, 0.95)    # how strongly they show, likewise
 @export var glitch_life := Vector2(0.28, 0.08)    # how long each lasts, likewise (seconds)
 @export var bg_glitch := Vector2(0.2, 1.0)        # how broken the background itself is, likewise (0 to 1)
+
+# And bits of the game itself float through it: mice, icons, windows, guns...
+@export var floaters: Array[Texture2D] = []
+@export var floater_count := Vector2(4.0, 28.0)   # how many at once, at full health and at none
+@export var floater_width := Vector2(50.0, 190.0) # how big each is, in picture units (random between)
