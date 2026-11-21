@@ -629,6 +629,16 @@
 			"creator": "coghezzi",
 			"source": "Pixabay (sound 555661)",
 			"license": "Pixabay Content License"
+		},
+		{
+			"file": "res://audio/sfx/creatorshome_turn_a_page.ogg",
+			"original": "creatorshome-turn-a-page-336933.mp3",
+			"used_for": [
+				"enter_folder"
+			],
+			"creator": "creatorshome",
+			"source": "Pixabay (sound 336933)",
+			"license": "Pixabay Content License"
 		}
 	]
 }

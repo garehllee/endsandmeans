@@ -9,6 +9,9 @@ class_name NotebookScan
 # and the game ends: caught. Lines scrolled out of view are read at the
 # bottom of the page.
 #
+# It doesn't start looking until the player has done something unethical
+# (the first exploit); the minute counts from then.
+#
 # It lives on the notepad window, so it moves with it, and draws over the
 # other windows.
 
@@ -50,6 +53,9 @@ func _ready() -> void:
 
 func _process(delta: float) -> void:
 	if _step == Step.WAIT:
+		if Ethics.act_count() == 0:
+			_wait = every           # nothing to find yet: the minute starts after the first exploit
+			return
 		if not Game.started or not _can_scan():
 			return
 		_wait -= delta

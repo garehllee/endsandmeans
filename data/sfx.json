@@ -405,5 +405,13 @@
 		],
 		"volume_db": -4,
 		"slice": 2.2
+	},
+	"enter_folder": {
+		"row": 15,
+		"files": [
+			"res://audio/sfx/creatorshome_turn_a_page.ogg"
+		],
+		"volume_db": -4,
+		"pitch_var": 0.05
 	}
 }

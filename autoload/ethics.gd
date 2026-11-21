@@ -134,8 +134,8 @@ func principle_name(principle_id: String) -> String:
 # ---------------------------------------------------------------- checkpoints
 # Call save_checkpoint() just before each rule-breaking minigame starts.
 func save_checkpoint() -> void:
-	_checkpoint = snapshot()
 	Game.say(Game.pick("progress_saved"), "save")   # the notepad shows it with a floppy disk
+	_checkpoint = snapshot()                         # (after, so the notepad keeps that line too)
 
 func has_checkpoint() -> bool:
 	return not _checkpoint.is_empty()
@@ -147,12 +147,20 @@ func respawn() -> bool:
 	restore(_checkpoint)
 	return true
 
+# Flags, the ledger, and every line in the notepad.
 func snapshot() -> Dictionary:
-	return {"flags": Game.flags.duplicate(true), "ledger": ledger.duplicate(true)}
+	var s := {"flags": Game.flags.duplicate(true), "ledger": ledger.duplicate(true)}
+	var notepad := get_tree().get_first_node_in_group("notepad")
+	if notepad:
+		s["notes"] = notepad.save_lines()
+	return s
 
 func restore(s: Dictionary) -> void:
 	Game.flags = s.flags.duplicate(true)
 	ledger = s.ledger.duplicate(true)
+	var notepad := get_tree().get_first_node_in_group("notepad")
+	if notepad and s.has("notes"):
+		notepad.load_lines(s["notes"])
 	restored.emit()
 
 # Clears the run (not the save file).

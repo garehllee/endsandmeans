@@ -13,17 +13,19 @@ extends DesktopWindow
 @onready var scroll: ScrollContainer = %Scroll
 
 var _latest_label: Label = null
-var _unethical_rows: Array[Node] = []
 
 func _ready() -> void:
 	super()
+	add_to_group("notepad")          # Ethics saves and restores its lines with a checkpoint
 	Game.line_logged.connect(add_line)
 	Game.clear_unethical_requested.connect(_redact_unethical)
-	Ethics.restored.connect(_forget_undone)
 	add_child(NotebookScan.new())   # every now and then, something reads the notebook
 
 func add_line(timestamp: String, text: String, kind: String) -> void:
 	var row = line_scene.instantiate()
+	row.set_meta("time", timestamp)
+	row.set_meta("text", text)
+	row.set_meta("kind", kind)
 	row.get_node("Time").text = timestamp
 	var label: Label = row.get_node("Text")
 	label.text = text
@@ -40,7 +42,6 @@ func add_line(timestamp: String, text: String, kind: String) -> void:
 	elif kind == "unethical":
 		label.add_theme_color_override("font_color", unethical_color)
 		row.set_meta("act_index", Ethics.ledger.size() - 1)   # the act this logs (just recorded)
-		_unethical_rows.append(row)
 	else:
 		label.add_theme_color_override("font_color", action_color)
 
@@ -52,12 +53,11 @@ func add_line(timestamp: String, text: String, kind: String) -> void:
 # Replaces every line logged for an unethical act with solid boxes, one per
 # word, like a redacted line in a file (the notebook exploit window asks for this).
 func _redact_unethical() -> void:
-	if not _unethical_rows.is_empty():
+	var red := unethical_rows()
+	if not red.is_empty():
 		Audio.play("redact")
-	for row in _unethical_rows:
-		if is_instance_valid(row):
-			_redact_row(row)
-	_unethical_rows.clear()
+	for row in red:
+		_redact_row(row)
 	Game.say_random("notes_cleared")
 
 # A small picture at the start of the line's text (the label shrinks to make room).
@@ -81,26 +81,47 @@ func _add_icon(row: Node, label: Label, tex: Texture2D, height: float) -> void:
 	(row as BoxContainer).add_theme_constant_override("separation", 8)
 
 # The red lines still readable (not redacted): what the scan is looking for.
+# Every line in the notepad is checked, so none can slip past.
 func unethical_rows() -> Array[Control]:
 	var out: Array[Control] = []
-	for row in _unethical_rows:
-		if is_instance_valid(row):
-			out.append(row)
+	for row in lines.get_children():
+		if row.is_queued_for_deletion():
+			continue
+		if row.get_meta("kind", "") == "unethical" and not row.get_meta("redacted", false):
+			out.append(row as Control)
 	return out
 
-# Going back to a checkpoint: lines for acts that are no longer in the ledger go.
-func _forget_undone() -> void:
-	var keep: Array[Node] = []
-	for row in _unethical_rows:
-		if not is_instance_valid(row):
+# ---------------------------------------------------------------- saving
+# Every line, oldest first, for a checkpoint: what it said, when, what kind,
+# and whether it has been redacted.
+func save_lines() -> Array:
+	var out := []
+	var rows := lines.get_children()
+	rows.reverse()                    # the newest is at the top
+	for row in rows:
+		if row.is_queued_for_deletion() or not row.has_meta("text"):
 			continue
-		if int(row.get_meta("act_index", -1)) >= Ethics.ledger.size():
-			row.queue_free()
-		else:
-			keep.append(row)
-	_unethical_rows = keep
+		out.append({"time": row.get_meta("time"), "text": row.get_meta("text"),
+				"kind": row.get_meta("kind"), "act_index": row.get_meta("act_index", -1),
+				"redacted": row.get_meta("redacted", false)})
+	return out
+
+# Going back to a checkpoint: the notepad becomes exactly what it was then.
+func load_lines(saved: Array) -> void:
+	for row in lines.get_children():
+		lines.remove_child(row)
+		row.queue_free()
+	_latest_label = null
+	for l in saved:
+		add_line(l["time"], l["text"], l["kind"])
+		var row := lines.get_child(0)
+		if l["kind"] == "unethical":
+			row.set_meta("act_index", l["act_index"])
+		if l["redacted"]:
+			_redact_row(row)
 
 func _redact_row(row: Node) -> void:
+	row.set_meta("redacted", true)
 	var label: Label = row.get_node("Text")
 	var font := label.get_theme_font("font")
 	var fs := label.get_theme_font_size("font_size")

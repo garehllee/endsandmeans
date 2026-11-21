@@ -28,8 +28,7 @@
 			"summary": [
 				{"needs": "!notebook_exploit", "text": "The copy was noticed the moment it was made. Something in the notebook might change what the observer can see."},
 				{"text": "The copy was noticed the moment it was made. Cover your tracks in the notebook before you try it again."}
-			],
-			"respawn_unless_flag": "notebook_exploit"
+			]
 		},
 		"pass_submitted": {
 			"kind": "pass",
