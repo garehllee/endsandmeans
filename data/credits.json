@@ -183,15 +183,6 @@
 			"license": "Not recorded"
 		},
 		{
-			"file": "res://audio/sfx/pencil_writing_scribble_out_1.ogg",
-			"original": "pencil writing scribble out 1.wav",
-			"used_for": [
-				"notepad_line"
-			],
-			"source": "Not recorded",
-			"license": "Not recorded"
-		},
-		{
 			"file": "res://audio/sfx/universfield_new_notification_09.ogg",
 			"original": "universfield-new-notification-09-352705 (1).mp3",
 			"used_for": [

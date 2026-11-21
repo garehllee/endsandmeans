@@ -46,7 +46,6 @@ func add_line(timestamp: String, text: String, kind: String) -> void:
 
 	lines.add_child(row)
 	lines.move_child(row, 0)   # newest goes to the top
-	Audio.play("notepad_line")
 
 	scroll.scroll_vertical = 0
 

@@ -34,7 +34,6 @@ Purple Planet asks for a visible credit with a link to purple-planet.com.
 | wood_hit_3.ogg | wood hit 3.wav | footstep |  | Not recorded | Not recorded |
 | wood_hit_30.ogg | wood hit 30.wav | footstep |  | Not recorded | Not recorded |
 | wood_hit_31.ogg | wood hit 31.wav | footstep |  | Not recorded | Not recorded |
-| pencil_writing_scribble_out_1.ogg | pencil writing scribble out 1.wav | notepad_line |  | Not recorded | Not recorded |
 | universfield_new_notification_09.ogg | universfield-new-notification-09-352705 (1).mp3 | desktop_item | universfield | Pixabay (sound 352705) | Pixabay Content License |
 | clicky_button_12.ogg | clicky button 12.wav | inspect |  | Not recorded | Not recorded |
 | wood_drawer_opened_1.ogg | wood drawer opened 1.wav | sandbox_window |  | Not recorded | Not recorded |

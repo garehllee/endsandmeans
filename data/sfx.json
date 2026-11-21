@@ -18,14 +18,6 @@
 		"volume_db": -14,
 		"pitch_var": 0.08
 	},
-	"notepad_line": {
-		"row": 4,
-		"files": [
-			"res://audio/sfx/pencil_writing_scribble_out_1.ogg"
-		],
-		"volume_db": -14,
-		"min_gap": 0.6
-	},
 	"desktop_item": {
 		"row": 9,
 		"files": [
