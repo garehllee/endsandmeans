@@ -135,6 +135,7 @@ func principle_name(principle_id: String) -> String:
 # Call save_checkpoint() just before each rule-breaking minigame starts.
 func save_checkpoint() -> void:
 	_checkpoint = snapshot()
+	Game.say(Game.pick("progress_saved"), "save")   # the notepad shows it with a floppy disk
 
 func has_checkpoint() -> bool:
 	return not _checkpoint.is_empty()

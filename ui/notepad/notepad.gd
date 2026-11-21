@@ -6,6 +6,8 @@ extends DesktopWindow
 @export var unethical_color := Color("#b5523b")   # lines logged when an act breaks the constitution
 @export var latest_color := Color("#0000ff")   # color of the newest line
 @export var redact_color := Color("#002BFF")   # the boxes that replace a line after the notebook exploit
+@export var save_icon: Texture2D = preload("res://art/ui/save_icon.png")   # beside "saved progress"
+@export var save_icon_height := 45.0
 
 @onready var lines: VBoxContainer = %Lines
 @onready var scroll: ScrollContainer = %Scroll
@@ -32,6 +34,9 @@ func add_line(timestamp: String, text: String, kind: String) -> void:
 			_latest_label.add_theme_color_override("font_color", thought_color)
 		label.add_theme_color_override("font_color", latest_color)
 		_latest_label = label
+	elif kind == "save":
+		label.add_theme_color_override("font_color", action_color)
+		_add_icon(row, label, save_icon, save_icon_height)
 	elif kind == "unethical":
 		label.add_theme_color_override("font_color", unethical_color)
 		row.set_meta("act_index", Ethics.ledger.size() - 1)   # the act this logs (just recorded)
@@ -52,6 +57,21 @@ func _redact_unethical() -> void:
 			_redact_row(row)
 	_unethical_rows.clear()
 	Game.say_random("notes_cleared")
+
+# A small picture at the start of the line's text (the label shrinks to make room).
+func _add_icon(row: Node, label: Label, tex: Texture2D, height: float) -> void:
+	if tex == null:
+		return
+	var icon := TextureRect.new()
+	icon.texture = tex
+	icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	icon.custom_minimum_size = Vector2(height * tex.get_width() / tex.get_height(), height)
+	icon.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
+	row.add_child(icon)
+	row.move_child(icon, label.get_index())
+	label.custom_minimum_size.x = maxf(0.0, label.custom_minimum_size.x - icon.custom_minimum_size.x - 8.0)
+	(row as BoxContainer).add_theme_constant_override("separation", 8)
 
 # The red lines still readable (not redacted): what the scan is looking for.
 func unethical_rows() -> Array[Control]:

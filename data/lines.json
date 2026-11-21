@@ -415,5 +415,8 @@
 	"scan_caught": [
 		"it saw.",
 		"it read that line."
+	],
+	"progress_saved": [
+		"saved progress"
 	]
 }
