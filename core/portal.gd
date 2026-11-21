@@ -30,6 +30,8 @@ func _on_interact() -> void:
 	_start_scale = _player.scale
 
 	_set_door_open(true)
+	if target_world == "library":
+		Audio.play("door_open")
 	await get_tree().create_timer(0.3).timeout
 
 	# Walk into the doorway, shrinking and fading.

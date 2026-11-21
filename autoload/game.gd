@@ -171,4 +171,5 @@ func restart() -> void:
 	last_move_time = 0.0
 	Ethics.reset()
 	Music.reset()
+	Audio.stop_all_loops()
 	get_tree().reload_current_scene()

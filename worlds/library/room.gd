@@ -159,6 +159,7 @@ func _apply_additions() -> void:
 		_tree["children"].append(entry)
 		var idx: int = walls[0].add_entry(entry)
 		walls[0].blink_entry(idx, a.get("blink", 3))
+		Audio.play("new_folder")
 		if a.has("say"):
 			Game.say_random(a["say"])
 

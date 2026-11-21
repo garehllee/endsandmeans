@@ -125,6 +125,7 @@ func play() -> void:
 	_copying = true
 	_copy_t = 0.0
 	_glitch.visible = true
+	Audio.play("collapse")
 	await get_tree().create_timer(copy_time).timeout
 	_copying = false
 	Game.input_locked = was_locked

@@ -1,0 +1,416 @@
+{
+	"click_start": {
+		"row": 2,
+		"files": [
+			"res://audio/sfx/click_noise.ogg"
+		],
+		"volume_db": -4
+	},
+	"footstep": {
+		"row": 3,
+		"files": [
+			"res://audio/sfx/wood_hit_28.ogg",
+			"res://audio/sfx/wood_hit_29.ogg",
+			"res://audio/sfx/wood_hit_3.ogg",
+			"res://audio/sfx/wood_hit_30.ogg",
+			"res://audio/sfx/wood_hit_31.ogg"
+		],
+		"volume_db": -14,
+		"pitch_var": 0.08
+	},
+	"notepad_line": {
+		"row": 4,
+		"files": [
+			"res://audio/sfx/pencil_writing_scribble_out_1.ogg"
+		],
+		"volume_db": -14,
+		"min_gap": 0.6
+	},
+	"desktop_item": {
+		"row": 9,
+		"files": [
+			"res://audio/sfx/universfield_new_notification_09.ogg"
+		],
+		"volume_db": -4
+	},
+	"inspect": {
+		"row": 11,
+		"files": [
+			"res://audio/sfx/clicky_button_12.ogg"
+		],
+		"volume_db": -6
+	},
+	"sandbox_window": {
+		"row": 12,
+		"files": [
+			"res://audio/sfx/wood_drawer_opened_1.ogg"
+		],
+		"volume_db": -4
+	},
+	"door_open": {
+		"row": 13,
+		"files": [
+			"res://audio/sfx/door_open_11.ogg"
+		],
+		"volume_db": -4
+	},
+	"strip_open": {
+		"row": 14,
+		"files": [
+			"res://audio/sfx/bounce_on_1.ogg",
+			"res://audio/sfx/bounce_on_2.ogg",
+			"res://audio/sfx/bounce_on_3.ogg"
+		],
+		"volume_db": -12,
+		"pitch_var": 0.06,
+		"min_gap": 0.3
+	},
+	"new_folder": {
+		"row": 17,
+		"files": [
+			"res://audio/sfx/universfield_new_notification_08.ogg"
+		],
+		"volume_db": -4
+	},
+	"hallway_glitch": {
+		"row": 19,
+		"files": [
+			"res://audio/sfx/pwlpl_digital_glitch.ogg",
+			"res://audio/sfx/sound_garage_glitch_fx_transitions_6.ogg",
+			"res://audio/sfx/virtual_vibes_glitch_sound_effect_hd.ogg"
+		],
+		"volume_db": -8,
+		"slice": 0.35
+	},
+	"choice_open": {
+		"row": 20,
+		"files": [
+			"res://audio/sfx/measuring_tape_contract_dramatic_2.ogg"
+		],
+		"volume_db": -6
+	},
+	"choose_do": {
+		"row": 22,
+		"files": [
+			"res://audio/sfx/8_bit_positive_long.ogg"
+		],
+		"volume_db": -4
+	},
+	"choose_later": {
+		"row": 23,
+		"files": [
+			"res://audio/sfx/8_bit_chime_positive.ogg"
+		],
+		"volume_db": -4
+	},
+	"scan_sweep": {
+		"row": 28,
+		"files": [
+			"res://audio/sfx/razor_buzz.ogg"
+		],
+		"volume_db": -10,
+		"loop": true
+	},
+	"caught": {
+		"row": 30,
+		"files": [
+			"res://audio/sfx/lose.ogg"
+		],
+		"volume_db": -4
+	},
+	"redact": {
+		"row": 31,
+		"files": [
+			"res://audio/sfx/punch.ogg"
+		],
+		"volume_db": -4
+	},
+	"come_apart": {
+		"row": 32,
+		"files": [
+			"res://audio/sfx/hurt.ogg"
+		],
+		"volume_db": -4
+	},
+	"respawn": {
+		"row": 33,
+		"files": [
+			"res://audio/sfx/sci_fi_select.ogg"
+		],
+		"volume_db": -4
+	},
+	"collapse": {
+		"row": 34,
+		"files": [
+			"res://audio/sfx/soundreality_glitch_effect_7.ogg"
+		],
+		"volume_db": -4,
+		"slice": 3.0
+	},
+	"ending_button": {
+		"row": 36,
+		"files": [
+			"res://audio/sfx/sci_fi_confirm.ogg"
+		],
+		"volume_db": -4
+	},
+	"submit_drop": {
+		"row": 37,
+		"files": [
+			"res://audio/sfx/pop_1.ogg"
+		],
+		"volume_db": -4
+	},
+	"submit": {
+		"row": 38,
+		"files": [
+			"res://audio/sfx/match_synth_8.ogg"
+		],
+		"volume_db": -4
+	},
+	"firewall_hit": {
+		"row": 39,
+		"files": [
+			"res://audio/sfx/match_7.ogg"
+		],
+		"volume_db": -4
+	},
+	"folder_caught": {
+		"row": 40,
+		"files": [
+			"res://audio/sfx/power_up.ogg"
+		],
+		"volume_db": -4
+	},
+	"erase": {
+		"row": 41,
+		"files": [
+			"res://audio/sfx/eraser_3.ogg",
+			"res://audio/sfx/eraser_4.ogg",
+			"res://audio/sfx/eraser_5.ogg"
+		],
+		"volume_db": -12,
+		"pitch_var": 0.05,
+		"loop": true
+	},
+	"catch_computer": {
+		"row": 42,
+		"files": [
+			"res://audio/sfx/coin_3.ogg"
+		],
+		"volume_db": -4
+	},
+	"connection_push": {
+		"row": 43,
+		"files": [
+			"res://audio/sfx/designerschoice_comcam_cu_kodak_film_wind_up_nicholas_judy_tdc.ogg"
+		],
+		"volume_db": -8,
+		"loop": true
+	},
+	"file_bounce": {
+		"row": 45,
+		"files": [
+			"res://audio/sfx/jump_short.ogg"
+		],
+		"volume_db": -4,
+		"pitch_var": 0.08,
+		"min_gap": 0.1
+	},
+	"file_in": {
+		"row": 48,
+		"files": [
+			"res://audio/sfx/power_up.ogg"
+		],
+		"volume_db": -4
+	},
+	"corrupt": {
+		"row": 49,
+		"files": [
+			"res://audio/sfx/mouse_click_2.ogg"
+		],
+		"volume_db": -4
+	},
+	"jump": {
+		"row": 50,
+		"files": [
+			"res://audio/sfx/jump.ogg"
+		],
+		"volume_db": -4
+	},
+	"fall_off": {
+		"row": 52,
+		"files": [
+			"res://audio/sfx/hurt.ogg"
+		],
+		"volume_db": -4
+	},
+	"key_taken": {
+		"row": 53,
+		"files": [
+			"res://audio/sfx/power_up.ogg"
+		],
+		"volume_db": -4
+	},
+	"laser_warning": {
+		"row": 54,
+		"files": [
+			"res://audio/sfx/soundshelfstudio_ui_alarm_clock.ogg"
+		],
+		"volume_db": -8
+	},
+	"laser_fire": {
+		"row": 55,
+		"files": [
+			"res://audio/sfx/freesound_community_laser_zap.ogg"
+		],
+		"volume_db": -4
+	},
+	"watergun_taken": {
+		"row": 57,
+		"files": [
+			"res://audio/sfx/power_up.ogg"
+		],
+		"volume_db": -4
+	},
+	"watergun_shot": {
+		"row": 58,
+		"files": [
+			"res://audio/sfx/explosion_medium.ogg"
+		],
+		"volume_db": -4
+	},
+	"shoved": {
+		"row": 62,
+		"files": [
+			"res://audio/sfx/hurt.ogg"
+		],
+		"volume_db": -4
+	},
+	"typing": {
+		"row": 63,
+		"files": [
+			"res://audio/sfx/dragon_studio_keyboard_typing_sound_effect.ogg"
+		],
+		"volume_db": -10,
+		"loop": true
+	},
+	"commit_good": {
+		"row": 65,
+		"files": [
+			"res://audio/sfx/coin_2.ogg"
+		],
+		"volume_db": -4,
+		"pitch_var": 0.0
+	},
+	"commit_bad": {
+		"row": 66,
+		"files": [
+			"res://audio/sfx/undesired_effect.ogg"
+		],
+		"volume_db": -4,
+		"pitch_var": 0.0
+	},
+	"branch_reset": {
+		"row": 67,
+		"files": [
+			"res://audio/sfx/lose.ogg"
+		],
+		"volume_db": -4
+	},
+	"pushed": {
+		"row": 68,
+		"files": [
+			"res://audio/sfx/power_up.ogg"
+		],
+		"volume_db": -4
+	},
+	"mouse_scoot": {
+		"row": 69,
+		"files": [
+			"res://audio/sfx/dragon_studio_cute_animal_chitter.ogg"
+		],
+		"volume_db": -8,
+		"pitch_var": 0.1
+	},
+	"mouse_adopt": {
+		"row": 70,
+		"files": [
+			"res://audio/sfx/power_up.ogg"
+		],
+		"volume_db": -4
+	},
+	"hf_hit": {
+		"row": 72,
+		"files": [
+			"res://audio/sfx/punch.ogg"
+		],
+		"volume_db": -4,
+		"pitch_var": 0.06
+	},
+	"umbrella_block": {
+		"row": 73,
+		"files": [
+			"res://audio/sfx/wood_hitting_tree_9.ogg"
+		],
+		"volume_db": -4,
+		"pitch_var": 0.06
+	},
+	"umbrella_open": {
+		"row": 74,
+		"files": [
+			"res://audio/sfx/8_bit_negative_quick.ogg"
+		],
+		"volume_db": -4
+	},
+	"hf_lasers": {
+		"row": 75,
+		"files": [
+			"res://audio/sfx/explosion_large.ogg"
+		],
+		"volume_db": -4
+	},
+	"knocked_back": {
+		"row": 76,
+		"files": [
+			"res://audio/sfx/hurt.ogg"
+		],
+		"volume_db": -4
+	},
+	"fall_heal": {
+		"row": 77,
+		"files": [
+			"res://audio/sfx/fall_quick.ogg"
+		],
+		"volume_db": -4
+	},
+	"mouse_bite": {
+		"row": 78,
+		"files": [
+			"res://audio/sfx/crunch_splat.ogg"
+		],
+		"volume_db": -4
+	},
+	"hf_strobe": {
+		"row": 79,
+		"files": [
+			"res://audio/sfx/dragon_studio_glitch_effect_1.ogg"
+		],
+		"volume_db": -4
+	},
+	"door_unlock": {
+		"row": 80,
+		"files": [
+			"res://audio/sfx/soundreality_opening_door.ogg"
+		],
+		"volume_db": -4
+	},
+	"final_glitch": {
+		"row": 81,
+		"files": [
+			"res://audio/sfx/soundreality_glitch_effect_7.ogg"
+		],
+		"volume_db": -4,
+		"slice": 2.2
+	}
+}

@@ -260,11 +260,13 @@ func _add_button(tex: Texture2D, down: Texture2D, top: float, callback: Callable
 	b.size = tex.get_size() * _s
 	b.position = _px(Vector2(DESIGN.x * 0.5 - tex.get_width() * 0.5, top))
 	b.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+	b.pressed.connect(func(): Audio.play("ending_button"))
 	b.pressed.connect(callback)
 	_screen.add_child(b)
 	_buttons.append(b)
 
 func _on_respawn() -> void:
+	Audio.play("respawn")
 	Ethics.respawn()
 	Game.close_world({"action": "respawn"})
 

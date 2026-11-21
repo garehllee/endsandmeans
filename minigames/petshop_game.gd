@@ -169,6 +169,15 @@ func _update_mouse(m: Mouse, pp: Vector2, dt: float) -> void:
 		if absf(m.dir.x) > 0.15:
 			m.face_right = m.dir.x > 0.0              # it faces the way it is going
 
+var _last_squeak := -10.0
+
+# A squeak as a mouse darts off, but not from every mouse at once.
+func _squeak(chance: float) -> void:
+	var now := Time.get_ticks_msec() / 1000.0
+	if running and now - _last_squeak > 0.45 and randf() < chance:
+		_last_squeak = now
+		Audio.play("mouse_scoot")
+
 func _decide(m: Mouse, to_p: Vector2) -> void:
 	var d := to_p.length()
 	m.timer = randf_range(config.decision_time.x, config.decision_time.y)
@@ -181,10 +190,12 @@ func _decide(m: Mouse, to_p: Vector2) -> void:
 			m.dir = away.rotated(randf_range(-0.55, 0.55))
 			m.speed = config.flee_speed * randf_range(0.85, 1.0)
 			_along_walls(m, away)
+			_squeak(0.8)
 	elif randf() < config.scoot_chance:
 		m.dir = Vector2.from_angle(randf() * TAU)
 		m.speed = config.scoot_speed
 		m.timer = randf_range(config.scoot_time.x, config.scoot_time.y)
+		_squeak(0.35)
 		_along_walls(m, m.dir)
 	else:
 		m.speed = 0.0
@@ -218,6 +229,7 @@ func _adopt(m: Mouse) -> void:
 	m.sprite.visible = false             # the pet carries on from where it stood
 	_touching = null
 	Game.input_locked = true
+	Audio.play("mouse_adopt")
 	Game.say_random("mouse_adopted")
 	Pets.adopt(m.index, _to_room(m.pos), m.face_right)
 	_burst_hearts(m.pos)

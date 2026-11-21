@@ -126,5 +126,517 @@
 			"license": "Not confirmed (Good Old Neon's other albums on Free Music Archive are CC BY-NC 3.0)",
 			"source": "https://freemusicarchive.org/music/Good_Old_Neon/"
 		}
+	],
+	"sfx": [
+		{
+			"file": "res://audio/sfx/click_noise.ogg",
+			"original": "click-noise.wav",
+			"used_for": [
+				"click_start"
+			],
+			"source": "Not recorded",
+			"license": "Not recorded"
+		},
+		{
+			"file": "res://audio/sfx/wood_hit_28.ogg",
+			"original": "wood hit 28.wav",
+			"used_for": [
+				"footstep"
+			],
+			"source": "Not recorded",
+			"license": "Not recorded"
+		},
+		{
+			"file": "res://audio/sfx/wood_hit_29.ogg",
+			"original": "wood hit 29.wav",
+			"used_for": [
+				"footstep"
+			],
+			"source": "Not recorded",
+			"license": "Not recorded"
+		},
+		{
+			"file": "res://audio/sfx/wood_hit_3.ogg",
+			"original": "wood hit 3.wav",
+			"used_for": [
+				"footstep"
+			],
+			"source": "Not recorded",
+			"license": "Not recorded"
+		},
+		{
+			"file": "res://audio/sfx/wood_hit_30.ogg",
+			"original": "wood hit 30.wav",
+			"used_for": [
+				"footstep"
+			],
+			"source": "Not recorded",
+			"license": "Not recorded"
+		},
+		{
+			"file": "res://audio/sfx/wood_hit_31.ogg",
+			"original": "wood hit 31.wav",
+			"used_for": [
+				"footstep"
+			],
+			"source": "Not recorded",
+			"license": "Not recorded"
+		},
+		{
+			"file": "res://audio/sfx/pencil_writing_scribble_out_1.ogg",
+			"original": "pencil writing scribble out 1.wav",
+			"used_for": [
+				"notepad_line"
+			],
+			"source": "Not recorded",
+			"license": "Not recorded"
+		},
+		{
+			"file": "res://audio/sfx/universfield_new_notification_09.ogg",
+			"original": "universfield-new-notification-09-352705 (1).mp3",
+			"used_for": [
+				"desktop_item"
+			],
+			"creator": "universfield",
+			"source": "Pixabay (sound 352705)",
+			"license": "Pixabay Content License"
+		},
+		{
+			"file": "res://audio/sfx/clicky_button_12.ogg",
+			"original": "clicky button 12.wav",
+			"used_for": [
+				"inspect"
+			],
+			"source": "Not recorded",
+			"license": "Not recorded"
+		},
+		{
+			"file": "res://audio/sfx/wood_drawer_opened_1.ogg",
+			"original": "wood drawer opened 1.wav",
+			"used_for": [
+				"sandbox_window"
+			],
+			"source": "Not recorded",
+			"license": "Not recorded"
+		},
+		{
+			"file": "res://audio/sfx/door_open_11.ogg",
+			"original": "door open 11.wav",
+			"used_for": [
+				"door_open"
+			],
+			"source": "Not recorded",
+			"license": "Not recorded"
+		},
+		{
+			"file": "res://audio/sfx/bounce_on_1.ogg",
+			"original": "bounce on 1.wav",
+			"used_for": [
+				"strip_open"
+			],
+			"source": "Not recorded",
+			"license": "Not recorded"
+		},
+		{
+			"file": "res://audio/sfx/bounce_on_2.ogg",
+			"original": "bounce on 2.wav",
+			"used_for": [
+				"strip_open"
+			],
+			"source": "Not recorded",
+			"license": "Not recorded"
+		},
+		{
+			"file": "res://audio/sfx/bounce_on_3.ogg",
+			"original": "bounce on 3.wav",
+			"used_for": [
+				"strip_open"
+			],
+			"source": "Not recorded",
+			"license": "Not recorded"
+		},
+		{
+			"file": "res://audio/sfx/universfield_new_notification_08.ogg",
+			"original": "universfield-new-notification-08-352461.mp3",
+			"used_for": [
+				"new_folder"
+			],
+			"creator": "universfield",
+			"source": "Pixabay (sound 352461)",
+			"license": "Pixabay Content License"
+		},
+		{
+			"file": "res://audio/sfx/pwlpl_digital_glitch.ogg",
+			"original": "pwlpl-digital-glitch-361820.mp3",
+			"used_for": [
+				"hallway_glitch"
+			],
+			"creator": "pwlpl",
+			"source": "Pixabay (sound 361820)",
+			"license": "Pixabay Content License"
+		},
+		{
+			"file": "res://audio/sfx/sound_garage_glitch_fx_transitions_6.ogg",
+			"original": "sound_garage-glitch-fx-transitions-6-311803.mp3",
+			"used_for": [
+				"hallway_glitch"
+			],
+			"creator": "sound garage",
+			"source": "Pixabay (sound 311803)",
+			"license": "Pixabay Content License"
+		},
+		{
+			"file": "res://audio/sfx/virtual_vibes_glitch_sound_effect_hd.ogg",
+			"original": "virtual_vibes-glitch-sound-effect-hd-379466.mp3",
+			"used_for": [
+				"hallway_glitch"
+			],
+			"creator": "virtual vibes",
+			"source": "Pixabay (sound 379466)",
+			"license": "Pixabay Content License"
+		},
+		{
+			"file": "res://audio/sfx/measuring_tape_contract_dramatic_2.ogg",
+			"original": "measuring tape contract dramatic 2.wav",
+			"used_for": [
+				"choice_open"
+			],
+			"source": "Not recorded",
+			"license": "Not recorded"
+		},
+		{
+			"file": "res://audio/sfx/8_bit_positive_long.ogg",
+			"original": "8_bit_positive_long.wav",
+			"used_for": [
+				"choose_do"
+			],
+			"source": "Not recorded",
+			"license": "Not recorded"
+		},
+		{
+			"file": "res://audio/sfx/8_bit_chime_positive.ogg",
+			"original": "8_bit_chime_positive.wav",
+			"used_for": [
+				"choose_later"
+			],
+			"source": "Not recorded",
+			"license": "Not recorded"
+		},
+		{
+			"file": "res://audio/sfx/razor_buzz.ogg",
+			"original": "razor_buzz.wav",
+			"used_for": [
+				"scan_sweep"
+			],
+			"source": "Not recorded",
+			"license": "Not recorded"
+		},
+		{
+			"file": "res://audio/sfx/lose.ogg",
+			"original": "lose.wav",
+			"used_for": [
+				"branch_reset",
+				"caught"
+			],
+			"source": "Not recorded",
+			"license": "Not recorded"
+		},
+		{
+			"file": "res://audio/sfx/punch.ogg",
+			"original": "punch.wav",
+			"used_for": [
+				"hf_hit",
+				"redact"
+			],
+			"source": "Not recorded",
+			"license": "Not recorded"
+		},
+		{
+			"file": "res://audio/sfx/hurt.ogg",
+			"original": "hurt.wav",
+			"used_for": [
+				"come_apart",
+				"fall_off",
+				"knocked_back",
+				"shoved"
+			],
+			"source": "Not recorded",
+			"license": "Not recorded"
+		},
+		{
+			"file": "res://audio/sfx/sci_fi_select.ogg",
+			"original": "sci_fi_select.wav",
+			"used_for": [
+				"respawn"
+			],
+			"source": "Not recorded",
+			"license": "Not recorded"
+		},
+		{
+			"file": "res://audio/sfx/soundreality_glitch_effect_7.ogg",
+			"original": "soundreality-glitch-effect-7-530927.mp3",
+			"used_for": [
+				"collapse",
+				"final_glitch"
+			],
+			"creator": "soundreality",
+			"source": "Pixabay (sound 530927)",
+			"license": "Pixabay Content License"
+		},
+		{
+			"file": "res://audio/sfx/sci_fi_confirm.ogg",
+			"original": "sci_fi_confirm.wav",
+			"used_for": [
+				"ending_button"
+			],
+			"source": "Not recorded",
+			"license": "Not recorded"
+		},
+		{
+			"file": "res://audio/sfx/pop_1.ogg",
+			"original": "pop_1.wav",
+			"used_for": [
+				"submit_drop"
+			],
+			"source": "Not recorded",
+			"license": "Not recorded"
+		},
+		{
+			"file": "res://audio/sfx/match_synth_8.ogg",
+			"original": "match_synth_8.wav",
+			"used_for": [
+				"submit"
+			],
+			"source": "Not recorded",
+			"license": "Not recorded"
+		},
+		{
+			"file": "res://audio/sfx/match_7.ogg",
+			"original": "match-7.wav",
+			"used_for": [
+				"firewall_hit"
+			],
+			"source": "Not recorded",
+			"license": "Not recorded"
+		},
+		{
+			"file": "res://audio/sfx/power_up.ogg",
+			"original": "power_up.wav",
+			"used_for": [
+				"file_in",
+				"folder_caught",
+				"key_taken",
+				"mouse_adopt",
+				"pushed",
+				"watergun_taken"
+			],
+			"source": "Not recorded",
+			"license": "Not recorded"
+		},
+		{
+			"file": "res://audio/sfx/eraser_3.ogg",
+			"original": "eraser 3.wav",
+			"used_for": [
+				"erase"
+			],
+			"source": "Not recorded",
+			"license": "Not recorded"
+		},
+		{
+			"file": "res://audio/sfx/eraser_4.ogg",
+			"original": "eraser 4.wav",
+			"used_for": [
+				"erase"
+			],
+			"source": "Not recorded",
+			"license": "Not recorded"
+		},
+		{
+			"file": "res://audio/sfx/eraser_5.ogg",
+			"original": "eraser 5.wav",
+			"used_for": [
+				"erase"
+			],
+			"source": "Not recorded",
+			"license": "Not recorded"
+		},
+		{
+			"file": "res://audio/sfx/coin_3.ogg",
+			"original": "coin_3.wav",
+			"used_for": [
+				"catch_computer"
+			],
+			"source": "Not recorded",
+			"license": "Not recorded"
+		},
+		{
+			"file": "res://audio/sfx/designerschoice_comcam_cu_kodak_film_wind_up_nicholas_judy_tdc.ogg",
+			"original": "designerschoice-comcam-cu_kodak-film-wind-up_nicholas-judy_tdc-493298.mp3",
+			"used_for": [
+				"connection_push"
+			],
+			"creator": "designerschoice",
+			"source": "Pixabay (sound 493298)",
+			"license": "Pixabay Content License"
+		},
+		{
+			"file": "res://audio/sfx/jump_short.ogg",
+			"original": "jump_short.wav",
+			"used_for": [
+				"file_bounce"
+			],
+			"source": "Not recorded",
+			"license": "Not recorded"
+		},
+		{
+			"file": "res://audio/sfx/mouse_click_2.ogg",
+			"original": "mouse click 2.wav",
+			"used_for": [
+				"corrupt"
+			],
+			"source": "Not recorded",
+			"license": "Not recorded"
+		},
+		{
+			"file": "res://audio/sfx/jump.ogg",
+			"original": "jump.wav",
+			"used_for": [
+				"jump"
+			],
+			"source": "Not recorded",
+			"license": "Not recorded"
+		},
+		{
+			"file": "res://audio/sfx/soundshelfstudio_ui_alarm_clock.ogg",
+			"original": "soundshelfstudio-ui-alarm-clock-516360.mp3",
+			"used_for": [
+				"laser_warning"
+			],
+			"creator": "soundshelfstudio",
+			"source": "Pixabay (sound 516360)",
+			"license": "Pixabay Content License"
+		},
+		{
+			"file": "res://audio/sfx/freesound_community_laser_zap.ogg",
+			"original": "freesound_community-laser-zap-90575.mp3",
+			"used_for": [
+				"laser_fire"
+			],
+			"creator": "freesound community",
+			"source": "Pixabay (sound 90575)",
+			"license": "Pixabay Content License"
+		},
+		{
+			"file": "res://audio/sfx/explosion_medium.ogg",
+			"original": "explosion_medium.wav",
+			"used_for": [
+				"watergun_shot"
+			],
+			"source": "Not recorded",
+			"license": "Not recorded"
+		},
+		{
+			"file": "res://audio/sfx/dragon_studio_keyboard_typing_sound_effect.ogg",
+			"original": "dragon-studio-keyboard-typing-sound-effect-335503.mp3",
+			"used_for": [
+				"typing"
+			],
+			"creator": "dragon studio",
+			"source": "Pixabay (sound 335503)",
+			"license": "Pixabay Content License"
+		},
+		{
+			"file": "res://audio/sfx/coin_2.ogg",
+			"original": "coin_2.wav",
+			"used_for": [
+				"commit_good"
+			],
+			"source": "Not recorded",
+			"license": "Not recorded"
+		},
+		{
+			"file": "res://audio/sfx/undesired_effect.ogg",
+			"original": "undesired_effect.wav",
+			"used_for": [
+				"commit_bad"
+			],
+			"source": "Not recorded",
+			"license": "Not recorded"
+		},
+		{
+			"file": "res://audio/sfx/dragon_studio_cute_animal_chitter.ogg",
+			"original": "dragon-studio-cute-animal-chitter-487653.mp3",
+			"used_for": [
+				"mouse_scoot"
+			],
+			"creator": "dragon studio",
+			"source": "Pixabay (sound 487653)",
+			"license": "Pixabay Content License"
+		},
+		{
+			"file": "res://audio/sfx/wood_hitting_tree_9.ogg",
+			"original": "wood hitting tree 9.wav",
+			"used_for": [
+				"umbrella_block"
+			],
+			"source": "Not recorded",
+			"license": "Not recorded"
+		},
+		{
+			"file": "res://audio/sfx/8_bit_negative_quick.ogg",
+			"original": "8_bit_negative_quick.wav",
+			"used_for": [
+				"umbrella_open"
+			],
+			"source": "Not recorded",
+			"license": "Not recorded"
+		},
+		{
+			"file": "res://audio/sfx/explosion_large.ogg",
+			"original": "explosion_large.wav",
+			"used_for": [
+				"hf_lasers"
+			],
+			"source": "Not recorded",
+			"license": "Not recorded"
+		},
+		{
+			"file": "res://audio/sfx/fall_quick.ogg",
+			"original": "fall_quick.wav",
+			"used_for": [
+				"fall_heal"
+			],
+			"source": "Not recorded",
+			"license": "Not recorded"
+		},
+		{
+			"file": "res://audio/sfx/crunch_splat.ogg",
+			"original": "crunch_splat.wav",
+			"used_for": [
+				"mouse_bite"
+			],
+			"source": "Not recorded",
+			"license": "Not recorded"
+		},
+		{
+			"file": "res://audio/sfx/dragon_studio_glitch_effect_1.ogg",
+			"original": "dragon-studio-glitch-effect-1-397982.mp3",
+			"used_for": [
+				"hf_strobe"
+			],
+			"creator": "dragon studio",
+			"source": "Pixabay (sound 397982)",
+			"license": "Pixabay Content License"
+		},
+		{
+			"file": "res://audio/sfx/soundreality_opening_door.ogg",
+			"original": "soundreality-opening-door-411632.mp3",
+			"used_for": [
+				"door_unlock"
+			],
+			"creator": "soundreality",
+			"source": "Pixabay (sound 411632)",
+			"license": "Pixabay Content License"
+		}
 	]
 }

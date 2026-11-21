@@ -81,6 +81,7 @@ func start(cfg: MinigameConfig) -> void:
 
 func stop() -> void:
 	running = false
+	Audio.loop_stop("erase")
 
 # 0 to 1: how much of the text is gone.
 func progress() -> float:
@@ -144,6 +145,8 @@ func _make_sprite(tex: Texture2D, s: float, z: int) -> Sprite2D:
 	add_child(sp)
 	return sp
 
+var _quiet := 0.0     # seconds since the eraser last rubbed out anything
+
 func _process(_delta: float) -> void:
 	if not running:
 		return
@@ -156,13 +159,23 @@ func _process(_delta: float) -> void:
 		_eraser_sprite.position = tip
 	if _done:
 		return
+	var before := _erased
 	_erase_along(tip)
+	# the rubbing sound runs while text is coming off, and stops when it isn't
+	if _erased > before:
+		_quiet = 0.0
+		Audio.loop_start("erase")
+	else:
+		_quiet += _delta
+		if _quiet > 0.12:
+			Audio.loop_stop("erase")
 	if _dirty:
 		_dirty = false
 		_mask_img.set_data(_mask_w, _mask_h, false, Image.FORMAT_R8, _mask)
 		_mask_tex.update(_mask_img)
 		if progress() >= config.target_fraction:
 			_done = true
+			Audio.loop_stop("erase")
 			Game.input_locked = true
 			finished.emit(true)
 

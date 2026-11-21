@@ -401,6 +401,7 @@ func _corrupt(it: Item) -> void:
 	_text.visible = true
 	_flash.visible = true
 	_flash.queue_redraw()
+	Audio.play("corrupt")
 	Game.say_random("transfer_corrupt")
 
 	await get_tree().create_timer(config.flash_time).timeout

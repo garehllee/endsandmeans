@@ -160,6 +160,7 @@ func _make_available(id: String, animate: bool) -> void:
 		var tw := create_tween().set_parallel(true)
 		tw.tween_property(icon, "modulate:a", 1.0, 0.4)
 		tw.tween_property(icon, "scale", Vector2.ONE, 0.45).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+		Audio.play("desktop_item")
 		if id == "orange_file":
 			Game.say_random("copy_added")
 		elif id == "key_file":
@@ -271,6 +272,7 @@ func _bounds() -> Rect2:
 	return DROP.grow(-(BOX_ICON * 0.5 + 12.0))
 
 func _add_item(id: String, at: Vector2) -> void:
+	Audio.play("submit_drop")
 	var d: Dictionary = _defs[id]
 	var tex: Texture2D = d["tex"]
 	var atlas: AtlasTexture = null
@@ -437,6 +439,7 @@ func _refresh_button() -> void:
 
 func _submit() -> void:
 	_submitting = true
+	Audio.play("submit")
 	_refresh_button()
 	var ids: Array[String] = []
 	for it in _items:

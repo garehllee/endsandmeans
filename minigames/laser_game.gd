@@ -199,6 +199,7 @@ func _step(dt: float) -> void:
 		_goal_taken = true
 		_state = State.TAKEN
 		_timer = config.end_hold
+		Audio.play("watergun_taken")
 		Game.say_random("watergun_taken")
 
 # ---------------------------------------------------------------- walking
@@ -234,7 +235,10 @@ func _blocked(at: Vector2) -> bool:
 
 # ---------------------------------------------------------------- lasers
 func _tick_lasers(dt: float) -> void:
+	var was := _clock
 	_clock += dt
+	if _active and was < config.warn_time and _clock >= config.warn_time:
+		Audio.play("laser_fire")
 	if _clock >= config.period:
 		_clock -= config.period
 		_spawn_volley()
@@ -242,6 +246,7 @@ func _tick_lasers(dt: float) -> void:
 		_spawn_volley()
 
 func _spawn_volley() -> void:
+	Audio.play("laser_warning")
 	_active = true
 	_volleys += 1
 	_beams = _make_volley()

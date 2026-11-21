@@ -111,6 +111,7 @@ func _update(delta: float) -> void:
 func _hit() -> void:
 	_state = State.HIT
 	Game.input_locked = true
+	Audio.play("firewall_hit")
 	Game.say_random("firewall_hit")
 	if _player.has_method("die"):
 		_player.die()                    # the bug comes apart while the screen flashes
@@ -129,6 +130,7 @@ func _hit() -> void:
 	_begin_round()
 
 func _catch() -> void:
+	Audio.play("folder_caught")
 	_state = State.DONE
 	Game.input_locked = true
 	finished.emit(true)

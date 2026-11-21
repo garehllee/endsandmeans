@@ -82,6 +82,7 @@ func _on_input(event: InputEvent) -> void:
 
 func _leave() -> void:
 	_leaving = true
+	Audio.play("click_start")
 	_canvas.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	var tw := create_tween()
 	tw.tween_property(_canvas, "modulate:a", 0.0, FADE).set_trans(Tween.TRANS_SINE)

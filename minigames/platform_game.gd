@@ -282,6 +282,7 @@ func _step(dt: float) -> void:
 	_coyote = maxf(_coyote - dt, 0.0)
 	_buffer = maxf(_buffer - dt, 0.0)
 	if _buffer > 0.0 and (_grounded or _coyote > 0.0):
+		Audio.play("jump")
 		_vel.y = -config.jump_speed
 		_grounded = false
 		_coyote = 0.0
@@ -323,6 +324,7 @@ func _step(dt: float) -> void:
 	if _pos.y > config.fall_y:
 		_state = State.DEAD
 		_timer = config.respawn_delay
+		Audio.play("fall_off")
 		Game.say_random("platform_fall")
 		return
 	if _takes_key():
@@ -330,6 +332,7 @@ func _step(dt: float) -> void:
 		_timer = config.end_hold
 		if _key:
 			_key.visible = false
+		Audio.play("key_taken")
 		Game.say_random("key_taken")
 
 func _takes_key() -> bool:

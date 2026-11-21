@@ -68,6 +68,8 @@ func _ready():
 	_build_bug()
 	_build_death()
 	_schedule_alt()
+	anim.frame_changed.connect(_on_step_frame.bind(anim))
+	_bug.frame_changed.connect(_on_step_frame.bind(_bug))
 
 func _physics_process(delta):
 	if npc:
@@ -148,6 +150,18 @@ func _track_movement(moving: bool) -> void:
 		return
 	last_walk_log = Game.elapsed
 	Game.say_random("walk_" + dir, {}, "action")
+
+# Footsteps: on the frames where a foot lands, for the one character the
+# player is moving (copies standing in minigames make no sound).
+func _on_step_frame(spr: AnimatedSprite2D) -> void:
+	if npc or Game.active_player != self or not spr.visible:
+		return
+	var a := String(spr.animation)
+	if not a.begins_with("walk"):
+		return
+	var n := spr.sprite_frames.get_frame_count(spr.animation)
+	if spr.frame == 0 or (a == "walk-up-down" and spr.frame == n / 2):
+		Audio.play("footstep", -4.0 if spr == _bug else 0.0)
 
 func play_anim(movement):
 	if _dead:
@@ -299,6 +313,8 @@ func die() -> void:
 	if _dead:
 		return
 	_dead = true
+	if not npc:
+		Audio.play("come_apart")
 	_gesture = false
 	_alt_playing = false
 	_died_as_bug = _bug_active or _bug_busy

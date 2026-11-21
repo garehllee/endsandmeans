@@ -224,6 +224,8 @@ func _update_buttons(delta: float) -> void:
 	_focus = focus
 	if focus != _prev_focus:
 		_prev_focus = focus
+		if focus >= 0:
+			Audio.play("choice_open")
 		if focus == 0:
 			Game.say_random(near_do_key)
 		elif focus == 1:
@@ -240,8 +242,10 @@ func _try_interact() -> void:
 	if b.open < 0.6 or not b.rect.has_point(player.position):
 		return
 	if _focus == 1:
+		Audio.play("choose_later")
 		_on_choose_later()
 	else:
+		Audio.play("choose_do")
 		_on_choose_do()
 
 # The two choices. A room that extends this one (the exploit rooms) overrides them.

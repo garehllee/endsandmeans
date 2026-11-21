@@ -110,6 +110,8 @@ var _pulse_t := 0.0
 # Glitches in the hallway you walked up (this wall's locked strip) and/or in
 # this room's floor, to show you've found somewhere that matters.
 var glitch_hallway := false
+var _sound_focus := -1        # the strip that last made its opening sound
+var _sound_t := 0.0
 var glitch_floor := false
 var _glitch_wait := 1.0
 var _glitch_left := 0.0
@@ -266,6 +268,12 @@ func _process(delta: float) -> void:
 		if fx < _items[i].x + _items[i].w:
 			_focus = i
 			break
+	_sound_t += delta
+	if _focus != _sound_focus:
+		if _sound_focus != -1 and _sound_t > 0.08 and Game.active_world == "library" and is_visible_in_tree():
+			Audio.play("strip_open")
+			_sound_t = 0.0
+		_sound_focus = _focus
 
 	var k := 1.0 - exp(-smoothing * delta)
 	var changed := false
@@ -392,6 +400,8 @@ func _tick_glitch(delta: float) -> void:
 	if _glitch_wait <= 0.0:
 		_glitch_left = randf_range(glitch_length.x, glitch_length.y)
 		_roll_glitch()
+		if Game.active_world == "library" and is_visible_in_tree():
+			Audio.play("hallway_glitch")
 
 func _roll_glitch() -> void:
 	_glitch_reroll = randf_range(0.03, 0.07)

@@ -41,6 +41,8 @@ func _process(_delta: float) -> void:
 			clampf(p.y, window_rect.position.y, window_rect.end.y))
 	var near := p.distance_to(nearest) <= open_range
 	if near != is_open_state:
+		if near and Game.active_world == "sandbox":
+			Audio.play("sandbox_window")
 		if near and Game.elapsed - last_window_open > WINDOW_COOLDOWN:
 			Game.say_random("window_hover")
 			last_window_open = Game.elapsed

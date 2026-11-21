@@ -222,6 +222,7 @@ func _shove(dt: float) -> void:
 	var k := clampf(_shove_t / (LUNGE_TIME * 2.0), 0.0, 1.0)
 	_orange_at = rest + Vector2(away * LUNGE * sin(k * PI), 0.0)
 	if before < LUNGE_TIME and _shove_t >= LUNGE_TIME:
+		Audio.play("shoved")
 		Game.say_random("dissent_kicked")
 	# the character goes flying, spinning, out of the room
 	if _shove_t > LUNGE_TIME:
@@ -256,6 +257,7 @@ func _try_shoot() -> void:
 	if not Input.is_action_just_pressed("Interact"):
 		return
 	_state = State.SHOOTING
+	Audio.play("watergun_shot")
 	_shot_t = 0.0
 	_shot_dir = _side()
 	_shot_hit = absf(_pos.y - config.orange_pos.y) <= config.line_tolerance

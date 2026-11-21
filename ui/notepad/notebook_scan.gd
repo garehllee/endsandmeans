@@ -173,8 +173,16 @@ func _visible_page() -> Rect2:
 func _go(step: Step) -> void:
 	_step = step
 	_t = 0.0
+	if step == Step.SCAN:
+		Audio.loop_start("scan_sweep")
+	else:
+		Audio.loop_stop("scan_sweep")
+	if step == Step.CAUGHT:
+		Audio.play("caught")
 
 func _reset() -> void:
+	if _step == Step.SCAN:
+		Audio.loop_stop("scan_sweep")
 	_step = Step.WAIT
 	_t = 0.0
 	_alpha = 0.0

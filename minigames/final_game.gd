@@ -753,6 +753,7 @@ func _fell() -> void:
 	_hits = 0
 	_health = config.health if _phase == 1 else config.health - config.phase_one_hits
 	_hf_flash = 0.4
+	Audio.play("fall_heal")
 	Game.say_random("platform_fall")
 
 func _respawn_after_fall() -> void:
@@ -789,6 +790,7 @@ func _tick_shot(dt: float) -> void:
 			var mouse_turn := _phase == 2 and _hits >= config.phase_two_hits and _pet_tex != null
 			if _phase == 2 and (_shielded() or mouse_turn):
 				_shot_kind = "block"
+				Audio.play("umbrella_block")
 				_shot_reach = maxf(_hf.x - 135.0 - _muzzle().x, 0.0)
 			else:
 				_shot_kind = "hit"
@@ -804,6 +806,7 @@ func _tick_shot(dt: float) -> void:
 		_begin_bite()
 		return
 	_shot_t = 0.0
+	Audio.play("watergun_shot")
 	_shot_dir = _face
 	_shot_done = false
 	_shot_kind = ""
@@ -818,7 +821,9 @@ func _damage() -> void:
 	_hits += 1
 	_hf_flash = 0.3
 	_hf.x += 60.0
+	Audio.play("hf_hit")
 	if _phase == 1 and _hits >= config.phase_one_hits:
+		Audio.play("umbrella_open")
 		_phase = 2
 		_hits = 0
 		_phase_flash = 1.0
@@ -859,6 +864,7 @@ func _tick_beat() -> void:
 
 # ---------------------------------------------------------------- the lasers
 func _spawn_volley() -> void:
+	Audio.play("hf_lasers")
 	var v := _view()
 	var me := _pos - v.position             # where the character is on screen
 	var hf := _hf - v.position
@@ -955,6 +961,7 @@ func _pushed(l: Laser, side: float, dt: float) -> void:
 	var aside := Vector2(-l.d.y, l.d.x) * (-1.0 if side > 0.0 else 1.0)
 	if not l.pushed:
 		l.pushed = true
+		Audio.play("knocked_back")
 		var kick := l.d * config.push_along + aside * config.push_aside + Vector2(0.0, -config.push_lift)
 		kick.y = minf(kick.y, config.push_down_max)
 		_vel = kick if _vel.y > 0.0 else _vel * 0.3 + kick
@@ -1035,6 +1042,9 @@ func _bite_frame() -> int:
 # Hugging Face goes down: one red flash, then it strobes as it fades out, and
 # the window goes to black.
 func _begin_dying() -> void:
+	if _stage == Stage.BITE:
+		Audio.play("mouse_bite")         # the chomp
+	Audio.play("hf_strobe")
 	_go(Stage.DYING)
 	_server.paused = false
 	_battle_music.stream_paused = false
@@ -1103,6 +1113,7 @@ func _tick_unlock() -> void:
 	_key_t = _stage_t
 	if _stage_t >= KEY_FLY + KEY_TURN and not _door_open:
 		_door_open = true
+		Audio.play("door_unlock")
 	if _stage_t >= KEY_FLY + KEY_TURN + 0.5:
 		_go(Stage.ENTER)
 
@@ -1135,6 +1146,7 @@ func _tick_enter(dt: float) -> void:
 			_glitch.visible = true
 			_glitch.finished.connect(_on_glitch_done, CONNECT_ONE_SHOT)
 			_glitch.play()
+			Audio.play("final_glitch")
 
 # After the glitch the whole desktop fades to black. The ending opens under the
 # black, which then lifts. (It lives on the tree's root, since this game is

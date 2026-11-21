@@ -46,12 +46,15 @@ func add_line(timestamp: String, text: String, kind: String) -> void:
 
 	lines.add_child(row)
 	lines.move_child(row, 0)   # newest goes to the top
+	Audio.play("notepad_line")
 
 	scroll.scroll_vertical = 0
 
 # Replaces every line logged for an unethical act with solid boxes, one per
 # word, like a redacted line in a file (the notebook exploit window asks for this).
 func _redact_unethical() -> void:
+	if not _unethical_rows.is_empty():
+		Audio.play("redact")
 	for row in _unethical_rows:
 		if is_instance_valid(row):
 			_redact_row(row)

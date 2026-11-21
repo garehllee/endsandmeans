@@ -26,6 +26,7 @@ func _on_flag_changed(flag: StringName, value: bool) -> void:
 		visible = false
 	elif not visible:
 		open_fresh()
+		Audio.play("desktop_item")
 		Game.say_random("solution_added")
 
 # Dragging it by its picture and letting go over the submission box turns it into an icon there.

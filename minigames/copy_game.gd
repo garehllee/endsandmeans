@@ -182,6 +182,7 @@ func _step(dt: float) -> void:
 		var rel := _vel - _player_vel
 		var vn := rel.dot(n)
 		if vn < 0.0:
+			Audio.play("file_bounce")
 			var old_x := _vel.x
 			rel -= (1.0 + config.bounce) * vn * n
 			_vel = rel + _player_vel
@@ -238,6 +239,7 @@ func _dropped() -> void:
 # The file slides into the doorway, shrinking and fading, then the door closes.
 func _enter_door() -> void:
 	_state = State.ENTERING
+	Audio.play("file_in")
 	Game.input_locked = true
 	_set_door(true)
 	var target := _to_room(config.door_body.get_center())

@@ -149,6 +149,7 @@ func start(cfg: MinigameConfig) -> void:
 
 func stop() -> void:
 	running = false
+	Audio.loop_stop("typing")
 	if _music:
 		_music.stop()
 	if _player and is_instance_valid(_player):
@@ -187,7 +188,23 @@ func _process(delta: float) -> void:
 					running = false
 					_music.stop()
 					finished.emit(true)
+		_update_typing()
 	queue_redraw()
+
+# The keyboard runs while a command is typing itself out, and stops between.
+func _update_typing() -> void:
+	var now := _time + (2.8 - _timer if _state == State.FAILED else 0.0)
+	var typing := false
+	if _state == State.PLAYING or _state == State.FAILED:
+		for i in range(_lines.size() - 1, maxi(_lines.size() - 4, 0) - 1, -1):
+			var l: Dictionary = _lines[i]
+			if l["kind"] == "cmd" and float(l["dur"]) > 0.0 and now >= float(l["t0"]) and now < float(l["t0"]) + float(l["dur"]):
+				typing = true
+				break
+	if typing:
+		Audio.loop_start("typing")
+	else:
+		Audio.loop_pause("typing")
 
 # The character walks to its spot by the button: across first, then up or down.
 func _walk(dt: float) -> void:
@@ -273,6 +290,7 @@ func _resolve(c: Dictionary, ok: bool, problem: String) -> void:
 	_next_cue += 1
 	if ok:
 		_good += 1
+		Audio.play("pushed" if c["text"].ends_with("git push") else "commit_good")
 		var text := ""
 		if c["text"].ends_with("git push"):
 			text = "main -> main  (%d commits pushed)" % _good
@@ -286,6 +304,8 @@ func _resolve(c: Dictionary, ok: bool, problem: String) -> void:
 # One more bad commit. Too many and the run is over.
 func _strike(problem: String, under: Dictionary) -> void:
 	_bad += 1
+	if _bad <= config.max_bad:
+		Audio.play("commit_bad")
 	_say_under(under, "error: %s (%d/%d)" % [problem, mini(_bad, config.max_bad + 1), config.max_bad], "err")
 	if _bad > config.max_bad:
 		_fail()
@@ -307,6 +327,7 @@ func _hash() -> String:
 
 func _fail() -> void:
 	_state = State.FAILED
+	Audio.play("branch_reset")
 	_timer = 2.8
 	_music.stop()
 	_lines.append({"text": "fatal: too many bad commits", "t0": _time, "dur": 0.25, "kind": "err", "cue": -1})

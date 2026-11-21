@@ -141,6 +141,7 @@ func start(cfg: MinigameConfig) -> void:
 
 func stop() -> void:
 	running = false
+	Audio.loop_stop("connection_push")
 
 func _draw() -> void:
 	if _built:
@@ -172,6 +173,7 @@ func _process(delta: float) -> void:
 			_show_frame(_path("loop", i))
 			_update_hover(i)
 			if _hovering and pressed:
+				Audio.play("catch_computer")
 				_state = State.FINISH_LOOP
 				_finish_pos = (floorf(_t * config.loop_fps / n) + 1.0) * n    # the end of this lap
 				_request("transition")
@@ -194,15 +196,22 @@ func _process(delta: float) -> void:
 				_show_frame(_path("transition", i))
 		State.CLICK:
 			_loading_sprite.rotation += TAU * config.loading_spin * delta
+			# the wind-up runs while E is being mashed, and holds when it stops
+			_since_press += delta
+			if _since_press > 0.3:
+				Audio.loop_pause("connection_push")
 			if _click_wait >= 0.0:
 				_click_wait -= delta
 				if _click_wait < 0.0:
 					_begin_outro()
 			elif pressed:
+				_since_press = 0.0
+				Audio.loop_start("connection_push")
 				_click_i += 1
 				_show_frame(_path("click", _click_i))
 				if _click_i >= _counts["click"] - 1:
 					_click_wait = config.click_end_delay
+					Audio.loop_stop("connection_push")
 		State.OUTRO:
 			_t += delta
 			var i := int(_t * config.outro_fps)
@@ -218,6 +227,8 @@ func _process(delta: float) -> void:
 			if _hold <= 0.0 and running:
 				running = false
 				finished.emit(true)
+
+var _since_press := 0.0
 
 func _active() -> bool:
 	return world_id == "" or Game.active_world == world_id
