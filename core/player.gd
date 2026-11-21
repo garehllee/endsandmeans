@@ -32,6 +32,10 @@ const BUG_FRAME := Vector2(400, 378)
 const BUG_SCALE := 0.4232
 const BUG_OFFSET := Vector2(3.6, 2.0)
 const BUG_FPS := 12.0
+# Where the bug's picture actually is, around the character's middle (before
+# the character's scale): measured from the sheets' pixels. Minigames take
+# their hitboxes from this, so the bug stands, bumps and squeezes where it looks.
+const BUG_BOUNDS := Rect2(-64.5, -48.8, 131.2, 128.7)
 var _bug: AnimatedSprite2D
 var _bug_active := false     # the character is a bug
 var _bug_busy := false       # turning into (or back from) a bug
@@ -235,6 +239,10 @@ func _end_gesture() -> void:
 	_schedule_alt()
 
 # ---------------------------------------------------------------- bug form
+# The bug's picture, in the space the character is placed in (its scale applied).
+func bug_box() -> Rect2:
+	return Rect2(BUG_BOUNDS.position * scale, BUG_BOUNDS.size * scale)
+
 func _build_bug() -> void:
 	var frames := SpriteFrames.new()
 	frames.remove_animation("default")

@@ -17,6 +17,11 @@ enum State { WAITING, PLAYING, DEAD, TAKEN }
 const CELL := 4                     # the wall picture is boiled down to cells this big for collision
 const LONG := 5000.0                # long enough to run off any edge of the picture
 
+# The character against the walls: a circle on the bug's middle (Player.bug_box),
+# which sits a little below the character's own middle.
+var _body_off := Vector2.ZERO
+var _body_r := 58.0
+
 var config: LaserConfig
 var running := false
 
@@ -99,6 +104,14 @@ func _place() -> void:
 		_player.position = _to_room(_pos)
 
 # ---------------------------------------------------------------- running
+func _fit_body() -> void:
+	_body_r = config.body_radius
+	_body_off = Vector2.ZERO
+	if _player and _player.has_method("bug_box") and _s > 0.0:
+		var b: Rect2 = _player.call("bug_box")
+		_body_off = b.get_center() / _s
+		_body_r = minf(b.size.x, b.size.y) * 0.5 * 0.9 / _s
+
 func start(cfg: MinigameConfig) -> void:
 	if not _built:
 		prepare(cfg)
@@ -106,6 +119,7 @@ func start(cfg: MinigameConfig) -> void:
 		finished.emit(true)
 		return
 	set_expand(_arena, 1.0)
+	_fit_body()
 	_respawn()
 	_state = State.PLAYING
 	running = true
@@ -198,8 +212,9 @@ func _move(delta: Vector2) -> void:
 		if not _blocked(_pos + Vector2(0.0, d.y)):
 			_pos.y += d.y
 
-func _blocked(p: Vector2) -> bool:
-	var r := config.body_radius
+func _blocked(at: Vector2) -> bool:
+	var p := at + _body_off
+	var r := _body_r
 	if p.x < r or p.y < r or p.x > config.window.x - r or p.y > config.window.y - r:
 		return true
 	if _solid.is_empty():
@@ -236,7 +251,7 @@ func _fire_phase() -> bool:
 
 func _in_beam() -> bool:
 	for b in _beams:
-		var v: Vector2 = _pos - b["p"]
+		var v: Vector2 = _pos + _body_off - b["p"]
 		var d: Vector2 = b["d"]
 		if b["ray"] and v.dot(d) < -config.hit_radius:
 			continue

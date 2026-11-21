@@ -16,6 +16,12 @@ enum State { WAITING, PLAYING, DEAD, TAKEN }
 const EXCLUSION_SHADER := preload("res://shaders/exclusion.gdshader")
 const LAND_TOLERANCE := 60.0        # how far past the top edge a fall can be caught
 
+# The character's box (picture units), measured from where the bug is drawn
+# (Player.bug_box); the config's numbers are only a fallback.
+var _half_w := 70.0
+var _feet := 120.0
+var _head := 170.0
+
 var config: PlatformConfig
 var running := false
 
@@ -183,6 +189,18 @@ func _place() -> void:
 		_player.position = _to_room(_pos)
 
 # ---------------------------------------------------------------- running
+# The box matches the bug as it's drawn: its feet stand on the boxes, its
+# head bumps what it touches, and it hangs off an edge only as far as it looks.
+func _fit_box() -> void:
+	_half_w = config.half_width
+	_feet = config.feet
+	_head = config.head
+	if _player and _player.has_method("bug_box") and _s > 0.0:
+		var b: Rect2 = _player.call("bug_box")
+		_half_w = b.size.x * 0.5 * 0.9 / _s     # a little forgiving at the sides
+		_feet = b.end.y / _s
+		_head = -b.position.y / _s
+
 func start(cfg: MinigameConfig) -> void:
 	if not _built:
 		prepare(cfg)
@@ -191,6 +209,7 @@ func start(cfg: MinigameConfig) -> void:
 		return
 	_camera = get_parent().get_node_or_null("Camera2D") as Camera2D
 	set_expand(_arena, 1.0)
+	_fit_box()
 	_respawn()
 	_state = State.PLAYING
 	running = true
@@ -273,19 +292,19 @@ func _step(dt: float) -> void:
 		_cut = true
 
 	_vel.y += config.gravity * dt
-	_pos.x = clampf(_pos.x + _vel.x * dt, config.half_width, config.level_size.x - config.half_width)
+	_pos.x = clampf(_pos.x + _vel.x * dt, _half_w, config.level_size.x - _half_w)
 
-	var was_feet := _pos.y + config.feet
+	var was_feet := _pos.y + _feet
 	_pos.y += _vel.y * dt
-	var feet := _pos.y + config.feet
+	var feet := _pos.y + _feet
 	var landed := false
 	if _vel.y >= 0.0:
 		for r in config.platforms:
-			if _pos.x + config.half_width <= r.position.x or _pos.x - config.half_width >= r.end.x:
+			if _pos.x + _half_w <= r.position.x or _pos.x - _half_w >= r.end.x:
 				continue
 			# only from above: the soles were over the top edge a moment ago
 			if was_feet <= r.position.y + LAND_TOLERANCE and feet >= r.position.y:
-				_pos.y = r.position.y - config.feet
+				_pos.y = r.position.y - _feet
 				_vel.y = 0.0
 				landed = true
 				break
@@ -315,9 +334,9 @@ func _step(dt: float) -> void:
 
 func _takes_key() -> bool:
 	var k: Vector2 = config.key_pos
-	return absf(k.x - _pos.x) < config.key_radius + config.half_width \
-			and k.y > _pos.y - config.head - config.key_radius \
-			and k.y < _pos.y + config.feet + config.key_radius
+	return absf(k.x - _pos.x) < config.key_radius + _half_w \
+			and k.y > _pos.y - _head - config.key_radius \
+			and k.y < _pos.y + _feet + config.key_radius
 
 # ---------------------------------------------------------------- background
 func _advance_background(delta: float) -> void:

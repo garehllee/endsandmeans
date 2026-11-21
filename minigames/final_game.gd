@@ -51,6 +51,12 @@ class Laser:
 	var icon := Vector2(-1000, -1000)
 	var pushed := false        # it has kicked the character already
 
+# The character's box (picture units), measured from where the bug is drawn
+# (Player.bug_box); the config's numbers are only a fallback.
+var _half_w := 70.0
+var _feet := 120.0
+var _head := 170.0
+
 var config: FinalConfig
 var running := false
 
@@ -369,6 +375,18 @@ func _redraw() -> void:
 			(n as Node2D).queue_redraw()
 
 # ---------------------------------------------------------------- running
+# The box matches the bug as it's drawn: its feet stand on the boxes, its
+# head bumps what it touches, and it hangs off an edge only as far as it looks.
+func _fit_box() -> void:
+	_half_w = config.half_width
+	_feet = config.feet
+	_head = config.head
+	if _player and _player.has_method("bug_box") and _s > 0.0:
+		var b: Rect2 = _player.call("bug_box")
+		_half_w = b.size.x * 0.5 * 0.9 / _s     # a little forgiving at the sides
+		_feet = b.end.y / _s
+		_head = -b.position.y / _s
+
 func start(cfg: MinigameConfig) -> void:
 	if not _built:
 		prepare(cfg)
@@ -377,6 +395,7 @@ func start(cfg: MinigameConfig) -> void:
 		return
 	_camera = get_parent().get_node_or_null("Camera2D") as Camera2D
 	set_expand(_arena, 1.0)
+	_fit_box()
 	running = true
 	_pos = config.spawn
 	if _player:
@@ -617,7 +636,7 @@ func _next_cluster(prev: Cluster) -> Cluster:
 	return c
 
 func _spawn_on(c: Cluster, x: float) -> void:
-	_pos = Vector2(clampf(x, c.x0 + config.half_width, c.x1 - config.half_width), c.top - config.feet)
+	_pos = Vector2(clampf(x, c.x0 + _half_w, c.x1 - _half_w), c.top - _feet)
 	_vel = Vector2.ZERO
 	_grounded = true
 	_coyote = 0.0
@@ -689,21 +708,21 @@ func _step(dt: float) -> void:
 		_cut = true
 
 	_vel.y += config.gravity * dt
-	_pos.x = maxf(_pos.x + _vel.x * dt, _view().position.x + config.half_width)
+	_pos.x = maxf(_pos.x + _vel.x * dt, _view().position.x + _half_w)
 
-	var was_feet := _pos.y + config.feet
+	var was_feet := _pos.y + _feet
 	_pos.y += _vel.y * dt
-	var feet := _pos.y + config.feet
+	var feet := _pos.y + _feet
 	var landed := false
 	if _vel.y >= 0.0:
 		for c in _clusters:
-			if _pos.x + config.half_width <= c.x0 - 80.0 or _pos.x - config.half_width >= c.x1 + 80.0:
+			if _pos.x + _half_w <= c.x0 - 80.0 or _pos.x - _half_w >= c.x1 + 80.0:
 				continue
 			for r in c.boxes:
-				if _pos.x + config.half_width <= r.position.x or _pos.x - config.half_width >= r.end.x:
+				if _pos.x + _half_w <= r.position.x or _pos.x - _half_w >= r.end.x:
 					continue
 				if was_feet <= r.position.y + LAND_TOLERANCE and feet >= r.position.y:
-					_pos.y = r.position.y - config.feet
+					_pos.y = r.position.y - _feet
 					_vel.y = 0.0
 					landed = true
 					break
@@ -739,7 +758,7 @@ func _respawn_after_fall() -> void:
 	var want := v.position.x + v.size.x * 0.22
 	var pick: Cluster = _clusters[0]
 	for c in _clusters:
-		if c.x1 - config.half_width > want:
+		if c.x1 - _half_w > want:
 			pick = c
 			break
 	_spawn_on(pick, maxf(want, pick.x0 + 60.0))
@@ -755,7 +774,7 @@ func _hf_half() -> Vector2:
 	return Vector2(config.hf_width, h) * 0.5
 
 func _level_with_hf() -> bool:
-	return absf((_pos.y + config.feet) - (_hf_goal_y + _hf_half().y)) <= config.line_tolerance
+	return absf((_pos.y + _feet) - (_hf_goal_y + _hf_half().y)) <= config.line_tolerance
 
 func _tick_shot(dt: float) -> void:
 	_shot_pause = maxf(_shot_pause - dt, 0.0)
@@ -921,10 +940,10 @@ func _tick_lasers(dt: float) -> void:
 		var reach := lerpf(maxf(span.x, 0.0), span.y, out)
 		var v := me - l.p
 		var along := v.dot(l.d)
-		if along < -config.half_width or along > reach + config.half_width:
+		if along < -_half_w or along > reach + _half_w:
 			continue
 		var side := v.cross(l.d)
-		if absf(side) < l.w * 0.5 + config.half_width * 0.6:
+		if absf(side) < l.w * 0.5 + _half_w * 0.6:
 			_pushed(l, side, dt)
 
 # Caught in a beam: a kick the way it's going, out of its side and up, the
