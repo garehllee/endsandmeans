@@ -1698,8 +1698,10 @@ func _trail_path(w: float, length: int) -> PackedVector2Array:
 	var gap := randf_range(0.3, 0.6) * w                   # copies overlap a little
 	var side := 1.0 if randf() < 0.5 else -1.0
 	var shape := randi() % 4
-	var turn0 := randf_range(0.25, 0.55)                   # radians a step
-	var wave := randf_range(0.35, 0.8)
+	# gentle turns, so the curves are big (radius = gap / turn): most trails
+	# only sweep through part of the shape before they pop out
+	var turn0 := randf_range(0.04, 0.12)                   # radians a step
+	var wave := randf_range(0.1, 0.25)
 	for i in length:
 		pts.append(p)
 		var u := float(i) / maxf(float(length - 1), 1.0)
