@@ -314,15 +314,6 @@
 			"license": "Not recorded"
 		},
 		{
-			"file": "res://audio/sfx/razor_buzz.ogg",
-			"original": "razor_buzz.wav",
-			"used_for": [
-				"scan_sweep"
-			],
-			"source": "Not recorded",
-			"license": "Not recorded"
-		},
-		{
 			"file": "res://audio/sfx/lose.ogg",
 			"original": "lose.wav",
 			"used_for": [
@@ -627,6 +618,16 @@
 			],
 			"creator": "soundreality",
 			"source": "Pixabay (sound 411632)",
+			"license": "Pixabay Content License"
+		},
+		{
+			"file": "res://audio/sfx/coghezzi_alien_bio_scan_ufo_interface_sound_effect.ogg",
+			"original": "coghezzi-alien-bio-scan-ufo-interface-sound-effect-555661.mp3",
+			"used_for": [
+				"scan_sweep"
+			],
+			"creator": "coghezzi",
+			"source": "Pixabay (sound 555661)",
 			"license": "Pixabay Content License"
 		}
 	]

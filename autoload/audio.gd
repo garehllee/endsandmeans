@@ -98,7 +98,9 @@ func play(name: String, volume_db := 0.0) -> void:
 	played[name] = played.get(name, 0) + 1
 	sfx(path, float(e.get("volume_db", 0.0)) + volume_db, float(e.get("pitch_var", 0.03)), float(e.get("slice", 0.0)), float(e.get("start", 0.0)))
 
-# Starts a named sound looping (if it isn't already), until loop_stop.
+# Starts a named sound looping (if it isn't already), until loop_stop. A
+# sound marked "loop": false in data/sfx.json plays once from the top
+# instead, but can still be cut off with loop_stop.
 func loop_start(name: String) -> void:
 	if _sfx.is_empty():
 		_load_sfx()
@@ -121,11 +123,12 @@ func loop_start(name: String) -> void:
 	if stream == null:
 		stream = load(path)
 		_cache[path] = stream
+	var loops := bool(_sfx[name].get("loop", true))
 	if "loop" in stream:
-		stream.set("loop", true)
+		stream.set("loop", loops)
 	p.stream = stream
 	p.volume_db = float(_sfx[name].get("volume_db", 0.0))
-	p.play(randf() * stream.get_length() * 0.5)
+	p.play(randf() * stream.get_length() * 0.5 if loops else 0.0)
 
 # Pauses a looping sound where it is (loop_start carries on from there).
 func loop_pause(name: String) -> void:

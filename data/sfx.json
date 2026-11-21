@@ -99,10 +99,10 @@
 	"scan_sweep": {
 		"row": 28,
 		"files": [
-			"res://audio/sfx/razor_buzz.ogg"
+			"res://audio/sfx/coghezzi_alien_bio_scan_ufo_interface_sound_effect.ogg"
 		],
-		"volume_db": -10,
-		"loop": true
+		"volume_db": -6,
+		"loop": false
 	},
 	"caught": {
 		"row": 30,
