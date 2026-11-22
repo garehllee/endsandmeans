@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://b5w4tnki8m2f3"
-path="res://.godot/imported/orangedoc.webp-f0cd66a5de738954c660ac39d2f51601.ctex"
+path="res://.godot/imported/orangedoc.webp-21e688e6981009fab068598e5b06e7af.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://art/sandbox/orangedoc.webp"
-dest_files=["res://.godot/imported/orangedoc.webp-f0cd66a5de738954c660ac39d2f51601.ctex"]
+source_file="res://art/Sandbox/orangedoc.webp"
+dest_files=["res://.godot/imported/orangedoc.webp-21e688e6981009fab068598e5b06e7af.ctex"]
 
 [params]
 
