@@ -173,7 +173,6 @@ func _on_entry_entered(entry: Dictionary, index: int, w: FileWall) -> void:
 		# next step: open a viewer window for this file
 
 func _open_child(parent_wall: FileWall, entry: Dictionary, index: int) -> void:
-	Audio.play("enter_folder")
 	Game.say_random("folder_open", {"item": entry.name})
 	var child := FileWall.new()
 	child.copy_settings_from(parent_wall)

@@ -290,6 +290,13 @@ func _process(delta: float) -> void:
 			changed = true
 		it.open = new_o
 		it.open_w = new_ow
+		# a folder's hallway opening up far enough to walk into: a page turns
+		if it.entry.type == "folder":
+			var hall: bool = new_o > open_threshold
+			if hall and not it.get("hall", false) and i == _focus \
+					and Game.active_world == "library" and is_visible_in_tree():
+				Audio.play("enter_folder")
+			it["hall"] = hall
 		open_sum += new_o * new_ow
 		closed_sum += 1.0 - new_o
 
